@@ -1,10 +1,8 @@
-
 /* DB */
 DROP DATABASE IF EXISTS `virtual_teacher`;
 CREATE DATABASE IF NOT EXISTS `virtual_teacher`;
 
 use `virtual_teacher`;
-
 
 
 /*=========================Create tables===============================*/
@@ -42,13 +40,13 @@ create table courses
     id            int auto_increment
         primary key,
     title         varchar(50) not null,
-    topic         int         not null,
+    topic_id      int         not null,
     start_date    datetime    not null,
     creator_id    int         not null,
     is_published  tinyint(1)  not null,
     passing_grade decimal     not null,
     constraint courses_topics_fk
-        foreign key (topic) references topics (id),
+        foreign key (topic_id) references topics (id),
     constraint courses_users_id_fk
         foreign key (creator_id) references users (id)
 );
@@ -111,6 +109,8 @@ create table ratings
     comment   varchar(300) not null,
     user_id   int          not null,
     course_id int          not null,
+    id        int          not null
+        primary key,
     constraint ratings_courses_id_fk
         foreign key (course_id) references courses (id),
     constraint ratings_users_id_fk
