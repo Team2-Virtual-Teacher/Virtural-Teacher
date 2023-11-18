@@ -9,7 +9,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private int id;
+    private int id;
 
     @Column(name = "email")
     private String email;
@@ -24,7 +24,7 @@ public class User {
     private String lastName;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @Column(name = "profile_picture")

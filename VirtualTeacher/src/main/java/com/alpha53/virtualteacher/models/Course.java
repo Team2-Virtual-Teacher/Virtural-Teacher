@@ -21,11 +21,11 @@ public class Course {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "topic_id")
     private Topic topic;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "creator_id")
     private User creator;
 
     @Column(name = "start_date")

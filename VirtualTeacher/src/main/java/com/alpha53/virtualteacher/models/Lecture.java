@@ -17,7 +17,7 @@ public class Lecture {
     @Column(name = "video_url")
     private String video_url;
 
-    @Column(name = "assignment")
+    @Column(name = "assignment_task")
     private String assignment;
 
     @ManyToOne

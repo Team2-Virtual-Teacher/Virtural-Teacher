@@ -20,11 +20,11 @@ public class Rating {
     private double rating;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User rater;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     public Rating() {
