@@ -3,6 +3,8 @@ package com.alpha53.virtualteacher.models;
 import jakarta.persistence.*;
 import org.checkerframework.checker.units.qual.C;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -29,6 +31,14 @@ public class User {
 
     @Column(name = "profile_picture")
     private String pictureAddress;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "course_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses;
 
     public User() {
     }
