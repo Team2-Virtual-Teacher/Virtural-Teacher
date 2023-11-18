@@ -1,7 +1,13 @@
+
+/* DB */
 DROP DATABASE IF EXISTS `virtual_teacher`;
 CREATE DATABASE IF NOT EXISTS `virtual_teacher`;
 
 use `virtual_teacher`;
+
+
+
+/*=========================Create tables===============================*/
 
 create table roles
 (
@@ -68,22 +74,22 @@ create table course_user
 
 create table lectures
 (
-    id         int auto_increment
+    id              int auto_increment
         primary key,
-    title      varchar(50)  not null,
-    video_url  varchar(100) not null,
-    assignment varchar(100) null,
-    course_id  int          not null,
+    title           varchar(50)  not null,
+    video_url       varchar(100) not null,
+    assignment_task varchar(100) null,
+    course_id       int          not null,
     constraint lectures_courses_id_fk
         foreign key (course_id) references courses (id)
 );
 
 create table assignments
 (
-    assignment varchar(100) not null,
-    user_id    int          not null,
-    lecture_id int          not null,
-    id         int          not null
+    assignment_solution varchar(100) not null,
+    user_id             int          not null,
+    lecture_id          int          not null,
+    id                  int          not null
         primary key,
     constraint assignments_lectures_id_fk
         foreign key (lecture_id) references lectures (id),
