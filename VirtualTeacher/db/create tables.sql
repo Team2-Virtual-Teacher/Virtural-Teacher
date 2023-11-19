@@ -7,11 +7,18 @@ use `virtual_teacher`;
 
 /*=========================Create tables===============================*/
 
-create table roles
+/*create table roles
 (
     id   int auto_increment
         primary key,
     role varchar(32) not null
+);*/
+
+create table roles
+(
+    id   int auto_increment
+        primary key,
+    role enum('Student','Teacher','Admin') not null
 );
 
 create table topics
@@ -97,6 +104,8 @@ create table assignments
 
 create table grades
 (
+    id            int auto_increment
+        primary key,
     grade         decimal not null,
     assignment_id int     not null,
     constraint grades_assignments_id_fk
@@ -116,4 +125,5 @@ create table ratings
     constraint ratings_users_id_fk
         foreign key (user_id) references users (id)
 );
+
 
