@@ -1,7 +1,6 @@
 package com.alpha53.virtualteacher.models;
 
 import jakarta.persistence.*;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class User {
     private Role role;
 
     @Column(name = "profile_picture")
-    private String pictureAddress;
+    private String pictureUrl;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -91,11 +90,11 @@ public class User {
         this.role = role;
     }
 
-    public String getPictureAddress() {
-        return pictureAddress;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public void setPictureAddress(String pictureAddress) {
-        this.pictureAddress = pictureAddress;
+    public void setPictureUrl(String pictureAddress) {
+        this.pictureUrl = pictureAddress;
     }
 }
