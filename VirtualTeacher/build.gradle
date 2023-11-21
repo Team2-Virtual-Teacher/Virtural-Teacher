@@ -20,8 +20,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.mariadb.jdbc:mariadb-java-client:3.2.0'
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.0'
+	implementation 'org.springframework:spring-jdbc:6.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 
 }
 
@@ -32,3 +34,6 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+
+

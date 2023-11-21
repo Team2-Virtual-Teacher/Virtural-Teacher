@@ -1,27 +1,10 @@
 package com.alpha53.virtualteacher.models;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "lectures")
 public class Lecture {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
-
-    @Column(name = "title")
     private String title;
-
-    @Column(name = "video_url")
     private String video_url;
-
-    @Column(name = "assignment_task")
     private String assignment;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id")
     private Course course;
 
     public Lecture(int id, String title, String video_url, String assignment, Course course) {
@@ -30,9 +13,6 @@ public class Lecture {
         this.video_url = video_url;
         this.assignment = assignment;
         this.course = course;
-    }
-
-    public Lecture() {
     }
 
     public int getId() {

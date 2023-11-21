@@ -1,10 +1,10 @@
-package com.alpha53.virtualteacher.repositories;
+package com.alpha53.virtualteacher.repositories.contracts;
 
 import com.alpha53.virtualteacher.models.User;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface UserDao {
 
     User get(int id);
 

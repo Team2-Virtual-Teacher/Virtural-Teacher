@@ -1,53 +1,34 @@
 package com.alpha53.virtualteacher.models;
 
-import jakarta.persistence.*;
-
 import java.util.Set;
 
-@Entity
-@Table(name = "users")
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "email")
+    private int userId;
     private String email;
-
-    @Column(name = "password")
     private String password;
-
-    @Column(name = "first_name")
     private String firstName;
-
-    @Column(name = "last_name")
     private String lastName;
-
-    @ManyToOne
-    @JoinColumn(name = "role_id")
     private Role role;
-
-    @Column(name = "profile_picture")
     private String pictureUrl;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "course_user",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
     private Set<Course> courses;
 
-    public User() {
+    public User(int userId, String email, String password, String firstName, String lastName, Role role, String pictureUrl, Set<Course> courses) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.pictureUrl = pictureUrl;
+        this.courses = courses;
     }
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -96,5 +77,13 @@ public class User {
 
     public void setPictureUrl(String pictureAddress) {
         this.pictureUrl = pictureAddress;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 }

@@ -1,32 +1,24 @@
 package com.alpha53.virtualteacher.models;
 
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "topics")
 public class Topic {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-
-    @Column(name = "topic")
+    private int topicId;
     private String topic;
 
     public Topic(int id, String topic) {
-        this.id = id;
+        this.topicId = id;
         this.topic = topic;
     }
+
     public Topic() {
     }
 
-    public int getId() {
-        return id;
+    public int getTopicId() {
+        return topicId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
     }
 
     public String getTopic() {

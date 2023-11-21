@@ -1,18 +1,37 @@
 package com.alpha53.virtualteacher.models;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "grades")
 public class Grade {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "grade")
+    private int gradeId;
     private double grade;
-
-    @Column(name = "assignment_id")
     private int assignment_id;
+
+    public Grade(int gradeId, double grade, int assignment_id) {
+        this.gradeId = gradeId;
+        this.grade = grade;
+        this.assignment_id = assignment_id;
+    }
+
+    public int getGradeId() {
+        return gradeId;
+    }
+
+    public void setGradeId(int gradeId) {
+        this.gradeId = gradeId;
+    }
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
+
+    public int getAssignment_id() {
+        return assignment_id;
+    }
+
+    public void setAssignment_id(int assignment_id) {
+        this.assignment_id = assignment_id;
+    }
 }

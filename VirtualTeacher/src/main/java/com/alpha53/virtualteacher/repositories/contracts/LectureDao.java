@@ -1,10 +1,10 @@
-package com.alpha53.virtualteacher.repositories;
+package com.alpha53.virtualteacher.repositories.contracts;
 
 import com.alpha53.virtualteacher.models.Lecture;
 
 import java.util.List;
 
-public interface LectureRepository {
+public interface LectureDao {
 
     Lecture get(int id);
 
