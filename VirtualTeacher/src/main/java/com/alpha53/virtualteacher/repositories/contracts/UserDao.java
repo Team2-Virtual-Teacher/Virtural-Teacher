@@ -12,6 +12,8 @@ public interface UserDao {
 
     List<User> getAll();
 
+    boolean emailExists(String email);
+
     void create(User user);
 
     void update(User user);

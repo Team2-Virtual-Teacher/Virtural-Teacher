@@ -5,7 +5,7 @@ import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.UserRoles;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
-import com.alpha53.virtualteacher.repositories.UserRepository;
+import com.alpha53.virtualteacher.repositories.contracts.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,10 @@ public class UserServiceImpl implements UserService {
     public static final String EMAIL_UPDATE_EXCEPTION = "Email cannot be updated!";
     public static final String ROLE_UPDATE_EXCEPTION = "Role cannot be updated!";
     public static final String DELETE_USER_EXCEPTION = "You are not authorized to delete this user!";
-    public final UserRepository userRepository;
+    public final UserDao userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserDao userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(int id, User user) {
-        if (user.getId() != id){
+        if (user.getUserId() != id){
             throw new AuthorizationException(DELETE_USER_EXCEPTION);
         }
         userRepository.delete(id);
