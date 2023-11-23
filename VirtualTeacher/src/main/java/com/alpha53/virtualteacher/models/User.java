@@ -23,6 +23,9 @@ public class User {
         this.courses = courses;
     }
 
+    public User() {
+    }
+
     public int getUserId() {
         return userId;
     }

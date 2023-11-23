@@ -1,4 +1,4 @@
-package com.alpha53.virtualteacher.utilities;
+package com.alpha53.virtualteacher.utilities.mappers;
 
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.Topic;

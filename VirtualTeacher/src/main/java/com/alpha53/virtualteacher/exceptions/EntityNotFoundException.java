@@ -1,7 +1,7 @@
 package com.alpha53.virtualteacher.exceptions;
 
 public class EntityNotFoundException extends RuntimeException {
-    public EntityNotFoundException(String type, Long id) {
+    public EntityNotFoundException(String type, int id) {
         this(type, "id", String.valueOf(id));
     }
 

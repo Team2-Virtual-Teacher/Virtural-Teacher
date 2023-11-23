@@ -2,8 +2,9 @@ package com.alpha53.virtualteacher.services;
 
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
+import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
-import com.alpha53.virtualteacher.models.UserRoles;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.repositories.contracts.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(User user) {
+    public void create(User user, String userRole) {
         if (userRepository.emailExists(user.getEmail())) {
             throw new EntityDuplicateException("User", "Email", user.getEmail());
         }
-        if (user.getRole().getRole().toString().equalsIgnoreCase("Teacher")) {
-            user.getRole().setRole(UserRoles.PENDING_TEACHER);
+        if (!userRole.equalsIgnoreCase("Teacher") && !userRole.equalsIgnoreCase("User")){
+            throw new EntityNotFoundException(String.format("Role %s does not exist!", userRole));
+        }
+        if (userRole.equalsIgnoreCase("Teacher")) {
+            userRole ="PendingTeacher";
             // TODO: 21.11.23 inform all admins with email
         }
+        Role role = userRepository.getRole(userRole);
+        user.setRole(role);
         userRepository.create(user);
     }
 
@@ -57,7 +63,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getEmail().equals(userDto.getEmail())) {
             throw new AuthorizationException(EMAIL_UPDATE_EXCEPTION);
         }
-        if (!user.getRole().getRole().toString().equals(userDto.getRole())) {
+        if (!user.getRole().getRoleType().equals(userDto.getRole())) {
             throw new AuthorizationException(ROLE_UPDATE_EXCEPTION);
         }
         user.setFirstName(userDto.getFirstName());

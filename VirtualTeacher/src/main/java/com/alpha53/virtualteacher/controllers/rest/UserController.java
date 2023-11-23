@@ -1,11 +1,13 @@
 package com.alpha53.virtualteacher.controllers.rest;
 
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
+import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.helpers.AuthenticationHelper;
+import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.services.UserService;
+import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UserMapperHelper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +24,13 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
 
+    private final UserMapperHelper userMapperHelper;
+
     @Autowired
-    public UserController(UserService userService, AuthenticationHelper authenticationHelper) {
+    public UserController(UserService userService, AuthenticationHelper authenticationHelper, UserMapperHelper userMapperHelper) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
+        this.userMapperHelper = userMapperHelper;
     }
 
     @GetMapping
@@ -43,6 +48,18 @@ public class UserController {
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+    }
+
+    @PostMapping()
+    public UserDto create(@RequestBody @Valid UserDto userDto) {
+        User user = userMapperHelper.userDtoToUser(userDto);
+        try {
+            String userRole = userDto.getRole();
+            userService.create(user, userRole);
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+        return userDto;
     }
 
     @PutMapping()

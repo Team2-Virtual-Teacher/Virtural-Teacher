@@ -1,4 +1,4 @@
-package com.alpha53.virtualteacher.helpers;
+package com.alpha53.virtualteacher.utilities.helpers;
 
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
