@@ -9,7 +9,7 @@ public class Course {
     private int courseId;
     private String title;
     private Topic topic;
-    private int creator;
+    private User creator;
     private LocalDate startingDate;
     private boolean isPublished;
     private double passingGrade;
@@ -23,7 +23,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(int id, String title, Topic topic, int creator, LocalDate startingDate, boolean isPublished, double passingGrade) {
+    public Course(int id, String title, Topic topic, User creator, LocalDate startingDate, boolean isPublished, double passingGrade) {
         this.courseId = id;
         this.title = title;
         this.topic = topic;
@@ -57,11 +57,11 @@ public class Course {
         this.topic = topic;
     }
 
-    public int getCreator() {
+    public User getCreator() {
         return creator;
     }
 
-    public void setCreator(int creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 
