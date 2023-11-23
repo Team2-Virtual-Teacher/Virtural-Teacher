@@ -3,16 +3,30 @@ package com.alpha53.virtualteacher.models;
 public class Lecture {
     private int id;
     private String title;
-    private String video_url;
+    private String videoUrl;
     private String assignment;
-    private Course course;
+    private int courseId;
+    private LectureDescription description;
 
-    public Lecture(int id, String title, String video_url, String assignment, Course course) {
+    public Lecture(int id, String title, String video_url, String assignment, int courseId, LectureDescription description) {
         this.id = id;
         this.title = title;
-        this.video_url = video_url;
+        this.videoUrl = video_url;
         this.assignment = assignment;
-        this.course = course;
+        this.courseId = courseId;
+        this.description = description;
+    }
+
+    public Lecture() {
+
+    }
+
+    public LectureDescription getDescription() {
+        return description;
+    }
+
+    public void setDescription(LectureDescription description) {
+        this.description = description;
     }
 
     public int getId() {
@@ -31,12 +45,12 @@ public class Lecture {
         this.title = title;
     }
 
-    public String getVideo_url() {
-        return video_url;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setVideo_url(String video_url) {
-        this.video_url = video_url;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public String getAssignment() {
@@ -47,11 +61,11 @@ public class Lecture {
         this.assignment = assignment;
     }
 
-    public Course getCourse() {
-        return course;
+    public int getCourse() {
+        return courseId;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCourse(int courseId) {
+        this.courseId = courseId;
     }
 }

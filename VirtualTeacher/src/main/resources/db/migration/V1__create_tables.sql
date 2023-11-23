@@ -1,24 +1,16 @@
-/* DB */
+/*===============================DB=====================================*/
 DROP DATABASE IF EXISTS `virtual_teacher`;
 CREATE DATABASE IF NOT EXISTS `virtual_teacher`;
 
 use `virtual_teacher`;
 
-
 /*=========================Create tables===============================*/
-
-/*create table roles
-(
-    id   int auto_increment
-        primary key,
-    role varchar(32) not null
-);*/
 
 create table roles
 (
     id   int auto_increment
         primary key,
-    role enum('Student','Teacher','Admin') not null
+    role varchar(30) not null
 );
 
 create table topics
@@ -38,6 +30,8 @@ create table users
     last_name       varchar(50)  not null,
     role_id         int          not null,
     profile_picture varchar(100) not null,
+    constraint users_pk
+        unique (email),
     constraint users_roles_fk
         foreign key (role_id) references roles (id)
 );
@@ -62,6 +56,8 @@ create table course_description
 (
     course_id   int           not null,
     description varchar(1000) not null,
+    constraint course_description_pk
+        unique (course_id),
     constraint course_description_course_description_fk
         foreign key (course_id) references courses (id)
 );
@@ -112,6 +108,16 @@ create table grades
         foreign key (assignment_id) references assignments (id)
 );
 
+create table lecture_description
+(
+    lecture_id  int           not null,
+    description varchar(1000) not null,
+    constraint lecture_description_pk
+        unique (lecture_id),
+    constraint lecture_description_lectures_fk
+        foreign key (lecture_id) references lectures (id)
+);
+
 create table ratings
 (
     rating    decimal      not null,
@@ -125,5 +131,3 @@ create table ratings
     constraint ratings_users_id_fk
         foreign key (user_id) references users (id)
 );
-
-

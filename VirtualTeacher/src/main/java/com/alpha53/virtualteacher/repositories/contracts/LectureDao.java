@@ -8,7 +8,7 @@ public interface LectureDao {
 
     Lecture get(int id);
 
-    List<Lecture> getAllByCourse(int id);
+    List<Lecture> getAllByCourseId(int id);
 
     void create(Lecture lecture);
 
