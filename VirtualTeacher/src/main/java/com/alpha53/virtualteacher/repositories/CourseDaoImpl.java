@@ -3,7 +3,7 @@ package com.alpha53.virtualteacher.repositories;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
-import com.alpha53.virtualteacher.utilities.CourseMapper;
+import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -53,6 +53,17 @@ public class CourseDaoImpl implements CourseDao {
                      "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id                           ";
 
         return namedParameterJdbcTemplate.query(sql, new CourseMapper());
+
+    }
+    @Override
+    public List<Course> getCoursesByUser( int userId){
+        String sql = "SELECT courses.id,title,start_date,creator_id,is_published,passing_grade,topic,topic_id " +
+                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id";
+
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("id", userId);
+
+        return namedParameterJdbcTemplate.query(sql, in, new CourseMapper());
 
     }
 

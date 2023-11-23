@@ -2,7 +2,7 @@ package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.models.Topic;
 import com.alpha53.virtualteacher.repositories.contracts.TopicDao;
-import com.alpha53.virtualteacher.utilities.TopicMapper;
+import com.alpha53.virtualteacher.utilities.mappers.TopicMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

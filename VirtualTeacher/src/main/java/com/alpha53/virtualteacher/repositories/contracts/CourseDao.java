@@ -10,6 +10,7 @@ public interface CourseDao {
 
     List<Course> getAll();
 
+    List<Course> getCoursesByUser( int userId);
     void create(Course course);
 
     void update(Course course);

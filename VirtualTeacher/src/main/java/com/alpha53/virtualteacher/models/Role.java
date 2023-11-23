@@ -2,11 +2,9 @@ package com.alpha53.virtualteacher.models;
 
 public class Role {
     private int roleId;
-    private UserRoles role;
+    private String roleType;
 
-    public Role(int roleId, UserRoles role) {
-        this.roleId = roleId;
-        this.role = role;
+    public Role() {
     }
 
     public int getRoleId() {
@@ -17,11 +15,11 @@ public class Role {
         this.roleId = roleId;
     }
 
-    public UserRoles getRole() {
-        return role;
+    public String getRoleType() {
+        return roleType;
     }
 
-    public void setRole(UserRoles role) {
-        this.role = role;
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
     }
 }
