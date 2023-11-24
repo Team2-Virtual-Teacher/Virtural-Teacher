@@ -7,6 +7,7 @@ import java.util.List;
 public interface CourseDao {
 
     Course get(int id);
+    Course getByTitle(String title);
 
     List<Course> getAll();
 

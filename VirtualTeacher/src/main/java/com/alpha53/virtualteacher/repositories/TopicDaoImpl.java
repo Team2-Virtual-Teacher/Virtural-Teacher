@@ -23,4 +23,9 @@ public class TopicDaoImpl implements TopicDao {
         String sql = "SELECT * FROM topics";
         return namedParameterJdbcTemplate.query(sql,new TopicMapper());
     }
+
+    @Override
+    public Topic getById(int id) {
+        return new Topic(3, "Test3");
+    }
 }

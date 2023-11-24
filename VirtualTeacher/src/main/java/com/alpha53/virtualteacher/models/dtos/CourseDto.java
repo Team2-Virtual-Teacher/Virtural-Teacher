@@ -2,26 +2,25 @@ package com.alpha53.virtualteacher.models.dtos;
 
 import com.alpha53.virtualteacher.models.Topic;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class CourseDto {
 
     private String title;
 
-    private Topic topic;
+    private int topicId;
 
-    private int creator;
 
-    private LocalDate startingDate;
+    private String startingDate;
 
     private boolean isPublished;
 
     private double passingGrade;
 
-    public CourseDto(String title, Topic topic, int creator, LocalDate startingDate, boolean isPublished, double passingGrade) {
+    public CourseDto(String title, int topicId, String startingDate, boolean isPublished, double passingGrade) {
         this.title = title;
-        this.topic = topic;
-        this.creator = creator;
+        this.topicId=topicId;
         this.startingDate = startingDate;
         this.isPublished = isPublished;
         this.passingGrade = passingGrade;
@@ -35,27 +34,20 @@ public class CourseDto {
         this.title = title;
     }
 
-    public Topic getTopic() {
-        return topic;
+    public int getTopicId() {
+        return topicId;
     }
 
-    public void setTopic(Topic topic) {
-        this.topic = topic;
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
     }
 
-    public int getCreator() {
-        return creator;
-    }
 
-    public void setCreator(int creator) {
-        this.creator = creator;
-    }
-
-    public LocalDate getStartingDate() {
+    public String getStartingDate() {
         return startingDate;
     }
 
-    public void setStartingDate(LocalDate startingDate) {
+    public void setStartingDate(String startingDate) {
         this.startingDate = startingDate;
     }
 

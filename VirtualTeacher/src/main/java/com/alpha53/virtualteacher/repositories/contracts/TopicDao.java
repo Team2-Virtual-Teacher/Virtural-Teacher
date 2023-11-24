@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TopicDao {
     List<Topic> getAll();
+    Topic getById( int id );
+
 }
