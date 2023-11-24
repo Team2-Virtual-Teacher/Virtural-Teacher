@@ -3,7 +3,7 @@ package com.alpha53.virtualteacher.utilities.helpers;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.User;
-import com.alpha53.virtualteacher.services.UserService;
+import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;

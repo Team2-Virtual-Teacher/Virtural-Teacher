@@ -1,4 +1,4 @@
-package com.alpha53.virtualteacher.services;
+package com.alpha53.virtualteacher.services.contracts;
 
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
