@@ -1,5 +1,7 @@
 package com.alpha53.virtualteacher.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Set;
 
 public class User {
@@ -10,6 +12,8 @@ public class User {
     private String lastName;
     private Role role;
     private String pictureUrl;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<Course> courses;
 
     public User(int userId, String email, String password, String firstName, String lastName, Role role, String pictureUrl, Set<Course> courses) {

@@ -14,7 +14,6 @@ public class Course {
     private boolean isPublished;
     private double passingGrade;
 
-
     public Course(LocalDate startingDate) {
         this.startingDate = startingDate;
         this.isPublished = false;

@@ -34,8 +34,13 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<User> getAll(@RequestHeader HttpHeaders headers) {
+        try {
+            authenticationHelper.tryGetUser(headers);
+            return userService.getAll();
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -58,6 +63,8 @@ public class UserController {
             userService.create(user, userRole);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         return userDto;
     }

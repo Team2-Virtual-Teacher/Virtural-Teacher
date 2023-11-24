@@ -15,7 +15,10 @@ public interface CourseService {
     public void update(Course course, User user);
 
     public void delete(int id, User user);
+
     public Course getCourseById(int id);
 
     public List<Course> getAllCourses();
+
+    void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser);
 }

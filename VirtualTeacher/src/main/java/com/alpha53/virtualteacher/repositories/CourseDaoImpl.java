@@ -78,8 +78,12 @@ public class CourseDaoImpl implements CourseDao {
     }
     @Override
     public List<Course> getCoursesByUser( int userId){
-        String sql = "SELECT courses.id,title,start_date,creator_id,is_published,passing_grade,topic,topic_id " +
-                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id";
+        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, profile_picture," +
+                " is_published, passing_grade, topic, topic_id " +
+                "FROM courses " +
+                "LEFT JOIN topics ON courses.topic_id = topics.id " +
+                "LEFT JOIN users ON courses.creator_id = users.id " +
+                "WHERE creator_id = :id;";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", userId);
@@ -129,4 +133,15 @@ public class CourseDaoImpl implements CourseDao {
         in.addValue("id", id);
         namedParameterJdbcTemplate.update(sql, in);
     }
+
+    @Override
+    public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId){
+        String sql = "UPDATE courses SET creator_id = :idNewTeacher WHERE creator_id = :idPreviousTeacher;";
+
+        MapSqlParameterSource in =  new MapSqlParameterSource();
+        in.addValue("idPreviousTeacher", teacherToTransferFromId);
+        in.addValue("idNewTeacher", teacherToTransferToId);
+        namedParameterJdbcTemplate.update(sql,in);
+    }
+
 }

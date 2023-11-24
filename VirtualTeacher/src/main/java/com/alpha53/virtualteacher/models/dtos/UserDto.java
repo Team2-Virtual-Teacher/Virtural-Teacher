@@ -1,5 +1,6 @@
 package com.alpha53.virtualteacher.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -11,7 +12,7 @@ public class UserDto {
     @Email
     private String email;
 
-    //@JsonIgnore
+//    @JsonIgnore
     @NotNull
     @Size(min = 8,max = 32,message = "Password must be between 8 and 32 symbols")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#\\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$",message = "Password does not match requirements (ex. P@ss1234).")

@@ -16,6 +16,7 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService {
     private static final String ONLY_CREATOR_CAN_MODIFY_A_COURSE = "Only  creator or admin can modify a course.";
     private static final String ONLY_TEACHER_OR_ADMIN_CAN_CREATE_COURSE = "Only teacher or admin can create course.";
+    public static final String COURSE_TRANSFER_EXCEPTION = "Courses can only be transferred by an Admin.";
     private final CourseDao courseRepository;
 
     @Autowired
@@ -23,7 +24,7 @@ public class CourseServiceImpl implements CourseService {
         this.courseRepository = courseRepository;
     }
 
-    public void create(Course course, User user){
+    public void create(Course course, User user) {
         boolean duplicateExists = true;
         try {
             courseRepository.getByTitle(course.getTitle());
@@ -36,14 +37,14 @@ public class CourseServiceImpl implements CourseService {
             throw new EntityDuplicateException("Course", "title", course.getTitle());
         }
 
-        if (!user.getRole().getRoleType().equalsIgnoreCase("teacher") && !user.getRole().getRoleType().equalsIgnoreCase("admin")){
+        if (!user.getRole().getRoleType().equalsIgnoreCase("teacher") && !user.getRole().getRoleType().equalsIgnoreCase("admin")) {
             throw new AuthorizationException(ONLY_TEACHER_OR_ADMIN_CAN_CREATE_COURSE);
         }
         course.setCreator(user);
         courseRepository.create(course);
     }
 
-    public void update(Course course, User user){
+    public void update(Course course, User user) {
         boolean duplicateExists = true;
         try {
             Course existingCourse = courseRepository.getByTitle(course.getTitle());
@@ -61,27 +62,36 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.update(course);
     }
 
-    public void delete(int id, User user){
+    public void delete(int id, User user) {
 
         checkModifyPermissions(id, user);
         courseRepository.delete(id);
     }
 
-    public Course getCourseById(int id){
+    public Course getCourseById(int id) {
 
         return courseRepository.get(id);
     }
 
-    public List<Course> getAllCourses(){
+    public List<Course> getAllCourses() {
         return courseRepository.getAll();
     }
 
+    public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser){
+        if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin")){
+            throw new AuthorizationException(COURSE_TRANSFER_EXCEPTION);
+        }
+        if (teacherToTransferToId == teacherToTransferFromId){
+            return;
+        }
+        courseRepository.transferTeacherCourses(teacherToTransferFromId,teacherToTransferToId);
+    }
 
     private void checkModifyPermissions(int courseId, User user) {
         Course course = courseRepository.get(courseId);
         System.out.println(course.getCreator().getUserId());
         System.out.println(user.getUserId());
-        if (course.getCreator().getUserId() != user.getUserId() && !user.getRole().getRoleType().equalsIgnoreCase("admin")){
+        if (course.getCreator().getUserId() != user.getUserId() && !user.getRole().getRoleType().equalsIgnoreCase("admin")) {
             throw new AuthorizationException(ONLY_CREATOR_CAN_MODIFY_A_COURSE);
         }
 

@@ -15,11 +15,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Transactional
 @Repository
 public class UserDaoImpl implements UserDao {
 
@@ -76,6 +78,7 @@ public class UserDaoImpl implements UserDao {
                 "profile_picture, role_id , role " +
                 "FROM users JOIN roles r on r.id = users.role_id";
 
+
         return namedParameterJdbcTemplate.query(query, new UserMapper());
 
     }
@@ -127,8 +130,24 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void delete(int id) {
-
+        deleteFromCourseUser(id);
+        deleteFromUsers(id);
     }
+
+    private void deleteFromCourseUser(int id) {
+        String sql = "DELETE FROM course_user WHERE user_id = :id";
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("id", id);
+        namedParameterJdbcTemplate.update(sql, in);
+    }
+
+    private void deleteFromUsers(int id) {
+        String sql = "DELETE FROM users WHERE id = :id";
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("id", id);
+        namedParameterJdbcTemplate.update(sql, in);
+    }
+
 
     public Role getRole(String roleType){
         String query = "SELECT id as roleId, role as roleType " +
@@ -141,7 +160,7 @@ public class UserDaoImpl implements UserDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query,in, new BeanPropertyRowMapper<>(Role.class));
         } catch (IncorrectResultSizeDataAccessException e){
-            throw new EntityNotFoundException(String.format("No role %s found!", roleType));
+            throw new EntityNotFoundException(String.format("No role %s found.", roleType));
         }
     }
 

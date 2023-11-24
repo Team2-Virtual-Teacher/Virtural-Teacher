@@ -91,4 +91,14 @@ public class CourseController {
         }
     }
 
+    @PutMapping("/transfer/{userIdFrom}/{userIdTo}")
+    public void transferCourses(@RequestHeader HttpHeaders headers, @PathVariable int userIdFrom,
+                                @PathVariable int userIdTo){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+             courseService.transferTeacherCourses(userIdFrom, userIdTo, user);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
 }
