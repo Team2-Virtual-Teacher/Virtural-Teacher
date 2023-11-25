@@ -18,6 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -35,16 +38,18 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public String store(MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
+            String uniqueFileName = generateUniqueFileName(file.getOriginalFilename());
+
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(file.getOriginalFilename()))
+                            Paths.get(uniqueFileName))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-                // This is a security check
+                // This is a security check (Spring framework comment).
                 throw new StorageException(
                         "Cannot store file outside current directory.");
             }
@@ -52,6 +57,7 @@ public class StorageServiceImpl implements StorageService {
                 Files.copy(inputStream, destinationFile,
                         StandardCopyOption.REPLACE_EXISTING);
             }
+            return extractFilePath(destinationFile);
         } catch (IOException e) {
             throw new StorageException("Failed to store file.", e);
         }
@@ -103,5 +109,22 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
+    }
+
+
+    private String extractFilePath(Path fileLocation) {
+        String filePath = fileLocation.toString();
+        int startingPoint = filePath.indexOf("resources");
+        return filePath.substring(startingPoint-1);
+    }
+
+    private String generateUniqueFileName(String originalFilename) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
+        String timestamp = dateFormat.format(new Date());
+        String randomChars = UUID.randomUUID().toString().replaceAll("-", "");
+
+        int dotIndex = originalFilename.lastIndexOf(".");
+        String fileExtension = dotIndex > 0 ? originalFilename.substring(dotIndex) : "";
+        return originalFilename.substring(0, dotIndex) + "-" + timestamp + "-" + randomChars + fileExtension;
     }
 }
