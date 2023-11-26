@@ -19,4 +19,6 @@ public interface UserService {
     void update(UserDto userDto, User user);
 
     void delete(int id, User user);
+
+    void setUserRole(User loggedInUser, User userToGetRole, String roleName);
 }

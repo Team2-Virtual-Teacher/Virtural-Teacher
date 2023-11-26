@@ -26,6 +26,7 @@ public class UserDaoImpl implements UserDao {
 
     private final CourseDao courseDao;
 
+    private static final UserMapper USER_MAPPER = new UserMapper();
 
     @Autowired
     public UserDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CourseDao courseDao) {
@@ -43,7 +44,7 @@ public class UserDaoImpl implements UserDao {
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", id);
         try {
-            User user = namedParameterJdbcTemplate.queryForObject(query, in, new UserMapper());
+            User user = namedParameterJdbcTemplate.queryForObject(query, in, USER_MAPPER);
             // TODO: 22.11.23 ask if this is the right place to do this.
             Set<Course> courseSet = new HashSet<>(courseDao.getCoursesByUser(id));
             user.setCourses(courseSet);
@@ -63,7 +64,7 @@ public class UserDaoImpl implements UserDao {
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("email", email);
         try {
-            return namedParameterJdbcTemplate.queryForObject(query, in, new UserMapper());
+            return namedParameterJdbcTemplate.queryForObject(query, in, USER_MAPPER);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new EntityNotFoundException("User", "email", email);
         }
@@ -105,7 +106,7 @@ public class UserDaoImpl implements UserDao {
         queryString.append(generateOrderBy(filterOptionsUsers));
 
 
-        return namedParameterJdbcTemplate.query(queryString.toString(),params, new UserMapper());
+        return namedParameterJdbcTemplate.query(queryString.toString(),params, USER_MAPPER);
 
     }
 

@@ -62,8 +62,8 @@ public class UserController {
     public UserDtoOut get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             authenticationHelper.tryGetUser(headers);
-            User user = userService.get(id);
-            return userMapperHelper.userToUserDtoOut(user);
+            User loggedInUser = userService.get(id);
+            return userMapperHelper.userToUserDtoOut(loggedInUser);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
@@ -73,10 +73,10 @@ public class UserController {
 
     @PostMapping()
     public UserDto create(@RequestBody @Valid UserDto userDto) {
-        User user = userMapperHelper.userDtoToUser(userDto);
+        User loggedInUser = userMapperHelper.userDtoToUser(userDto);
         try {
             String userRole = userDto.getRole();
-            userService.create(user, userRole);
+            userService.create(loggedInUser, userRole);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
@@ -88,8 +88,8 @@ public class UserController {
     @PutMapping()
     public void update(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserDto userDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
-            userService.update(userDto, user);
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            userService.update(userDto, loggedInUser);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -99,8 +99,22 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
-            userService.delete(id, user);
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            userService.delete(id, loggedInUser);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PutMapping("{id}/role/{newRole}")
+    public void setUserRole(@RequestHeader HttpHeaders headers, @PathVariable int id, @PathVariable String newRole) {
+
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            User userToGetRole = userService.get(id);
+            userService.setUserRole(loggedInUser, userToGetRole, newRole);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
