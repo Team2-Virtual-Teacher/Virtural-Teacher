@@ -2,6 +2,7 @@ package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Course;
+import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
@@ -12,11 +13,10 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.sql.DataSource;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+
+import java.util.*;
 
 @Transactional
 @Repository
@@ -31,6 +31,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         this.setDataSource(dataSource);
     }
 
+    private static final UserMapper USER_MAPPER = new UserMapper();
 
 
    /* @Autowired
@@ -49,13 +50,12 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", id);
         try {
-            User user = namedParameterJdbcTemplate.queryForObject(query,in, new UserMapper());
+            User user = namedParameterJdbcTemplate.queryForObject(query, in, USER_MAPPER);
             // TODO: 22.11.23 ask if this is the right place to do this.
-            //TODO Into Service
             Set<Course> courseSet = new HashSet<>(courseDao.getCoursesByUser(id));
             user.setCourses(courseSet);
             return user;
-        } catch (IncorrectResultSizeDataAccessException e){
+        } catch (IncorrectResultSizeDataAccessException e) {
             throw new EntityNotFoundException("User", id);
         }
     }
@@ -70,21 +70,72 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("email", email);
         try {
-            return namedParameterJdbcTemplate.queryForObject(query,in, new UserMapper());
-        } catch (IncorrectResultSizeDataAccessException e){
-            throw new EntityNotFoundException("User","email", email);
+            return namedParameterJdbcTemplate.queryForObject(query, in, USER_MAPPER);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new EntityNotFoundException("User", "email", email);
         }
     }
 
     @Override
-    public List<User> getAll() {
-        String query = "SELECT users.id as userId, email, password, first_name, last_name, " +
-                "profile_picture, role_id , role " +
-                "FROM users JOIN roles r on r.id = users.role_id";
+    public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
+        StringBuilder queryString = new StringBuilder("SELECT users.id as userId, email, password, first_name, " +
+                                                      "last_name, " +
+                                                      "profile_picture, role_id , role " +
+                                                      "FROM users JOIN roles r on r.id = users.role_id");
+        List<String> filterAttributes = new ArrayList<>();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        if (filterOptionsUsers.getEmail().isPresent() && !filterOptionsUsers.getEmail().get().isEmpty()){
+            filterAttributes.add(" email like :email ");
+            params.addValue("email", String.format("%%%s%%", filterOptionsUsers.getEmail().get()));
+        }
+
+        if (filterOptionsUsers.getFirstName().isPresent() && !filterOptionsUsers.getFirstName().get().isEmpty()){
+            filterAttributes.add(" first_name like :firstName");
+            params.addValue("firstName", String.format("%%%s%%", filterOptionsUsers.getFirstName().get()));
+        }
+
+        if (filterOptionsUsers.getLastName().isPresent() && !filterOptionsUsers.getLastName().get().isEmpty()){
+            filterAttributes.add(" last_name like :lastName");
+            params.addValue("lastName", String.format("%%%s%%", filterOptionsUsers.getLastName().get()));
+        }
+
+        if (filterOptionsUsers.getRoleType().isPresent() && !filterOptionsUsers.getRoleType().get().isEmpty()){
+            filterAttributes.add(" role like :roleType");
+            params.addValue("roleType", String.format("%%%s%%", filterOptionsUsers.getRoleType().get()));
+        }
+
+        if (!filterAttributes.isEmpty()) {
+            queryString.append(" where ").append(String.join(" and ", filterAttributes));
+        }
+
+        queryString.append(generateOrderBy(filterOptionsUsers));
 
 
-        return namedParameterJdbcTemplate.query(query, new UserMapper());
+        return namedParameterJdbcTemplate.query(queryString.toString(),params, USER_MAPPER);
 
+    }
+
+    private String generateOrderBy(FilterOptionsUsers filterOptionsUsers) {
+        if (filterOptionsUsers.getSortBy().isEmpty() || (filterOptionsUsers.getSortBy().isPresent() && filterOptionsUsers.getSortBy().get().isEmpty())) {
+            return "";
+        }
+
+        String orderBy = switch (filterOptionsUsers.getSortBy().get()) {
+            case "email" -> "email";
+            case "firstName" -> "firstName";
+            case "lastName" -> "lastName";
+            case "roleType" -> "roleType";
+            default -> "";
+        };
+
+        orderBy = String.format(" order by %s", orderBy);
+
+        if (filterOptionsUsers.getSortOrder().isPresent()
+                && filterOptionsUsers.getSortOrder().get().equalsIgnoreCase("desc")) {
+            orderBy = String.format("%s desc", orderBy);
+        }
+        return orderBy;
     }
 
     @Override
@@ -92,7 +143,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         try {
             get(email);
             return true;
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return false;
         }
     }
@@ -153,7 +204,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
     }
 
 
-    public Role getRole(String roleType){
+    public Role getRole(String roleType) {
         String query = "SELECT id as roleId, role as roleType " +
                 "FROM roles " +
                 "WHERE role like :roleType;";
@@ -162,8 +213,8 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         in.addValue("roleType", roleType);
 
         try {
-            return namedParameterJdbcTemplate.queryForObject(query,in, new BeanPropertyRowMapper<>(Role.class));
-        } catch (IncorrectResultSizeDataAccessException e){
+            return namedParameterJdbcTemplate.queryForObject(query, in, new BeanPropertyRowMapper<>(Role.class));
+        } catch (IncorrectResultSizeDataAccessException e) {
             throw new EntityNotFoundException(String.format("No role %s found.", roleType));
         }
     }

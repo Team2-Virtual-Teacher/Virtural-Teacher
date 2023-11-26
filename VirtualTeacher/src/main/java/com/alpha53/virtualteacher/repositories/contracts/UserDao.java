@@ -1,5 +1,6 @@
 package com.alpha53.virtualteacher.repositories.contracts;
 
+import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
 
@@ -11,7 +12,7 @@ public interface UserDao {
 
     User get(String email);
 
-    List<User> getAll();
+    List<User> getAll(FilterOptionsUsers filterOptionsUsers);
 
     boolean emailExists(String email);
 

@@ -1,6 +1,7 @@
 package com.alpha53.virtualteacher.utilities.mappers.dtoMappers;
 
 import com.alpha53.virtualteacher.models.Course;
+import com.alpha53.virtualteacher.models.CourseDescription;
 import com.alpha53.virtualteacher.models.dtos.CourseDto;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.TopicDao;
@@ -30,6 +31,9 @@ public class CourseDtoMapper {
         course.setTopic(topicDao.getById(dto.getTopicId()));
         course.setPublished(dto.isPublished());
         course.setPassingGrade(dto.getPassingGrade());
+        course.setDescription(dto.getDescription());
+
+
 
 
         return  course;
@@ -42,6 +46,7 @@ public class CourseDtoMapper {
         course.setTopic(topicDao.getById(dto.getTopicId()));
         course.setPublished(dto.isPublished());
         course.setPassingGrade(dto.getPassingGrade());
+        course.setDescription(dto.getDescription());
 
 
         return  course;

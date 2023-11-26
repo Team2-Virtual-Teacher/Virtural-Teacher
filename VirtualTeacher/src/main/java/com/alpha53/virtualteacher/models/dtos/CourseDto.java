@@ -1,5 +1,6 @@
 package com.alpha53.virtualteacher.models.dtos;
 
+import com.alpha53.virtualteacher.models.CourseDescription;
 import com.alpha53.virtualteacher.models.Topic;
 
 import java.sql.Date;
@@ -17,9 +18,9 @@ public class CourseDto {
     private boolean isPublished;
 
     private double passingGrade;
-    private String description;
+    private CourseDescription description;
 
-    public CourseDto(String title, int topicId, String startingDate, boolean isPublished, double passingGrade, String description) {
+    public CourseDto(String title, int topicId, String startingDate, boolean isPublished, double passingGrade, CourseDescription description) {
         this.title = title;
         this.topicId=topicId;
         this.startingDate = startingDate;
@@ -69,11 +70,11 @@ public class CourseDto {
         this.passingGrade = passingGrade;
     }
 
-    public String getDescription() {
+    public CourseDescription getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(CourseDescription description) {
         this.description = description;
     }
 }
