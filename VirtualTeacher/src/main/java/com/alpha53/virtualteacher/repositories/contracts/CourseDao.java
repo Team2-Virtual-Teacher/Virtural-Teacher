@@ -2,6 +2,7 @@ package com.alpha53.virtualteacher.repositories.contracts;
 
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 
 import java.util.List;
 
@@ -10,7 +11,9 @@ public interface CourseDao {
     Course get(int id);
     Course getByTitle(String title);
 
-    List<Course> getAll();
+    List<Course> get(FilterOptions filterOptions);
+    List<Course> getUsersEnrolledCourses(int userId);
+    void enrollUserForCourse(int userId, int courseId);
 
     List<Course> getCoursesByUser( int userId);
     void create(Course course);
@@ -20,4 +23,7 @@ public interface CourseDao {
     void delete(int id);
 
     void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId);
+
+
+    void rateCourse(RatingDto rating, int courseId, int raterId);
 }

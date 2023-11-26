@@ -10,9 +10,11 @@ public interface LectureDao {
 
     List<Lecture> getAllByCourseId(int id);
 
-    void create(Lecture lecture);
+    int create(Lecture lecture);
 
     void update(Lecture lecture);
 
-    void delete(int id);
+    int delete(int id);
+
+    Integer getCourseCreatorId(int lectureId);
 }

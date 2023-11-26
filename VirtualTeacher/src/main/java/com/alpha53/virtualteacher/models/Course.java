@@ -6,13 +6,14 @@ import java.util.Objects;
 
 
 public class Course {
-    private int courseId;
+    private Integer courseId;
     private String title;
     private Topic topic;
     private User creator;
     private LocalDate startingDate;
     private boolean isPublished;
     private double passingGrade;
+    private CourseDescription description;
 
     public Course(LocalDate startingDate) {
         this.startingDate = startingDate;
@@ -22,7 +23,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(int id, String title, Topic topic, User creator, LocalDate startingDate, boolean isPublished, double passingGrade) {
+    public Course(Integer id, String title, Topic topic, User creator, LocalDate startingDate, boolean isPublished, double passingGrade, CourseDescription description) {
         this.courseId = id;
         this.title = title;
         this.topic = topic;
@@ -30,13 +31,14 @@ public class Course {
         this.startingDate = startingDate;
         this.isPublished = isPublished;
         this.passingGrade = passingGrade;
+        this.description = description;
     }
 
-    public int getCourseId() {
+    public Integer getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Integer courseId) {
         this.courseId = courseId;
     }
 
@@ -86,6 +88,14 @@ public class Course {
 
     public void setPassingGrade(double passingGrade) {
         this.passingGrade = passingGrade;
+    }
+
+    public CourseDescription getDescription() {
+        return description;
+    }
+
+    public void setDescription(CourseDescription description) {
+        this.description = description;
     }
 
     @Override

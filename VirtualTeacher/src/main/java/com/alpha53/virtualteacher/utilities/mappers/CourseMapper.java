@@ -17,14 +17,6 @@ import java.time.LocalDate;
 @Component
 public class CourseMapper implements RowMapper<Course> {
 
-    private final TopicDao topicDao;
-    private final CourseDao courseDao;
-
-    @Autowired
-    public CourseMapper(TopicDao topicDao, CourseDao courseDao) {
-        this.topicDao = topicDao;
-        this.courseDao = courseDao;
-    }
 
     @Override
     public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -49,29 +41,8 @@ public class CourseMapper implements RowMapper<Course> {
         return course;
     }
 
-    public Course fromDto(CourseDto dto){
-        Course course = new Course();
-        course.setTitle(dto.getTitle());
-        course.setStartingDate(LocalDate.parse(dto.getStartingDate()));
-        course.setPassingGrade(dto.getPassingGrade());
-        course.setTopic(topicDao.getById(dto.getTopicId()));
-        course.setPublished(dto.isPublished());
-        course.setPassingGrade(dto.getPassingGrade());
 
 
-        return  course;
-    }
-    public Course fromDto(int id, CourseDto dto){
-        Course course = courseDao.get(id);
-        course.setTitle(dto.getTitle());
-        course.setStartingDate(LocalDate.parse(dto.getStartingDate()));
-        course.setPassingGrade(dto.getPassingGrade());
-        course.setTopic(topicDao.getById(dto.getTopicId()));
-        course.setPublished(dto.isPublished());
-        course.setPassingGrade(dto.getPassingGrade());
 
-
-        return  course;
-    }
 }
 
