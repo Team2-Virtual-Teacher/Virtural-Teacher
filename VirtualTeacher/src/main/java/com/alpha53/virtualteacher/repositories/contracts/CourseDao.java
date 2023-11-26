@@ -24,8 +24,6 @@ public interface CourseDao {
 
     void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId);
 
-    void addDescription(int courseId, String description);
-    void removeDescription(int courseId);
-    CourseDescription getCourseDescription(int courseId);
+
     void rateCourse(RatingDto rating, int courseId, int raterId);
 }

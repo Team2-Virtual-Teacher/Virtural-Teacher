@@ -190,15 +190,18 @@ public class CourseDaoImpl implements CourseDao {
         in.addValue("creator_id", course.getCreator().getUserId());
         in.addValue("is_published", course.isPublished());
         in.addValue("passing_grade", course.getPassingGrade());
+        int executeResult = namedParameterJdbcTemplate.update(sql, in);
 
-        namedParameterJdbcTemplate.update(sql, in);
+        if (course.getDescription() != null) {
+            addDescription(course, in);
+        }
     }
 
 
     @Override
     public void update(Course course) {
 
-        String sql = "UPDATE courses SET title= :title, topic_id= :topic_id, start_date= :start_date,creator_id= :creator_id, is_published= :is_published, passing_grade= :is_published where courses.id= :id";
+        String sql = "UPDATE courses SET title= :title, topic_id= :topic_id, start_date= :start_date,creator_id= :creator_id, is_published= :is_published, passing_grade= :is_published where courses.id= :course_id";
 
          MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("title", course.getTitle());
@@ -207,16 +210,35 @@ public class CourseDaoImpl implements CourseDao {
         in.addValue("creator_id", course.getCreator().getUserId());
         in.addValue("is_published", course.isPublished());
         in.addValue("passing_grade", course.getPassingGrade());
-        in.addValue("id", course.getCourseId());
-        namedParameterJdbcTemplate.update(sql, in);
+        in.addValue("course_id", course.getCourseId());
+        if (namedParameterJdbcTemplate.update(sql, in) == 0) {
+            throw new EntityNotFoundException("Lecture", "id", course.getCourseId().toString());
+        }
+
+        if (isDescriptionExist(course.getCourseId())) {
+            if (course.getDescription() == null) {
+                deleteDescription(in);
+            } else {
+                in.addValue("description", course.getDescription().getDescription());
+                updateDescription(in);
+            }
+        } else if (course.getDescription() != null) {
+            addDescription(course, in);
+        }
     }
 
     @Override
-    public void delete(int id) {
-        String sql = "DELETE FROM courses where id= :id";
+    public void delete(int courseId) {
+        String sql = "DELETE FROM courses where id= :course_id";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("id", id);
+
+
+        in.addValue("course_id", courseId);
+
+        if (isDescriptionExist(courseId)) {
+            deleteDescription(in);
+        }
         namedParameterJdbcTemplate.update(sql, in);
     }
 
@@ -231,37 +253,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
 
-    @Override
-    public void addDescription(int courseId, String description) {
-        String sql = "INSERT INTO course_description (course_id, description)" +
-                "VALUES (:course_id,:description)         ";
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("course_id", courseId);
-        in.addValue("description", description);
 
-
-        namedParameterJdbcTemplate.update(sql, in);
-    }
-    @Override
-    public void removeDescription(int courseId) {
-        String sql = "DELETE FROM course_description WHERE course_id= :course_id";
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("course_id", courseId);
-
-
-        namedParameterJdbcTemplate.update(sql, in);
-    }
-
-    @Override
-    public CourseDescription getCourseDescription(int courseId) {
-        String sql = "SELECT  * FROM course_description WHERE course_id= :course_id";
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("course_id", courseId);
-
-
-        return namedParameterJdbcTemplate.queryForObject(sql, in, courseDescriptionMapper);
-
-    }
 
     @Override
     public void rateCourse(RatingDto rating, int courseId, int raterId) {
@@ -311,4 +303,42 @@ public class CourseDaoImpl implements CourseDao {
         return courseDescription;
     }
 
+
+    private boolean isDescriptionExist(int courseId) {
+
+        String sql =
+                "SELECT COUNT(*) FROM course_description WHERE course_id = :course_id";
+
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("course_id", courseId);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class) > 0;
+    }
+
+
+    private void addDescription(Course course, MapSqlParameterSource param) {
+
+        if (course.getCourseId() == null) {
+            String courseIdSql = "SELECT id FROM courses WHERE title =:title";
+            course.setCourseId(namedParameterJdbcTemplate.queryForObject(courseIdSql, param, Integer.class));
+        }
+
+        String descriptionSql = "INSERT INTO course_description (course_id,description) VALUES (:course_id,:description) ";
+
+        param.addValue("course_id", course.getCourseId());
+        param.addValue("description", course.getDescription().getDescription());
+        namedParameterJdbcTemplate.update(descriptionSql, param);
+    }
+
+
+    private void deleteDescription(MapSqlParameterSource params) {
+        String sql = "DELETE FROM course_description WHERE course_id =:course_id";
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+
+    private void updateDescription(MapSqlParameterSource params) {
+        String sql = "UPDATE course_description SET description =:description WHERE course_id =:course_id";
+        namedParameterJdbcTemplate.update(sql, params);
+    }
 }
