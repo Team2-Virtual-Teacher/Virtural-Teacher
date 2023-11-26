@@ -1,20 +1,24 @@
 package com.alpha53.virtualteacher.models;
 
 public class CourseDescription {
-    private Course course;
+    private int courseId;
     private String description;
 
-    public CourseDescription(Course course, String description) {
-        this.course = course;
+    public CourseDescription(int courseId, String description) {
+        this.courseId = courseId;
         this.description = description;
     }
 
-    public Course getCourse() {
-        return course;
+    public CourseDescription() {
+
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public String getDescription() {

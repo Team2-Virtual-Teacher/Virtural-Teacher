@@ -17,13 +17,15 @@ public class CourseDto {
     private boolean isPublished;
 
     private double passingGrade;
+    private String description;
 
-    public CourseDto(String title, int topicId, String startingDate, boolean isPublished, double passingGrade) {
+    public CourseDto(String title, int topicId, String startingDate, boolean isPublished, double passingGrade, String description) {
         this.title = title;
         this.topicId=topicId;
         this.startingDate = startingDate;
         this.isPublished = isPublished;
         this.passingGrade = passingGrade;
+        this.description = description;
     }
 
     public String getTitle() {
@@ -65,5 +67,13 @@ public class CourseDto {
 
     public void setPassingGrade(double passingGrade) {
         this.passingGrade = passingGrade;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
