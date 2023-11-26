@@ -106,9 +106,10 @@ public class LectureServiceImpl implements LectureService {
     //TODO Reformat error message
     // May be we should remove assignment files to this lecture into history directory and remove from main directory
     @Override
-    public void delete(int lectureId, User user) {
-        if (lectureDao.getCourseCreatorId(lectureId) == user.getUserId()
-                || user.getRole().getRoleType().equalsIgnoreCase("admin")) {
+    public void delete(int courseId,int lectureId, User user) {
+        Course course = courseDao.get(courseId);
+        if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
+                course.getCreator().getUserId() == user.getUserId()) {
 
             if (lectureDao.delete(lectureId) == 0) {
                 throw new EntityNotFoundException("Lecture", "id", String.valueOf(lectureId));

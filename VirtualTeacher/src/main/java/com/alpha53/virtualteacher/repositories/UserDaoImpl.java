@@ -7,34 +7,37 @@ import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.UserDao;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Transactional
 @Repository
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     private final CourseDao courseDao;
 
+    public UserDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CourseDao courseDao, DataSource dataSource) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.courseDao = courseDao;
+        this.setDataSource(dataSource);
+    }
 
-    @Autowired
+
+
+   /* @Autowired
     public UserDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CourseDao courseDao) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.courseDao = courseDao;
-    }
+    }*/
 
     @Override
     public User get(int id) {
@@ -48,6 +51,7 @@ public class UserDaoImpl implements UserDao {
         try {
             User user = namedParameterJdbcTemplate.queryForObject(query,in, new UserMapper());
             // TODO: 22.11.23 ask if this is the right place to do this.
+            //TODO Into Service
             Set<Course> courseSet = new HashSet<>(courseDao.getCoursesByUser(id));
             user.setCourses(courseSet);
             return user;

@@ -7,19 +7,21 @@ import com.alpha53.virtualteacher.utilities.LectureMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
 @Transactional
-public class LectureDaoImpl implements LectureDao {
+public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements LectureDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
-    public LectureDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public LectureDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource) {
+        this.setDataSource(dataSource);
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
@@ -31,7 +33,7 @@ public class LectureDaoImpl implements LectureDao {
      * @Throws EntityNotFoundException if lecture does not exist
      */
     @Override
-    public Lecture get(int id) {
+    public Lecture get(final int id) {
 
         String sql = "SELECT * FROM lectures  WHERE id = :id";
 
@@ -224,5 +226,6 @@ public class LectureDaoImpl implements LectureDao {
         String sql = "UPDATE lecture_description SET description =:description WHERE lecture_id =:lectureId";
         namedParameterJdbcTemplate.update(sql, params);
     }
+
 
 }

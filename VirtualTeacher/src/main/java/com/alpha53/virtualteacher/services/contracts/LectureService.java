@@ -11,5 +11,5 @@ public interface LectureService {
     List<Lecture> getAllByCourseId(int courseId, User user);
     void create(Lecture lecture,User user);
     void update(Lecture lecture,User user);
-    void delete(int id,User user);
+    void delete(int courseId,int lectureId,User user);
 }

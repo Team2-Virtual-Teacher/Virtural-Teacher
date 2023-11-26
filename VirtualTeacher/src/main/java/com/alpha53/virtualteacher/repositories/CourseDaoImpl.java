@@ -5,34 +5,43 @@ import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.utilities.mappers.CourseDescriptionMapper;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
-public class CourseDaoImpl implements CourseDao {
+public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements CourseDao {
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+   // private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final CourseMapper courseMapper;
+
+   /* //TODO
+    private static final CourseMapper COURSE_MAPPER = new CourseMapper();*/
     private final CourseDescriptionMapper courseDescriptionMapper;
 
-    @Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public CourseDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource, CourseMapper courseMapper, CourseDescriptionMapper courseDescriptionMapper) {
+        this.courseMapper = courseMapper;
+        this.courseDescriptionMapper = courseDescriptionMapper;
+        this.setDataSource(dataSource);
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    /*//TODO remove Autowired annotations in Component classes
     public CourseDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, @Lazy CourseMapper courseMapper, CourseDescriptionMapper courseDescriptionMapper) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 
        this.courseMapper = courseMapper;
         this.courseDescriptionMapper = courseDescriptionMapper;
-    }
+    }*/
 
     @Override
     public Course get(int id) {
@@ -131,7 +140,8 @@ public class CourseDaoImpl implements CourseDao {
         try {
             return namedParameterJdbcTemplate.query(sql, in, courseMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new EntityNotFoundException();
+           // throw new EntityNotFoundException();
+            return Collections.emptyList();
         }
     }
 
