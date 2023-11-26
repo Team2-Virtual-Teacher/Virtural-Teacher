@@ -1,7 +1,6 @@
 package com.alpha53.virtualteacher.utilities.mappers;
 
 import com.alpha53.virtualteacher.models.Role;
-import com.alpha53.virtualteacher.models.Topic;
 import com.alpha53.virtualteacher.models.User;
 import org.springframework.jdbc.core.RowMapper;
 

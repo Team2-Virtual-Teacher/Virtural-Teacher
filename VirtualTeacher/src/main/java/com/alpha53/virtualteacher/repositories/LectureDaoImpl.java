@@ -4,7 +4,6 @@ import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Lecture;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.utilities.LectureMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;

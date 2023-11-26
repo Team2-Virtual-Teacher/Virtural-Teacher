@@ -3,16 +3,11 @@ package com.alpha53.virtualteacher.utilities.mappers;
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.Topic;
 import com.alpha53.virtualteacher.models.User;
-import com.alpha53.virtualteacher.models.dtos.CourseDto;
-import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
-import com.alpha53.virtualteacher.repositories.contracts.TopicDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 @Component
 public class CourseMapper implements RowMapper<Course> {

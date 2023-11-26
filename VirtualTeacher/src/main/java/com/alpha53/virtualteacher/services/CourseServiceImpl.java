@@ -3,7 +3,10 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.*;
+import com.alpha53.virtualteacher.models.Course;
+import com.alpha53.virtualteacher.models.FilterOptions;
+import com.alpha53.virtualteacher.models.RatingDto;
+import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.services.contracts.UserService;
@@ -11,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {

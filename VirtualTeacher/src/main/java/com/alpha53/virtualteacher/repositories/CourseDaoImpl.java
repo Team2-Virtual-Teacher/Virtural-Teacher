@@ -1,7 +1,10 @@
 package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.*;
+import com.alpha53.virtualteacher.models.Course;
+import com.alpha53.virtualteacher.models.CourseDescription;
+import com.alpha53.virtualteacher.models.FilterOptions;
+import com.alpha53.virtualteacher.models.RatingDto;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.utilities.mappers.CourseDescriptionMapper;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;

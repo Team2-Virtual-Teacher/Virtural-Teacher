@@ -1,9 +1,9 @@
 package com.alpha53.virtualteacher.services.contracts;
 
-import com.alpha53.virtualteacher.exceptions.AuthorizationException;
-import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
-import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.*;
+import com.alpha53.virtualteacher.models.Course;
+import com.alpha53.virtualteacher.models.FilterOptions;
+import com.alpha53.virtualteacher.models.RatingDto;
+import com.alpha53.virtualteacher.models.User;
 
 import java.util.List;
 

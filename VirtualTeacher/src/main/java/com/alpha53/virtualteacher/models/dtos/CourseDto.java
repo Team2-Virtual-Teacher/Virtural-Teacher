@@ -1,10 +1,6 @@
 package com.alpha53.virtualteacher.models.dtos;
 
 import com.alpha53.virtualteacher.models.CourseDescription;
-import com.alpha53.virtualteacher.models.Topic;
-
-import java.sql.Date;
-import java.time.LocalDate;
 
 public class CourseDto {
 

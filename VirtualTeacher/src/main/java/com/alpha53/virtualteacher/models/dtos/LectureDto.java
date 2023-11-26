@@ -1,7 +1,9 @@
 package com.alpha53.virtualteacher.models.dtos;
 
 import com.alpha53.virtualteacher.models.LectureDescription;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

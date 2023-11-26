@@ -1,7 +1,6 @@
 package com.alpha53.virtualteacher.utilities.mappers.dtoMappers;
 
 import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.CourseDescription;
 import com.alpha53.virtualteacher.models.dtos.CourseDto;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.TopicDao;
