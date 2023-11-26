@@ -7,6 +7,7 @@ import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.models.dtos.CourseDto;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
+import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.CourseDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -140,7 +141,7 @@ public class CourseController {
         }
     }
 
-    @PutMapping("/transfer/{userIdFrom}/{userIdTo}")
+    @PutMapping("/transfer/from/{userIdFrom}/to/{userIdTo}")
     public void transferCourses(@RequestHeader HttpHeaders headers, @PathVariable int userIdFrom,
                                 @PathVariable int userIdTo){
         try {
@@ -148,6 +149,10 @@ public class CourseController {
              courseService.transferTeacherCourses(userIdFrom, userIdTo, user);
         } catch (AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        } catch (UnsupportedOperationException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 }

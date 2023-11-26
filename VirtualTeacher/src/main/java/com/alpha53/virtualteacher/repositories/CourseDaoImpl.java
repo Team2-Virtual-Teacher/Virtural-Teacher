@@ -21,7 +21,6 @@ import java.util.Map;
 
 @Repository
 public class CourseDaoImpl implements CourseDao {
-
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final CourseMapper courseMapper;
     private final CourseDescriptionMapper courseDescriptionMapper;
@@ -38,7 +37,7 @@ public class CourseDaoImpl implements CourseDao {
     public Course get(int id) {
 
         String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade,topic,topic_id " +
-                     "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id WHERE courses.id=:id      ";
 
 
@@ -116,6 +115,8 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     //TODO refactor keywords in the query with capital letter pattern to follow consistency of the code
+    // TODO: 26.11.23 we should consider combining this method with getCoursesByUser. Removing the throw statement here
+    //  and adding a .isEmpty check in the service will most likely do the job. Discuss with team.
     @Override
     public List<Course> getUsersEnrolledCourses(int userId) {
         String sql = "select  courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade, topic, topic_id from course_user "+
@@ -163,13 +164,14 @@ public class CourseDaoImpl implements CourseDao {
 //
 //    }
     @Override
-    public List<Course> getCoursesByUser( int userId){
+    public List<Course> getCoursesByUser(int userId) {
         String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, profile_picture," +
                 " is_published, passing_grade, topic, topic_id " +
-                "FROM courses " +
+                "FROM course_user " +
+                "LEFT JOIN courses ON course_user.course_id = courses.id " +
                 "LEFT JOIN topics ON courses.topic_id = topics.id " +
                 "LEFT JOIN users ON courses.creator_id = users.id " +
-                "WHERE creator_id = :id;";
+                "WHERE user_id = :id;";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", userId);
@@ -182,7 +184,7 @@ public class CourseDaoImpl implements CourseDao {
     public void create(Course course) {
 
         String sql = "INSERT INTO courses (title, topic_id, start_date,creator_id,is_published,passing_grade)" +
-                     "VALUES (:title,:topic_id,:start_date,:creator_id,:is_published,:passing_grade)         ";
+                "VALUES (:title,:topic_id,:start_date,:creator_id,:is_published,:passing_grade)         ";
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("title", course.getTitle());
         in.addValue("topic_id", course.getTopic().getTopicId());
@@ -203,7 +205,7 @@ public class CourseDaoImpl implements CourseDao {
 
         String sql = "UPDATE courses SET title= :title, topic_id= :topic_id, start_date= :start_date,creator_id= :creator_id, is_published= :is_published, passing_grade= :is_published where courses.id= :course_id";
 
-         MapSqlParameterSource in = new MapSqlParameterSource();
+        MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("title", course.getTitle());
         in.addValue("topic_id", course.getTopic().getTopicId());
         in.addValue("start_date", course.getStartingDate());
@@ -243,13 +245,13 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId){
+    public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId) {
         String sql = "UPDATE courses SET creator_id = :idNewTeacher WHERE creator_id = :idPreviousTeacher;";
 
-        MapSqlParameterSource in =  new MapSqlParameterSource();
+        MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("idPreviousTeacher", teacherToTransferFromId);
         in.addValue("idNewTeacher", teacherToTransferToId);
-        namedParameterJdbcTemplate.update(sql,in);
+        namedParameterJdbcTemplate.update(sql, in);
     }
 
 

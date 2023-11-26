@@ -1,5 +1,6 @@
 package com.alpha53.virtualteacher.services.contracts;
 
+import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 
@@ -11,7 +12,7 @@ public interface UserService {
 
     User get(String email);
 
-    List<User> getAll();
+    List<User> getAll(FilterOptionsUsers filterOptionsUsers);
 
     void create(User user, String userRole);
 

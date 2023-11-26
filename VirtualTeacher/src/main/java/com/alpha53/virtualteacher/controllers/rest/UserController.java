@@ -3,6 +3,8 @@ package com.alpha53.virtualteacher.controllers.rest;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.models.FilterOptionsUsers;
+import com.alpha53.virtualteacher.models.dtos.UserDtoOut;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.models.User;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/users")
@@ -34,20 +37,33 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll(@RequestHeader HttpHeaders headers) {
+    public List<UserDtoOut> getAll(@RequestHeader HttpHeaders headers,
+                                   @RequestParam(required = false) String email,
+                                   @RequestParam(required = false) String firstName,
+                                   @RequestParam(required = false) String lastName,
+                                   @RequestParam(required = false) String roleType,
+                                   @RequestParam(required = false) String sortBy,
+                                   @RequestParam(required = false) String sortOrder) {
+        FilterOptionsUsers filterOptionsUsers = new FilterOptionsUsers(email, firstName, lastName, roleType, sortBy, sortOrder);
         try {
             authenticationHelper.tryGetUser(headers);
-            return userService.getAll();
+            return userService.getAll(filterOptionsUsers)
+                    .stream()
+                    .map(userMapperHelper::userToUserDtoOut)
+                    .collect(Collectors.toList());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public User get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public UserDtoOut get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             authenticationHelper.tryGetUser(headers);
-            return userService.get(id);
+            User user = userService.get(id);
+            return userMapperHelper.userToUserDtoOut(user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
@@ -63,7 +79,7 @@ public class UserController {
             userService.create(user, userRole);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         return userDto;

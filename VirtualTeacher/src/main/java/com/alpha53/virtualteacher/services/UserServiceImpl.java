@@ -3,9 +3,11 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
+import com.alpha53.virtualteacher.models.dtos.UserDtoOut;
 import com.alpha53.virtualteacher.repositories.contracts.UserDao;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +42,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.getAll();
+    public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
+        if (filterOptionsUsers.getRoleType().isPresent()){
+            userRepository.getRole(filterOptionsUsers.getRoleType().get());
+        }
+        return userRepository.getAll(filterOptionsUsers);
     }
 
     @Override

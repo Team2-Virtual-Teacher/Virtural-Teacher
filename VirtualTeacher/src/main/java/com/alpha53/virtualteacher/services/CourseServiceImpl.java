@@ -6,6 +6,7 @@ import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
+import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,15 @@ public class CourseServiceImpl implements CourseService {
     private static final String ONLY_CREATOR_CAN_MODIFY_A_COURSE = "Only  creator or admin can modify a course.";
     private static final String ONLY_TEACHER_OR_ADMIN_CAN_CREATE_COURSE = "Only teacher or admin can create course.";
     public static final String COURSE_TRANSFER_EXCEPTION = "Courses can only be transferred by an Admin.";
+    public static final String ASSIGN_COURSE_TO_USER_EXCEPTION = "Courses can only be assigned to teachers.";
+    public static final String INVALID_CURRENT_TEACHER_EXCEPTION = "User with ID %d is not a Teacher.";
     private final CourseDao courseRepository;
+    private final UserService userService;
 
     @Autowired
-    public CourseServiceImpl(CourseDao courseRepository) {
+    public CourseServiceImpl(CourseDao courseRepository, UserService userService) {
         this.courseRepository = courseRepository;
+        this.userService = userService;
     }
 
     public void create(Course course, User user) {
@@ -87,6 +92,15 @@ public class CourseServiceImpl implements CourseService {
     public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser){
         if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin")){
             throw new AuthorizationException(COURSE_TRANSFER_EXCEPTION);
+        }
+        User previousTeacher = userService.get(teacherToTransferFromId);
+        if (!previousTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")){
+            throw new UnsupportedOperationException(String.format(INVALID_CURRENT_TEACHER_EXCEPTION,previousTeacher.getUserId()));
+        }
+        User newTeacher = userService.get(teacherToTransferToId);
+        // TODO: 25.11.23 correct this later if we we decide to also transfer to Admins.
+        if (!newTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")){
+            throw new UnsupportedOperationException(ASSIGN_COURSE_TO_USER_EXCEPTION);
         }
         if (teacherToTransferToId == teacherToTransferFromId){
             return;
