@@ -48,7 +48,7 @@ public class CourseDaoImpl implements CourseDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(sql, in, courseMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Course","id",String.valueOf(id));
         }
 
     }
@@ -115,6 +115,7 @@ public class CourseDaoImpl implements CourseDao {
 
     }
 
+    //TODO refactor keywords in the query with capital letter pattern to follow consistency of the code
     @Override
     public List<Course> getUsersEnrolledCourses(int userId) {
         String sql = "select  courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade, topic, topic_id from course_user "+

@@ -84,7 +84,6 @@ public class CourseController {
     @PostMapping()
     public void create(@RequestHeader HttpHeaders headers,  @RequestBody CourseDto courseDto){
 
-
         try {
             Course course = courseMapper.fromDto(courseDto);
             User user = authenticationHelper.tryGetUser(headers);

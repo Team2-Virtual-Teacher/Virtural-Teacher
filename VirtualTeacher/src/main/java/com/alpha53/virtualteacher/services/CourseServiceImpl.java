@@ -93,6 +93,7 @@ public class CourseServiceImpl implements CourseService {
         }
         courseRepository.transferTeacherCourses(teacherToTransferFromId,teacherToTransferToId);
     }
+    //TODO Check logic
     @Override
     public void enrollUserForCourse(User user, int courseId) {
      List<Course> enrolledCourses = courseRepository.getUsersEnrolledCourses(user.getUserId());
