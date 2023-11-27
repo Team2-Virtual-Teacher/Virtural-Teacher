@@ -37,6 +37,7 @@ public class CourseController {
 
     @GetMapping
     public List<Course> get(
+            @RequestHeader(required = false) HttpHeaders headers,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String topic,
             @RequestParam(required = false) String teacher,

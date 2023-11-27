@@ -32,6 +32,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public void create(Course course, User user) {
+        //TODO fix description dto
         boolean duplicateExists = true;
         try {
             courseRepository.getByTitle(course.getTitle());
@@ -52,6 +53,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public void update(Course course, User user) {
+        //TODO fix description dto
         boolean duplicateExists = true;
         try {
             Course existingCourse = courseRepository.getByTitle(course.getTitle());
@@ -70,9 +72,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public void delete(int id, User user) {
+        Course course = courseRepository.get(id);
+        if (course.isPublished()==false || courseRepository.getStudentsWhichAreEnrolledForCourse(id).isEmpty()){
+            checkModifyPermissions(id, user);
+            courseRepository.delete(id);
+        } else {
+            throw new AuthorizationException("You can delete course only if there are no enrolled studens or the course is not public");
+        }
 
-        checkModifyPermissions(id, user);
-        courseRepository.delete(id);
     }
 
     public Course getCourseById(int id) {
@@ -83,7 +90,7 @@ public class CourseServiceImpl implements CourseService {
     public List<Course> get(FilterOptions filterOptions) {
 
 
-        return courseRepository.get(filterOptions);
+        return courseRepository.getPublicCourses(filterOptions);
     }
 
     @Override
@@ -109,16 +116,19 @@ public class CourseServiceImpl implements CourseService {
         }
         courseRepository.transferTeacherCourses(teacherToTransferFromId,teacherToTransferToId);
     }
-    //TODO Check logic
     @Override
     public void enrollUserForCourse(User user, int courseId) {
      List<Course> enrolledCourses = courseRepository.getUsersEnrolledCourses(user.getUserId());
+     Course course = courseRepository.get(courseId);
      if (containsId(enrolledCourses, courseId)){
          throw new EntityDuplicateException("Record", "id", Integer.toString(courseId));
 
-     } else {
-         courseRepository.enrollUserForCourse(user.getUserId(), courseId);
-     }
+     } else  if(course.getCreator().getUserId()==user.getUserId()) {
+         throw new AuthorizationException("You cannot enroll for course if you are creator");
+     } else{
+             courseRepository.enrollUserForCourse(user.getUserId(), courseId);
+         }
+
     }
 
     @Override
@@ -138,11 +148,7 @@ public class CourseServiceImpl implements CourseService {
 
 
     }
-//    create
-//    update
-//    delete
-//    get(id)
-//    getAll
+
 
 
 }

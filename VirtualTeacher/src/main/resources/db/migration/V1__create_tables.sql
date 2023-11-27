@@ -55,6 +55,7 @@ create table course_description
         unique (course_id),
     constraint course_description_course_description_fk
         foreign key (course_id) references courses (id)
+            ON DELETE CASCADE
 );
 
 create table course_user
@@ -78,6 +79,7 @@ create table lectures
     course_id       int          not null,
     constraint lectures_courses_id_fk
         foreign key (course_id) references courses (id)
+            ON DELETE CASCADE
 );
 
 create table assignments
@@ -111,6 +113,7 @@ create table lecture_description
         unique (lecture_id),
     constraint lecture_description_lectures_fk
         foreign key (lecture_id) references lectures (id)
+            ON DELETE CASCADE
 );
 
 create table ratings
@@ -126,3 +129,4 @@ create table ratings
     constraint ratings_users_id_fk
         foreign key (user_id) references users (id)
 );
+

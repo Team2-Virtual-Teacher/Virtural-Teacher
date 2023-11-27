@@ -1,13 +1,11 @@
 package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.CourseDescription;
-import com.alpha53.virtualteacher.models.FilterOptions;
-import com.alpha53.virtualteacher.models.RatingDto;
+import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.utilities.mappers.CourseDescriptionMapper;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
+import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -30,6 +28,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     private final CourseDescriptionMapper courseDescriptionMapper;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final UserMapper userMapper = new UserMapper();
 
     public CourseDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource, CourseMapper courseMapper, CourseDescriptionMapper courseDescriptionMapper) {
         this.courseMapper = courseMapper;
@@ -127,16 +126,62 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     }
 
+    @Override
+    public List<Course> getPublicCourses(FilterOptions filterOptions) {
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade,topic,topic_id " +
+                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+                "  LEFT JOIN users ON courses.creator_id = users.id ";
+
+
+
+
+        List<String> filters = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        MapSqlParameterSource in = new MapSqlParameterSource();
+
+        filterOptions.getTitle().ifPresent(value -> {
+            filters.add("title like :title");
+            params.put("title", String.format("%%%s%%", value));
+            in.addValue("title", String.format("%%%s%%", value));
+        });
+        filterOptions.getTopic().ifPresent(value -> {
+            filters.add("topic like :topic");
+            params.put("topic", String.format("%%%s%%", value));
+            in.addValue("topic", String.format("%%%s%%", value));
+        });
+        filterOptions.getTeacher().ifPresent(value -> {
+            filters.add("email like :teacher");
+            params.put("teacher", String.format("%%%s%%", value));
+            in.addValue("teacher", String.format("%%%s%%", value));
+
+        });
+        filters.add("is_published = 1");
+        //TODO Rating
+
+
+        if (!filters.isEmpty()) {
+            sql+=" where ";
+            sql+= String.join(" and ", filters);
+        }
+        sql+=generateOrderBy(filterOptions);
+        try {
+            return namedParameterJdbcTemplate.query(sql, in, courseMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new EntityNotFoundException();
+        }
+
+    }
+
     //TODO refactor keywords in the query with capital letter pattern to follow consistency of the code
     // TODO: 26.11.23 we should consider combining this method with getCoursesByUser. Removing the throw statement here
     //  and adding a .isEmpty check in the service will most likely do the job. Discuss with team.
     @Override
     public List<Course> getUsersEnrolledCourses(int userId) {
-        String sql = "select  courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade, topic, topic_id from course_user "+
-                "left join courses on course_user.course_id = courses.id "+
-                "left join users on course_user.user_id = users.id "+
-                "left join topics on courses.topic_id=topics.id "+
-                "where user_id = :id";
+        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade, topic, topic_id FROM course_user "+
+                "LEFT JOIN courses ON course_user.course_id = courses.id "+
+                "LEFT JOIN users ON course_user.user_id = users.id "+
+                "LEFT JOIN topics ON courses.topic_id=topics.id "+
+                "WHERE user_id = :id";
 
 
         MapSqlParameterSource in = new MapSqlParameterSource();
@@ -146,6 +191,26 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
             return namedParameterJdbcTemplate.query(sql, in, courseMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
            // throw new EntityNotFoundException();
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public List<User> getStudentsWhichAreEnrolledForCourse(int courseId) {
+        String sql = "SELECT users.id AS userId, email, password, first_name, last_name, profile_picture, role_id, role " +
+                "FROM course_user " +
+                "LEFT JOIN users ON course_user.user_id = users.id " +
+                "LEFT JOIN roles r ON r.id = users.role_id " +
+                "WHERE course_id=:id";
+
+
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("id", courseId);
+
+        try {
+            return namedParameterJdbcTemplate.query(sql, in, userMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            // throw new EntityNotFoundException();
             return Collections.emptyList();
         }
     }
@@ -252,9 +317,9 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
         in.addValue("course_id", courseId);
 
-        if (isDescriptionExist(courseId)) {
-            deleteDescription(in);
-        }
+//        if (isDescriptionExist(courseId)) {
+//            deleteDescription(in);
+//        }
         namedParameterJdbcTemplate.update(sql, in);
     }
 
