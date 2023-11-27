@@ -89,7 +89,6 @@ public class CourseServiceImpl implements CourseService {
 
     public List<Course> get(FilterOptions filterOptions) {
 
-
         return courseRepository.getPublicCourses(filterOptions);
     }
 

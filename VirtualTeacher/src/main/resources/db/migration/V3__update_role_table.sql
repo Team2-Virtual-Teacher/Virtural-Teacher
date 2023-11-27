@@ -1,1 +1,0 @@
-UPDATE roles SET role = 'PendingTeacher' WHERE id = 4;

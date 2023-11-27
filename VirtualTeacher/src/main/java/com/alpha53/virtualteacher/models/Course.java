@@ -1,8 +1,12 @@
 package com.alpha53.virtualteacher.models;
 
 
+import lombok.Getter;
+
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 public class Course {
@@ -14,6 +18,13 @@ public class Course {
     private boolean isPublished;
     private double passingGrade;
     private CourseDescription description;
+
+    @Getter
+    private Set<Lecture> lectures = new HashSet<>();
+
+    public void setLectures(Set<Lecture> lectures) {
+        this.lectures = lectures;
+    }
 
     public Course(LocalDate startingDate) {
         this.startingDate = startingDate;
@@ -103,7 +114,7 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return courseId == course.courseId && Objects.equals(title, course.title) && Objects.equals(topic, course.topic);
+        return Objects.equals(courseId, course.courseId) && Objects.equals(title, course.title) && Objects.equals(topic, course.topic);
     }
 
     @Override

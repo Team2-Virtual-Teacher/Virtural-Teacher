@@ -24,7 +24,7 @@ create table users
     first_name      varchar(50)  not null,
     last_name       varchar(50)  not null,
     role_id         int          not null,
-    profile_picture varchar(100) not null,
+    picture_url varchar(100) not null,
     constraint users_pk
         unique (email),
     constraint users_roles_fk
@@ -75,23 +75,23 @@ create table lectures
         primary key,
     title           varchar(50)  not null,
     video_url       varchar(100) not null,
-    assignment_task varchar(100) null,
+    assignment_url varchar(100) null,
     course_id       int          not null,
     constraint lectures_courses_id_fk
         foreign key (course_id) references courses (id)
             ON DELETE CASCADE
 );
 
-create table assignments
+create table solutions
 (
-    assignment_solution varchar(100) not null,
+    solution_url varchar(100) not null,
     user_id             int          not null,
     lecture_id          int          not null,
-    id                  int          not null
+    id                  int          auto_increment
         primary key,
-    constraint assignments_lectures_id_fk
+    constraint solutions_lectures_id_fk
         foreign key (lecture_id) references lectures (id),
-    constraint assignments_users_id_fk
+    constraint solutions_users_id_fk
         foreign key (user_id) references users (id)
 );
 
@@ -100,9 +100,9 @@ create table grades
     id            int auto_increment
         primary key,
     grade         decimal not null,
-    assignment_id int     not null,
-    constraint grades_assignments_id_fk
-        foreign key (assignment_id) references assignments (id)
+    solution_id int     not null,
+    constraint grades_solutions_id_fk
+        foreign key (solution_id) references solutions (id)
 );
 
 create table lecture_description
@@ -122,7 +122,7 @@ create table ratings
     comment   varchar(300) not null,
     user_id   int          not null,
     course_id int          not null,
-    id        int          not null
+    id        int          auto_increment
         primary key,
     constraint ratings_courses_id_fk
         foreign key (course_id) references courses (id),

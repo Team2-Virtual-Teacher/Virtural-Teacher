@@ -6,6 +6,7 @@ import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.utilities.mappers.CourseDescriptionMapper;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
+import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -59,7 +60,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         try {
             return namedParameterJdbcTemplate.queryForObject(sql, in, courseMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new EntityNotFoundException("Course","id",String.valueOf(id));
+            throw new EntityNotFoundException("Course", "id", String.valueOf(id));
         }
 
     }
@@ -334,8 +335,6 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     }
 
 
-
-
     @Override
     public void rateCourse(RatingDto rating, int courseId, int raterId) {
 
@@ -348,10 +347,19 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         in.addValue("user_id", raterId);
 
 
-
-
-
         namedParameterJdbcTemplate.update(sql, in);
+    }
+
+    @Override
+    public boolean isUserEnrolled(int userId, int courseId) {
+        String sql = "SELECT COUNT(*) FROM course_user WHERE user_id =:userId AND course_id=:courseId AND ongoing=1";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("courseId", courseId);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class) > 0;
+
     }
 
     private String generateOrderBy(FilterOptions filterOptions) {

@@ -3,15 +3,22 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.models.Assignment;
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.Lecture;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.services.contracts.LectureService;
+import com.alpha53.virtualteacher.services.contracts.StorageService;
+import com.alpha53.virtualteacher.utilities.helpers.FileValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -20,15 +27,17 @@ public class LectureServiceImpl implements LectureService {
     private static final String LECTURE_PERMIT_CREATE_EXCEPTION = "Only  creator of the course or admin can create a lecture.";
     private final LectureDao lectureDao;
     private final CourseDao courseDao;
+    private final StorageService storageService;
 
 
-    public LectureServiceImpl(LectureDao lectureDao, CourseDao courseDao) {
+    public LectureServiceImpl(LectureDao lectureDao, CourseDao courseDao, StorageService storageService) {
         this.lectureDao = lectureDao;
         this.courseDao = courseDao;
+        this.storageService = storageService;
     }
 
     @Override
-    public Lecture get(int courseId,int lectureId, User user) {
+    public Lecture get(int courseId, int lectureId, User user) {
         Course course = courseDao.get(courseId);
         if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
                 course.getCreator().getUserId() == user.getUserId()) {
@@ -85,6 +94,7 @@ public class LectureServiceImpl implements LectureService {
         }
     }
 
+    //TODO I can use course ID from controller
     @Override
     public void update(Lecture lecture, User user) {
 
@@ -106,18 +116,50 @@ public class LectureServiceImpl implements LectureService {
     //TODO Reformat error message
     // May be we should remove assignment files to this lecture into history directory and remove from main directory
     @Override
-    public void delete(int courseId,int lectureId, User user) {
+    public void delete(int courseId, int lectureId, User user) {
         Course course = courseDao.get(courseId);
         if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
                 course.getCreator().getUserId() == user.getUserId()) {
+           List<Assignment> assignmentList= lectureDao.getAllByLectureId(lectureId);
 
             if (lectureDao.delete(lectureId) == 0) {
                 throw new EntityNotFoundException("Lecture", "id", String.valueOf(lectureId));
             }
+            storageService.deleteAll(assignmentList);
 
         } else {
             throw new AuthorizationException(LECTURE_PERMIT_DELETE_EXCEPTION);
         }
     }
+
+    @Override
+    public void uploadAssignmentSolution(int courseId, int lectureId, User user, MultipartFile assignmentSolution) {
+
+        FileValidator.fileTypeValidator(assignmentSolution, "text");
+
+        if (courseDao.isUserEnrolled(user.getUserId(), courseId)) {
+
+            Course course = courseDao.get(courseId);
+            Set<Lecture> lectures = new HashSet<>(lectureDao.getAllByCourseId(course.getCourseId()));
+            course.setLectures(lectures);
+            if (course.getLectures().stream().noneMatch(lecture -> lecture.getId() == lectureId)) {
+                throw new EntityNotFoundException("Lecture", "ID", String.valueOf(lectureId));
+            }
+
+            Optional<String> result = lectureDao.getSolutionUrl(lectureId);
+
+            String fileUrl = storageService.store(assignmentSolution);
+
+            if (result.isPresent()) {
+                storageService.delete(result.get());
+                lectureDao.updateSolution(user.getUserId(), lectureId, fileUrl);
+            } else {
+
+                lectureDao.addSolution(user.getUserId(), lectureId, fileUrl);
+            }
+        }
+
+    }
+
 
 }

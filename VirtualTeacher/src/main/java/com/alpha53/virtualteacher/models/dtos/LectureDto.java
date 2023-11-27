@@ -31,10 +31,7 @@ public class LectureDto {
     @NotBlank
     private String assignment;
 
-
-   /* @Min(value = 1, message = "Course Id must be an positive Integer")
-    @Max(value = Integer.MAX_VALUE, message = "Course Id must be less than" + Integer.MAX_VALUE)
-    private int courseId;*/
+    private int courseId;
 
     private LectureDescription description;
 }

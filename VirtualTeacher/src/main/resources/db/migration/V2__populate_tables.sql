@@ -6,7 +6,7 @@ values ('Teacher');
 INSERT INTO roles (role)
 values ('Admin');
 INSERT INTO roles (role)
-values ('Pending');
+values ('PendingTeacher');
 
 /*======================== INSERT TOPICS===============================*/
 INSERT INTO topics (topic)
@@ -45,7 +45,7 @@ INSERT INTO topics (topic)
 values ('Marketing');
 /*======================== INSERT USERS===============================*/
 
-INSERT INTO users(email, password, first_name, last_name, role_id, profile_picture)
+INSERT INTO users(email, password, first_name, last_name, role_id, picture_url)
 VALUES ('john.doe@example.com', 'P@ssw0rd', 'John', 'Doe', 1, 'n/a'),
        ('jane.smith@example.com', 'Secure12#', 'Jane', 'Smith', 1, 'n/a'),
        ('mark.johnson@example.com', 'M@rkPass', 'Mark', 'Johnson', 2, 'n/a'),
@@ -157,7 +157,7 @@ VALUES ('Mathematics Fundamentals', 1, '2023-11-30', 3, true, 3),
 
 /*======================== INSERT LECTURES===============================*/
 
-INSERT INTO lectures (title, video_url, assignment_task, course_id)
+INSERT INTO lectures (title, video_url, assignment_url, course_id)
 VALUES ('Introduction to Basic Arithmetic', 'n/a', 'n/a', 1),
        ('Understanding Algebraic Concepts', 'n/a', 'n/a', 1),
        ('Exploring Geometry Fundamentals', 'n/a', 'n/a', 1),
@@ -659,13 +659,7 @@ VALUES ('Introduction to Basic Arithmetic', 'n/a', 'n/a', 1),
 
 INSERT INTO lecture_description (lecture_id, description)
 VALUES (1,
-        'Introduction to Basic Arithmetic" is a foundational lecture designed to equip learners with essential
-        mathematical skills. This session covers fundamental arithmetic operations such as addition, subtraction,
-        multiplication, and division. Participants will gain a solid understanding of numerical relationships and
-        problem-solving techniques. The lecture emphasizes real-world applications, fostering confidence in
-        mathematical abilities. Through interactive examples and practical exercises, attendees will develop a strong
-        foundation in basic arithmetic, setting the stage for more advanced mathematical concepts and their application
-        in daily life.'),
+        'Introduction to Basic Arithmetic is a foundational lecture designed to equip learners with essential mathematical skills. This session covers fundamental arithmetic operations such as addition, subtraction,multiplication, and division. Participants will gain a solid understanding of numerical relationships and problem-solving techniques. The lecture emphasizes real-world applications, fostering confidence in mathematical abilities. Through interactive examples and practical exercises, attendees will develop a strong foundation in basic arithmetic, setting the stage for more advanced mathematical concepts and their application in daily life.'),
        (2,
         'Understanding Algebraic Concepts" is a comprehensive lecture aimed at demystifying algebra for learners.
          This session delves into the core principles of algebra, including variables, equations, and expressions.

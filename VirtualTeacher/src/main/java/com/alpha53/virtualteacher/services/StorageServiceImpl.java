@@ -3,6 +3,7 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.config.StorageProperties;
 import com.alpha53.virtualteacher.exceptions.StorageException;
 import com.alpha53.virtualteacher.exceptions.StorageFileNotFoundException;
+import com.alpha53.virtualteacher.models.Assignment;
 import com.alpha53.virtualteacher.services.contracts.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -19,9 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -83,6 +82,17 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public void delete(String filename) {
+
+        try {
+            Path path = Paths.get("src/main" + filename);
+            Files.deleteIfExists(path);
+        } catch (IOException e){
+            throw new StorageException("Unable to delete file.");
+        }
+    }
+
+    @Override
     public Resource loadAsResource(String filename) {
         try {
             Path file = load(filename);
@@ -96,6 +106,13 @@ public class StorageServiceImpl implements StorageService {
             }
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
+
+    @Override
+    public void deleteAll(List<Assignment> assignments) {
+        for (Assignment assignment : assignments) {
+            delete(assignment.getAssignmentUrl());
         }
     }
 

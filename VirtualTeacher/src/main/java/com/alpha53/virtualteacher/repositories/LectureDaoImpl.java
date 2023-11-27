@@ -1,10 +1,13 @@
 package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.models.Assignment;
 import com.alpha53.virtualteacher.models.Lecture;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.utilities.LectureMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -34,7 +38,7 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
     @Override
     public Lecture get(final int id) {
 
-        String sql = "SELECT * FROM lectures  WHERE id = :id";
+        String sql = "SELECT * FROM lectures LEFT JOIN lecture_description ON lectures.id = lecture_description.lecture_id WHERE id = :id";
 
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("id", id);
@@ -76,7 +80,7 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
     public int create(Lecture lecture) {
 
         String sql =
-                "INSERT INTO lectures(title,video_url,assignment_task,course_id) " +
+                "INSERT INTO lectures(title,video_url,assignment_url,course_id) " +
                         "     VALUES (:title,:videoUrl,:assignment,:courseId)    ";
 
         MapSqlParameterSource param = new MapSqlParameterSource();
@@ -107,7 +111,7 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
 
     @Override
     public void update(Lecture lecture) {
-        String sql = "UPDATE lectures SET title = :title, video_url = :videoUrl,assignment_task = :assignment,course_id =:courseId WHERE id= :lectureId";
+        String sql = "UPDATE lectures SET title = :title, video_url = :videoUrl,assignment_url = :assignment,course_id =:courseId WHERE id= :lectureId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("lectureId", lecture.getId());
         params.addValue("title", lecture.getTitle());
@@ -139,12 +143,8 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
      */
     @Override
     public int delete(int lectureId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("lectureId", lectureId);
-        if (isDescriptionExist(lectureId)) {
-            deleteDescription(params);
-        }
         String sql = "DELETE FROM lectures WHERE id =:lectureId";
-
+        MapSqlParameterSource params = new MapSqlParameterSource("lectureId", lectureId);
         return namedParameterJdbcTemplate.update(sql, params);
 
     }
@@ -168,6 +168,51 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         }
     }
 
+    @Override
+    public void addSolution(int userId, int lectureId, String fileUrl) {
+        String sql = "INSERT INTO solutions (solution_url,user_id,lecture_id) " +
+                "VALUES (:fileUrl,:userId,:lectureId)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("fileUrl", fileUrl);
+        params.addValue("userId", userId);
+        params.addValue("lectureId", lectureId);
+
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    @Override
+    public void updateSolution(int userId, int lectureId, String fileUrl) {
+        String sql = "UPDATE solutions SET solution_url =:fileUrl WHERE lecture_id = :lectureId";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("fileUrl", fileUrl);
+        param.addValue("lectureId", lectureId);
+
+        namedParameterJdbcTemplate.update(sql, param);
+    }
+
+    @Override
+    public Optional<String> getSolutionUrl(int lectureId) {
+        String sql = "SELECT solution_url FROM solutions WHERE lecture_id=:lectureId";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("lectureId", lectureId);
+        try {
+
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, param, String.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Assignment> getAllByLectureId(int lectureId) {
+        String sql = "SELECT id as assignmentId,solution_url as assignmentUrl,user_id as userId, lecture_id as lectureId " +
+                "FROM solutions WHERE lecture_id=:lectureId";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("lectureId", lectureId);
+
+        return namedParameterJdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(Assignment.class));
+    }
 
     /**
      * Check if lecture has description

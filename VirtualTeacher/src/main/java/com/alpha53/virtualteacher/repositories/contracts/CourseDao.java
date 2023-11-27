@@ -26,7 +26,8 @@ public interface CourseDao {
     void delete(int id);
 
     void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId);
-
-
+    //TODO DTO object should not pass to DAO
     void rateCourse(RatingDto rating, int courseId, int raterId);
+
+    boolean isUserEnrolled(int userId, int courseId);
 }

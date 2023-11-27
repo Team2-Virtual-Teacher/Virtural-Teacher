@@ -1,8 +1,6 @@
 package com.alpha53.virtualteacher.controllers.rest;
 
-import com.alpha53.virtualteacher.exceptions.AuthorizationException;
-import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
-import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.exceptions.*;
 import com.alpha53.virtualteacher.models.Lecture;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.LectureDto;
@@ -10,9 +8,13 @@ import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
 import jakarta.validation.Valid;
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -24,10 +26,12 @@ public class LectureController {
     private final LectureDtoMapper lectureDtoMapper;
     private final AuthenticationHelper authenticationHelper;
 
+
     public LectureController(LectureService lectureService, LectureDtoMapper lectureDtoMapper, AuthenticationHelper authenticationHelper) {
         this.lectureService = lectureService;
         this.lectureDtoMapper = lectureDtoMapper;
         this.authenticationHelper = authenticationHelper;
+
     }
 
     @GetMapping("/{courseId}/lecture/{lectureId}")
@@ -36,7 +40,7 @@ public class LectureController {
                        @PathVariable(name = "lectureId") int lectureId) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            return lectureService.get(courseId,lectureId, user);
+            return lectureService.get(courseId, lectureId, user);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -47,7 +51,7 @@ public class LectureController {
     }
 
     /*Tested with Postman*/
-    @GetMapping("/{courseId}/lecture")
+    @GetMapping("/{courseId}/lectures")
     public List<Lecture> getAllByCourse(@RequestHeader HttpHeaders headers,
                                         @PathVariable(name = "courseId") int courseId) {
 
@@ -64,6 +68,7 @@ public class LectureController {
     }
 
     /*Tested with Postman*/
+    //TODO Assignment must be uploaded also
     @PostMapping("{id}/lecture")
     public void create(@RequestHeader HttpHeaders headers,
                        @RequestBody @Valid LectureDto lectureDto,
@@ -106,18 +111,39 @@ public class LectureController {
 
     /*Tested with Postman*/
     //TODO check why courseId is not used
-    @DeleteMapping("{courseId}/lecture/{id}")
+    @DeleteMapping("{courseId}/lecture/{lectureId}")
     public void delete(@RequestHeader HttpHeaders headers,
-                       @PathVariable(name = "id") int id,
+                       @PathVariable(name = "lectureId") int lectureId,
                        @PathVariable(name = "courseId") int courseId) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            lectureService.delete(courseId,id, user);
+            lectureService.delete(courseId, lectureId, user);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "{courseId}/lecture/{lectureId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void uploadSolution(@RequestHeader HttpHeaders headers,
+                                         @PathVariable(name = "lectureId") int lectureId,
+                                         @PathVariable(name = "courseId") int courseId,
+                                         @RequestPart(name = "Solution") MultipartFile assignmentSolution) {
+
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            lectureService.uploadAssignmentSolution(courseId, lectureId, user, assignmentSolution);
+
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (UnsupportedFileTypeException | EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        //TODO think for appropriated message to return
+        catch (StorageException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 }
