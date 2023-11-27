@@ -3,6 +3,7 @@ package com.alpha53.virtualteacher.controllers.rest;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.exceptions.StorageException;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
@@ -76,24 +77,23 @@ public class UserController {
     }
 
     @PostMapping()
-    public UserDto create(@RequestBody @Valid UserDto userDto) {
-        User loggedInUser = userMapperHelper.userDtoToUser(userDto);
+    public void create(@RequestBody @Valid UserDto userDto) {
+        User user = userMapperHelper.userDtoToUser(userDto);
         try {
             String userRole = userDto.getRole();
-            userService.create(loggedInUser, userRole);
+            userService.create(user, userRole);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        return userDto;
     }
 
-    @PutMapping()
-    public void update(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserDto userDto) {
+    @PutMapping("/{id}")
+    public void update(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserDto userDto , @PathVariable int id) {
         try {
             User loggedInUser = authenticationHelper.tryGetUser(headers);
-            userService.update(userDto, loggedInUser);
+            userService.update(userDto, loggedInUser, id);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -114,7 +114,6 @@ public class UserController {
 
     @PutMapping("{id}/role/{newRole}")
     public void setUserRole(@RequestHeader HttpHeaders headers, @PathVariable int id, @PathVariable String newRole) {
-
         try {
             User loggedInUser = authenticationHelper.tryGetUser(headers);
             User userToGetRole = userService.get(id);
@@ -126,11 +125,16 @@ public class UserController {
         }
     }
 
-    @PostMapping("/uploadPicture")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-
-        storageService.store(file);
-
-        return "OK";
+    @PostMapping("{id}/profilePicture")
+    public void uploadProfilePicture(@RequestHeader HttpHeaders headers,@PathVariable int id,@RequestParam("file") MultipartFile file) {
+        User loggedInUser = authenticationHelper.tryGetUser(headers);
+        try {
+            String picturePath = storageService.store(file);
+            userService.uploadProfilePicture(picturePath, loggedInUser, id);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (StorageException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

@@ -16,9 +16,11 @@ public interface UserService {
 
     void create(User user, String userRole);
 
-    void update(UserDto userDto, User user);
+    void update(UserDto userDto, User user, int id);
 
     void delete(int id, User user);
 
     void setUserRole(User loggedInUser, User userToGetRole, String roleName);
+
+    void uploadProfilePicture(String picturePath, User user, int id);
 }

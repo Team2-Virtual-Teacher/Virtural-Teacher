@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -43,7 +44,7 @@ public class StorageServiceImpl implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            String uniqueFileName = generateUniqueFileName(file.getOriginalFilename());
+            String uniqueFileName = generateUniqueFileName(Objects.requireNonNull(file.getOriginalFilename()));
 
             Path destinationFile = this.rootLocation.resolve(
                             Paths.get(uniqueFileName))
@@ -65,8 +66,9 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.rootLocation, 1)
+        try (Stream<Path> paths = Files.walk(this.rootLocation, 1))
+        {
+            return paths
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);
         } catch (IOException e) {

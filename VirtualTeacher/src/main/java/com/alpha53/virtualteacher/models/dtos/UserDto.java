@@ -28,9 +28,6 @@ public class UserDto {
     @NotNull
     private String role;
 
-    @NotNull
-    private String pictureUrl;
-
     public UserDto() {
     }
 
@@ -73,10 +70,4 @@ public class UserDto {
         this.role = role;
     }
 
-    public String getPictureUrl(){
-        return pictureUrl;
-    }
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
 }

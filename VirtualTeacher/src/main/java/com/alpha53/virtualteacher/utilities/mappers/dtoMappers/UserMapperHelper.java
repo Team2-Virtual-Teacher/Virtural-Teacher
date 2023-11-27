@@ -14,7 +14,6 @@ public class UserMapperHelper {
         user.setPassword(userDto.getPassword());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
-        user.setPictureUrl(userDto.getPictureUrl());
         return user;
     }
 

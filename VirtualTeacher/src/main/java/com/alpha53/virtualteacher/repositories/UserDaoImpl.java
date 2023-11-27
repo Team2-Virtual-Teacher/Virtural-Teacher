@@ -1,7 +1,6 @@
 package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
@@ -18,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Transactional
 @Repository
@@ -37,13 +34,6 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
 
     private static final UserMapper USER_MAPPER = new UserMapper();
 
-
-   /* @Autowired
-    public UserDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CourseDao courseDao) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.courseDao = courseDao;
-    }*/
-
     @Override
     public User get(int id) {
         String query = "SELECT users.id as userId, email, password, first_name, last_name, " +
@@ -54,11 +44,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", id);
         try {
-            User user = namedParameterJdbcTemplate.queryForObject(query, in, USER_MAPPER);
-            // TODO: 22.11.23 ask if this is the right place to do this.
-            Set<Course> courseSet = new HashSet<>(courseDao.getCoursesByUser(id));
-            user.setCourses(courseSet);
-            return user;
+            return namedParameterJdbcTemplate.queryForObject(query, in, USER_MAPPER);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new EntityNotFoundException("User", id);
         }
