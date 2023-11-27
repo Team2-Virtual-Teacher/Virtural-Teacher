@@ -37,7 +37,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
     @Override
     public User get(int id) {
         String query = "SELECT users.id as userId, email, password, first_name, last_name, " +
-                "profile_picture, role_id , role " +
+                "picture_url, role_id , role " +
                 "FROM users JOIN roles r on r.id = users.role_id " +
                 "WHERE users.id = :id;";
 
@@ -53,7 +53,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
     @Override
     public User get(String email) {
         String query = "SELECT users.id as userId, email, password, first_name, last_name, " +
-                "profile_picture, role_id , role " +
+                "picture_url, role_id , role " +
                 "FROM users JOIN roles r on r.id = users.role_id " +
                 "WHERE users.email = :email;";
 
@@ -70,7 +70,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
     public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
         StringBuilder queryString = new StringBuilder("SELECT users.id as userId, email, password, first_name, " +
                                                       "last_name, " +
-                                                      "profile_picture, role_id , role " +
+                                                      "picture_url, role_id , role " +
                                                       "FROM users JOIN roles r on r.id = users.role_id");
         List<String> filterAttributes = new ArrayList<>();
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -140,8 +140,8 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
 
     @Override
     public void create(User user) {
-        String sql = "INSERT INTO users (email, password, first_name, last_name, role_id, profile_picture) " +
-                "VALUES (:email, :password, :first_name, :last_name, :role_id, :profile_picture)";
+        String sql = "INSERT INTO users (email, password, first_name, last_name, role_id, picture_url) " +
+                "VALUES (:email, :password, :first_name, :last_name, :role_id, :picture_url)";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("email", user.getEmail());
@@ -149,7 +149,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         in.addValue("first_name", user.getFirstName());
         in.addValue("last_name", user.getLastName());
         in.addValue("role_id", user.getRole().getRoleId());
-        in.addValue("profile_picture", user.getPictureUrl());
+        in.addValue("picture_url", user.getPictureUrl());
 
         namedParameterJdbcTemplate.update(sql, in);
     }
@@ -158,7 +158,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
     public void update(User user) {
         String sql = "UPDATE users SET email = :email, password = :password, " +
                 "first_name = :firstName, last_name = :lastName, " +
-                "role_id = :role, profile_picture = :pictureUrl " +
+                "role_id = :role, picture_url = :pictureUrl " +
                 "WHERE id = :userId";
 
         MapSqlParameterSource in = new MapSqlParameterSource();

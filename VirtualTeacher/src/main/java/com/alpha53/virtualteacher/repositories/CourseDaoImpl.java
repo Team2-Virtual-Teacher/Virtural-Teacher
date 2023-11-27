@@ -49,9 +49,9 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     @Override
     public Course get(int id) {
 
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade,topic,topic_id " +
-                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
-                "  LEFT JOIN users ON courses.creator_id = users.id WHERE courses.id=:id      ";
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id " +
+                     "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+                     "  LEFT JOIN users ON courses.creator_id = users.id WHERE courses.id=:id      ";
 
 
         MapSqlParameterSource in = new MapSqlParameterSource();
@@ -67,7 +67,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public Course getByTitle(String title) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade,topic,topic_id " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id WHERE courses.title=:title      ";
 
@@ -84,7 +84,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> get(FilterOptions filterOptions) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade,topic,topic_id " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id ";
 
@@ -129,7 +129,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> getPublicCourses(FilterOptions filterOptions) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade,topic,topic_id " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id ";
 
@@ -178,7 +178,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     //  and adding a .isEmpty check in the service will most likely do the job. Discuss with team.
     @Override
     public List<Course> getUsersEnrolledCourses(int userId) {
-        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,profile_picture,is_published,passing_grade, topic, topic_id FROM course_user "+
+        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade, topic, topic_id FROM course_user "+
                 "LEFT JOIN courses ON course_user.course_id = courses.id "+
                 "LEFT JOIN users ON course_user.user_id = users.id "+
                 "LEFT JOIN topics ON courses.topic_id=topics.id "+
@@ -198,7 +198,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<User> getStudentsWhichAreEnrolledForCourse(int courseId) {
-        String sql = "SELECT users.id AS userId, email, password, first_name, last_name, profile_picture, role_id, role " +
+        String sql = "SELECT users.id AS userId, email, password, first_name, last_name, picture_url, role_id, role " +
                 "FROM course_user " +
                 "LEFT JOIN users ON course_user.user_id = users.id " +
                 "LEFT JOIN roles r ON r.id = users.role_id " +
@@ -245,7 +245,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 //    }
     @Override
     public List<Course> getCoursesByUser(int userId) {
-        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, profile_picture," +
+        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url," +
                 " is_published, passing_grade, topic, topic_id " +
                 "FROM course_user " +
                 "LEFT JOIN courses ON course_user.course_id = courses.id " +
