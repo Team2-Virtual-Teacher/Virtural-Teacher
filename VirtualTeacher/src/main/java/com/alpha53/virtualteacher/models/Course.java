@@ -4,6 +4,8 @@ package com.alpha53.virtualteacher.models;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @NoArgsConstructor
@@ -21,5 +23,8 @@ public class Course {
     private double passingGrade;
     private double avgRating;
     private CourseDescription description;
+    @Getter
+    private Set<Lecture> lectures = new HashSet<>();
+
 
 }
