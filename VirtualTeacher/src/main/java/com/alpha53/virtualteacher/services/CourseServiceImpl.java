@@ -139,6 +139,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void rateCourse(RatingDto rating, int courseId, int raterId) {
+        //TODO student hass passed
         courseRepository.rateCourse(rating, courseId, raterId);
     }
 
