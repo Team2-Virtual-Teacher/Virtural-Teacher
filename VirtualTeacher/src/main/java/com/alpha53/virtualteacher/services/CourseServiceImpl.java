@@ -87,7 +87,14 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.get(id);
     }
 
-    public List<Course> get(FilterOptions filterOptions) {
+    public List<Course> getPublic(FilterOptions filterOptions) {
+
+        return courseRepository.getPublicCourses(filterOptions);
+    }
+    public List<Course> get(FilterOptions filterOptions, User user) {
+        if (user.getRole().getRoleType().equalsIgnoreCase("Admin") || user.getRole().getRoleType().equalsIgnoreCase("teacher")){
+            return courseRepository.get(filterOptions);
+        }
 
         return courseRepository.getPublicCourses(filterOptions);
     }

@@ -37,6 +37,7 @@ public class CourseMapper implements RowMapper<Course> {
 
         course.setCreator(creator);
         course.setTopic(topic);
+        course.setAvgRating(rs.getDouble("avg_rating"));
         return course;
     }
 

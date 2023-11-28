@@ -84,9 +84,10 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> get(FilterOptions filterOptions) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating  " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
-                "  LEFT JOIN users ON courses.creator_id = users.id ";
+                "  LEFT JOIN users ON courses.creator_id = users.id "+
+                "   LEFT JOIN ratings ON courses.id = ratings.course_id ";
 
 
 
@@ -96,29 +97,36 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         MapSqlParameterSource in = new MapSqlParameterSource();
 
             filterOptions.getTitle().ifPresent(value -> {
-                filters.add("title like :title");
+                filters.add("title like :title ");
                 params.put("title", String.format("%%%s%%", value));
                 in.addValue("title", String.format("%%%s%%", value));
             });
             filterOptions.getTopic().ifPresent(value -> {
-                filters.add("topic like :topic");
+                filters.add("topic like :topic ");
                 params.put("topic", String.format("%%%s%%", value));
                 in.addValue("topic", String.format("%%%s%%", value));
             });
             filterOptions.getTeacher().ifPresent(value -> {
-                filters.add("email like :teacher");
+                filters.add("email like :teacher ");
                 params.put("teacher", String.format("%%%s%%", value));
                 in.addValue("teacher", String.format("%%%s%%", value));
 
             });
-        //TODO Rating
 
 
-            if (!filters.isEmpty()) {
-                sql+=" where ";
-                sql+= String.join(" and ", filters);
-            }
-            sql+=generateOrderBy(filterOptions);
+
+
+        if (!filters.isEmpty()) {
+            sql+=" WHERE ";
+            sql+= String.join(" and ", filters);
+        }
+        sql+="GROUP BY courses.id";
+        if (filterOptions.getRating().isPresent()){
+            sql+=String.format(" HAVING  AVG(ratings.rating) >= %f ", Double.parseDouble(filterOptions.getRating().get()));
+        }
+
+        sql+=generateOrderBy(filterOptions);
+
         try {
             return namedParameterJdbcTemplate.query(sql, in, courseMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -129,9 +137,10 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> getPublicCourses(FilterOptions filterOptions) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
-                "  LEFT JOIN users ON courses.creator_id = users.id ";
+                "  LEFT JOIN users ON courses.creator_id = users.id "+
+                "   LEFT JOIN ratings ON courses.id = ratings.course_id ";
 
 
 
@@ -141,29 +150,34 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         MapSqlParameterSource in = new MapSqlParameterSource();
 
         filterOptions.getTitle().ifPresent(value -> {
-            filters.add("title like :title");
+            filters.add("title like :title ");
             params.put("title", String.format("%%%s%%", value));
             in.addValue("title", String.format("%%%s%%", value));
         });
         filterOptions.getTopic().ifPresent(value -> {
-            filters.add("topic like :topic");
+            filters.add("topic like :topic ");
             params.put("topic", String.format("%%%s%%", value));
             in.addValue("topic", String.format("%%%s%%", value));
         });
         filterOptions.getTeacher().ifPresent(value -> {
-            filters.add("email like :teacher");
+            filters.add("email like :teacher ");
             params.put("teacher", String.format("%%%s%%", value));
             in.addValue("teacher", String.format("%%%s%%", value));
 
         });
-        filters.add("is_published = 1");
-        //TODO Rating
+        filters.add(" is_published = 1 ");
+
 
 
         if (!filters.isEmpty()) {
-            sql+=" where ";
+            sql+=" WHERE ";
             sql+= String.join(" and ", filters);
         }
+        sql+=" GROUP BY courses.id ";
+        if (filterOptions.getRating().isPresent()){
+            sql+=String.format(" HAVING  AVG(ratings.rating) >= %f ", Double.parseDouble(filterOptions.getRating().get()));
+        }
+
         sql+=generateOrderBy(filterOptions);
         try {
             return namedParameterJdbcTemplate.query(sql, in, courseMapper);
@@ -371,6 +385,9 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         switch (filterOptions.getSortBy().get()) {
             case "title":
                 orderBy = "title";
+                break;
+            case "rating":
+                orderBy = "avg_rating";
                 break;
 
         }

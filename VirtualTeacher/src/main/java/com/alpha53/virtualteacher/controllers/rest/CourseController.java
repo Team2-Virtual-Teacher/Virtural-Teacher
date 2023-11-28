@@ -46,7 +46,25 @@ public class CourseController {
             @RequestParam(required = false) String sortOrder
     ) {
         FilterOptions filterOptions = new FilterOptions( title,  topic, teacher,  rating,  sortBy, sortOrder);
-        return courseService.get(filterOptions);
+        boolean isAuthenticated = true;
+        User user = new User();
+        try {
+            user = authenticationHelper.tryGetUser(headers);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+
+            isAuthenticated = false;
+        }
+        if (isAuthenticated){
+            return courseService.get(filterOptions, user);
+        } else {
+            return courseService.getPublic(filterOptions);
+        }
+
     }
 
 

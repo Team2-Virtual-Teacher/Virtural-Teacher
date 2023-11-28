@@ -19,7 +19,8 @@ public interface CourseService {
 
 
     void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser);
-    public List<Course> get(FilterOptions filterOptions);
+    public List<Course> get(FilterOptions filterOptions, User user);
+    public List<Course> getPublic(FilterOptions filterOptions);
     public List<Course> getUsersEnrolledCourses(int userId);
     public void enrollUserForCourse(User user, int courseId);
     public void rateCourse(RatingDto rating, int courseId, int raterId);
