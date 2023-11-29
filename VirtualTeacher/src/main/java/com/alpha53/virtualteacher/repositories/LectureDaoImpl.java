@@ -168,29 +168,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         }
     }
 
-    @Override
-    public void addSolution(int userId, int lectureId, String fileUrl) {
-        String sql = "INSERT INTO solutions (solution_url,user_id,lecture_id) " +
-                "VALUES (:fileUrl,:userId,:lectureId)";
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("fileUrl", fileUrl);
-        params.addValue("userId", userId);
-        params.addValue("lectureId", lectureId);
-
-        namedParameterJdbcTemplate.update(sql, params);
-    }
-
-    @Override
-    public void updateSolution(int userId, int lectureId, String fileUrl) {
-        String sql = "UPDATE solutions SET solution_url =:fileUrl WHERE lecture_id = :lectureId";
-        MapSqlParameterSource param = new MapSqlParameterSource();
-        param.addValue("fileUrl", fileUrl);
-        param.addValue("lectureId", lectureId);
-
-        namedParameterJdbcTemplate.update(sql, param);
-    }
-
     /**
      * Check if lecture has description
      *

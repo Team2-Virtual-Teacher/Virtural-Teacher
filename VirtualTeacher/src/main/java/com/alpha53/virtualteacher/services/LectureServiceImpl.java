@@ -9,9 +9,11 @@ import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
+import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
 import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.services.contracts.StorageService;
 import com.alpha53.virtualteacher.utilities.helpers.FileValidator;
+import com.alpha53.virtualteacher.utilities.helpers.PermissionHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,12 +29,15 @@ public class LectureServiceImpl implements LectureService {
     private static final String LECTURE_PERMIT_CREATE_EXCEPTION = "Only  creator of the course or admin can create a lecture.";
     private final LectureDao lectureDao;
     private final CourseDao courseDao;
+    private final SolutionDao solutionDao;
     private final StorageService storageService;
 
 
-    public LectureServiceImpl(LectureDao lectureDao, CourseDao courseDao, StorageService storageService) {
+    public LectureServiceImpl(LectureDao lectureDao, CourseDao courseDao, StorageService storageService,
+                              SolutionDao solutionDao) {
         this.lectureDao = lectureDao;
         this.courseDao = courseDao;
+        this.solutionDao = solutionDao;
         this.storageService = storageService;
     }
 
@@ -92,6 +97,7 @@ public class LectureServiceImpl implements LectureService {
         } else {
             throw new AuthorizationException(LECTURE_PERMIT_CREATE_EXCEPTION);
         }
+
     }
 
     //TODO I can use course ID from controller
@@ -155,7 +161,7 @@ public class LectureServiceImpl implements LectureService {
                 solutionDao.updateSolution(user.getUserId(), lectureId, fileUrl);
             } else {
 
-                lectureDao.addSolution(user.getUserId(), lectureId, fileUrl);
+                solutionDao.addSolution(user.getUserId(), lectureId, fileUrl);
             }
         }
 
