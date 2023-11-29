@@ -20,11 +20,11 @@ create table users
     id              int auto_increment
         primary key,
     email           varchar(50)  not null,
-    password        varchar(64)  not null,
+    password        varchar(500)  not null,
     first_name      varchar(50)  not null,
     last_name       varchar(50)  not null,
     role_id         int          not null,
-    picture_url varchar(100) not null,
+    picture_url varchar(500) not null,
     constraint users_pk
         unique (email),
     constraint users_roles_fk
@@ -74,8 +74,8 @@ create table lectures
     id              int auto_increment
         primary key,
     title           varchar(50)  not null,
-    video_url       varchar(100) not null,
-    assignment_url varchar(100) null,
+    video_url       varchar(500) not null,
+    assignment_url varchar(500) null,
     course_id       int          not null,
     constraint lectures_courses_id_fk
         foreign key (course_id) references courses (id)
@@ -84,7 +84,7 @@ create table lectures
 
 create table solutions
 (
-    solution_url varchar(100) not null,
+    solution_url varchar(500) not null,
     user_id             int          not null,
     lecture_id          int          not null,
     id                  int          auto_increment

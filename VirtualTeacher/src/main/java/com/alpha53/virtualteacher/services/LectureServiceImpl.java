@@ -13,20 +13,19 @@ import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
 import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.services.contracts.StorageService;
 import com.alpha53.virtualteacher.utilities.helpers.FileValidator;
-import com.alpha53.virtualteacher.utilities.helpers.PermissionHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class LectureServiceImpl implements LectureService {
 
     private static final String LECTURE_PERMIT_DELETE_EXCEPTION = "Only  creator of the course or admin can delete a lecture.";
     private static final String LECTURE_PERMIT_CREATE_EXCEPTION = "Only  creator of the course or admin can create a lecture.";
+    private static final String LECTURE_PERMIT_UPDATE_EXCEPTION = "Only  creator of the course or admin can update a lecture.";
+    public static final String ASSIGNMENT_UPLOAD_ERROR = "Assignment upload is not allowed on public course";
     private final LectureDao lectureDao;
     private final CourseDao courseDao;
     private final SolutionDao solutionDao;
@@ -49,16 +48,18 @@ public class LectureServiceImpl implements LectureService {
             return lectureDao.get(lectureId);
         }
 
-        List<Course> enrolledCourses = courseDao.getUsersEnrolledCourses(user.getUserId());
+        if (courseDao.isUserEnrolled(user.getUserId(), courseId)) {
+            return lectureDao.get(lectureId);
+        }
+       /* List<Course> enrolledCourses = courseDao.getUsersEnrolledCourses(user.getUserId());
 
         if (enrolledCourses.stream().anyMatch(c -> c.getCourseId() == courseId)) {
             return lectureDao.get(lectureId);
-        }
-        throw new EntityNotFoundException("No lectures to show for user with ID: " + user.getUserId() + " in course with ID " + courseId);
+        }*/
+        throw new EntityNotFoundException(String.format("No lectures to show for user with ID: %d in course with ID: %d", user.getUserId(), courseId));
 
     }
 
-    //TODO Refactor error message in appropriate manner
     @Override
     public List<Lecture> getAllByCourseId(int courseId, User user) {
 
@@ -72,7 +73,8 @@ public class LectureServiceImpl implements LectureService {
         if (enrolledCourses.stream().anyMatch(c -> c.getCourseId() == courseId)) {
             return lectureDao.getAllByCourseId(courseId);
         }
-        throw new EntityNotFoundException("No lectures to show for user with ID: " + user.getUserId() + " in course with ID " + courseId);
+        return Collections.emptyList();
+
     }
 
     /**
@@ -85,57 +87,49 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public void create(Lecture lecture, User user, MultipartFile assignment) {
         Course course = courseDao.get(lecture.getCourseId());
-        if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
-                course.getCreator().getUserId() == user.getUserId()) {
+        verifyLectureModifyPermit(user, course, LECTURE_PERMIT_CREATE_EXCEPTION);
 
-            List<Lecture> lectureList = lectureDao.getAllByCourseId(lecture.getCourseId());
-            boolean isTitleExist = lectureList.stream().anyMatch(l -> l.getTitle().equalsIgnoreCase(lecture.getTitle()));
-            if (isTitleExist) {
-                throw new EntityDuplicateException("Lecture", "title", lecture.getTitle());
-            }
-            lectureDao.create(lecture);
-        } else {
-            throw new AuthorizationException(LECTURE_PERMIT_CREATE_EXCEPTION);
-        }
+        checkLectureTitleExist(lecture);
+        lectureDao.create(lecture);
 
     }
 
-    //TODO I can use course ID from controller
+    @Transactional
     @Override
-    public void update(Lecture lecture, User user) {
-
-        if (lectureDao.getCourseCreatorId(lecture.getId()) == user.getUserId()
-                || user.getRole().getRoleType().equalsIgnoreCase("admin")) {
-
-            List<Lecture> lectureList = lectureDao.getAllByCourseId(lecture.getCourseId());
-            boolean isTitleExist = lectureList.stream().anyMatch(l -> l.getTitle().equalsIgnoreCase(lecture.getTitle()));
-            if (isTitleExist) {
-                throw new EntityDuplicateException("Lecture", "title", lecture.getTitle());
+    public void update(Lecture lecture, User user, MultipartFile assignment) {
+        Course course = courseDao.get(lecture.getCourseId());
+        verifyLectureModifyPermit(user, course, LECTURE_PERMIT_UPDATE_EXCEPTION);
+        FileValidator.fileTypeValidator(assignment,"text");
+        Optional<String> existAssignmentUrl = lectureDao.getAssignmentUrl(lecture.getId());
+        if (course.isPublished()) {
+            if (assignment != null) {
+                throw new AuthorizationException(ASSIGNMENT_UPLOAD_ERROR);
+            } else {
+                existAssignmentUrl.ifPresent(lecture::setAssignmentUrl);
+                lectureDao.update(lecture);
             }
-            lectureDao.update(lecture);
         } else {
-            throw new AuthorizationException(LECTURE_PERMIT_CREATE_EXCEPTION);
+
+            String fileUrl = storageService.store(assignment);
+            lecture.setAssignmentUrl(fileUrl);
+            lectureDao.update(lecture);
+            existAssignmentUrl.ifPresent(storageService::delete);
         }
 
     }
 
-    //TODO Reformat error message
-    // May be we should remove assignment files to this lecture into history directory and remove from main directory
     @Override
     public void delete(int courseId, int lectureId, User user) {
         Course course = courseDao.get(courseId);
-        if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
-                course.getCreator().getUserId() == user.getUserId()) {
-           List<Solution> solutionList = solutionDao.getAllByLectureId(lectureId);
+        verifyLectureModifyPermit(user, course, LECTURE_PERMIT_DELETE_EXCEPTION);
 
-            if (lectureDao.delete(lectureId) == 0) {
-                throw new EntityNotFoundException("Lecture", "id", String.valueOf(lectureId));
-            }
-            storageService.deleteAll(solutionList);
+        List<Solution> solutionList = solutionDao.getAllByLectureId(lectureId);
 
-        } else {
-            throw new AuthorizationException(LECTURE_PERMIT_DELETE_EXCEPTION);
+        if (lectureDao.delete(lectureId) == 0) {
+            throw new EntityNotFoundException("Lecture", "id", String.valueOf(lectureId));
         }
+        storageService.deleteAll(solutionList);
+
     }
 
     @Override
@@ -152,20 +146,36 @@ public class LectureServiceImpl implements LectureService {
                 throw new EntityNotFoundException("Lecture", "ID", String.valueOf(lectureId));
             }
 
-            Optional<String> result = solutionDao.getSolutionUrl(lectureId);
-
+            Optional<String> existingSolutionUrl = solutionDao.getSolutionUrl(lectureId);
             String fileUrl = storageService.store(solution);
 
-            if (result.isPresent()) {
-                storageService.delete(result.get());
+            if (existingSolutionUrl.isPresent()) {
+                storageService.delete(existingSolutionUrl.get());
                 solutionDao.updateSolution(user.getUserId(), lectureId, fileUrl);
             } else {
-
                 solutionDao.addSolution(user.getUserId(), lectureId, fileUrl);
             }
         }
 
     }
 
+    private void checkLectureTitleExist(Lecture lecture) {
+        List<Lecture> lectureList = lectureDao.getAllByCourseId(lecture.getCourseId());
+        boolean isTitleExist = lectureList.stream().anyMatch(l -> l.getTitle().equalsIgnoreCase(lecture.getTitle()));
+        if (isTitleExist) {
+            throw new EntityDuplicateException("Lecture", "title", lecture.getTitle());
+        }
+    }
+
+    private void verifyLectureModifyPermit(User user, Course course, String errorMessage) {
+
+        if (!user.getRole().getRoleType().equalsIgnoreCase("admin") &&
+                course.getCreator().getUserId() != user.getUserId()) {
+
+            throw new AuthorizationException(errorMessage);
+
+        }
+
+    }
 
 }

@@ -34,7 +34,6 @@ public class CourseController {
         this.courseMapper = courseMapper;
     }
 
-
     @GetMapping
     public List<Course> get(
             @RequestHeader(required = false) HttpHeaders headers,
@@ -45,7 +44,7 @@ public class CourseController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder
     ) {
-        FilterOptions filterOptions = new FilterOptions( title,  topic, teacher,  rating,  sortBy, sortOrder);
+        FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, sortBy, sortOrder);
         boolean isAuthenticated = true;
         User user = new User();
         try {
@@ -59,7 +58,7 @@ public class CourseController {
 
             isAuthenticated = false;
         }
-        if (isAuthenticated){
+        if (isAuthenticated) {
             return courseService.get(filterOptions, user);
         } else {
             return courseService.getPublic(filterOptions);
@@ -67,15 +66,13 @@ public class CourseController {
 
     }
 
-
     @GetMapping("/{id}")
-    public Course get(@PathVariable (name = "id") int id){
-       return courseService.getCourseById(id);
+    public Course get(@PathVariable(name = "id") int id) {
+        return courseService.getCourseById(id);
     }
 
-
     @GetMapping("/enrolled")
-    public List<Course> getUsersEnrolledCourses(@RequestHeader HttpHeaders headers){
+    public List<Course> getUsersEnrolledCourses(@RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return courseService.getUsersEnrolledCourses(user.getUserId());
@@ -87,8 +84,9 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @PostMapping("/{id}/enroll")
-    public void enrollUserForCourse(@RequestHeader HttpHeaders headers, @PathVariable (name = "id") int id){
+    public void enrollUserForCourse(@RequestHeader HttpHeaders headers, @PathVariable(name = "id") int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             courseService.enrollUserForCourse(user, id);
@@ -101,10 +99,8 @@ public class CourseController {
         }
     }
 
-
-
     @PostMapping()
-    public void create(@RequestHeader HttpHeaders headers,  @RequestBody CourseDto courseDto){
+    public void create(@RequestHeader HttpHeaders headers, @RequestBody CourseDto courseDto) {
 
         try {
             Course course = courseMapper.fromDto(courseDto);
@@ -121,7 +117,7 @@ public class CourseController {
 
 
     @PutMapping("/{id}")
-    public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody CourseDto courseDto){
+    public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody CourseDto courseDto) {
 
 
         try {
@@ -150,7 +146,7 @@ public class CourseController {
     }
 
     @PostMapping("/{id}/rate")
-    public void rateCourse(@RequestHeader HttpHeaders headers, @PathVariable int id,  @RequestBody RatingDto rating) {
+    public void rateCourse(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody RatingDto rating) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
@@ -164,15 +160,15 @@ public class CourseController {
 
     @PutMapping("/transfer/from/{userIdFrom}/to/{userIdTo}")
     public void transferCourses(@RequestHeader HttpHeaders headers, @PathVariable int userIdFrom,
-                                @PathVariable int userIdTo){
+                                @PathVariable int userIdTo) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-             courseService.transferTeacherCourses(userIdFrom, userIdTo, user);
-        } catch (AuthorizationException e){
+            courseService.transferTeacherCourses(userIdFrom, userIdTo, user);
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
-        } catch (UnsupportedOperationException e){
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnsupportedOperationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }

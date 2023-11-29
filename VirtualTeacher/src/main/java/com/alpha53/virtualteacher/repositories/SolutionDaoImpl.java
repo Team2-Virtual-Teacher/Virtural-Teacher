@@ -43,7 +43,6 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
         return namedParameterJdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(Solution.class));
     }
 
-
     @Override
     public Optional<String> getSolutionUrl(int lectureId) {
         String sql = "SELECT solution_url FROM solutions WHERE lecture_id=:lectureId";
@@ -79,5 +78,4 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
 
         namedParameterJdbcTemplate.update(sql, param);
     }
-
 }

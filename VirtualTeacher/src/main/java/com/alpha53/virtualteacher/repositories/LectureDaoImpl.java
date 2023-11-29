@@ -2,12 +2,10 @@ package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Lecture;
-import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.utilities.LectureMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -81,12 +79,12 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
 
         String sql =
                 "INSERT INTO lectures(title,video_url,assignment_url,course_id) " +
-                        "     VALUES (:title,:videoUrl,:assignment,:courseId)    ";
+                        "     VALUES (:title,:videoUrl,:assignmentUrl,:courseId)    ";
 
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("title", lecture.getTitle());
         param.addValue("videoUrl", lecture.getVideoUrl());
-        param.addValue("assignment", lecture.getAssignmentUrl());
+        param.addValue("assignmentUrl", lecture.getAssignmentUrl());
         param.addValue("courseId", lecture.getCourseId());
 
         int executeResult = namedParameterJdbcTemplate.update(sql, param);
@@ -111,12 +109,12 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
 
     @Override
     public void update(Lecture lecture) {
-        String sql = "UPDATE lectures SET title = :title, video_url = :videoUrl,assignment_url = :assignment,course_id =:courseId WHERE id= :lectureId";
+        String sql = "UPDATE lectures SET title = :title, video_url = :videoUrl,assignment_url = :assignmentUrl,course_id =:courseId WHERE id= :lectureId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("lectureId", lecture.getId());
         params.addValue("title", lecture.getTitle());
         params.addValue("videoUrl", lecture.getVideoUrl());
-        params.addValue("assignment", lecture.getAssignmentUrl());
+        params.addValue("assignmentUrl", lecture.getAssignmentUrl());
         params.addValue("courseId", lecture.getCourseId());
 
         if (namedParameterJdbcTemplate.update(sql, params) == 0) {
@@ -165,6 +163,19 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
             return namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new EntityNotFoundException("Course not found for lecture with ID: " + lectureId);
+        }
+    }
+
+    @Override
+    public Optional<String> getAssignmentUrl(int lectureId){
+        String sql = "SELECT assignment_url FROM lectures WHERE id=:lectureId";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("lectureId",lectureId);
+
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, param, String.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

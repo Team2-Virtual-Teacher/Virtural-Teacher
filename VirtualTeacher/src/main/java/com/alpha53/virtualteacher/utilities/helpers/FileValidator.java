@@ -3,15 +3,24 @@ package com.alpha53.virtualteacher.utilities.helpers;
 import com.alpha53.virtualteacher.exceptions.UnsupportedFileTypeException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class FileValidator {
 
-    public static boolean fileTypeValidator(MultipartFile file,String fileType) {
+    private static final Set<String> acceptableSolutionFormats = new HashSet<>(Set.of("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"));
 
-        if (file.getContentType() != null && file.getContentType().startsWith(fileType)) {
+    private static final Set<String> acceptablePhotoFormats = new HashSet<>(Set.of("image/png","image/jpg","image/jpeg"));
+
+    public static boolean fileTypeValidator(MultipartFile file, String fileType) {
+        if (fileType.equalsIgnoreCase("text") && file.getContentType() != null && acceptableSolutionFormats.contains(file.getContentType())) {
             return true;
         }
-        throw new UnsupportedFileTypeException(fileType);
+        if (fileType.equalsIgnoreCase("picture") && file.getContentType() != null && acceptablePhotoFormats.contains(file.getContentType())) {
+            return true;
+        }
+        throw new UnsupportedFileTypeException(file.getContentType());
 
     }
 

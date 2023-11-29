@@ -32,7 +32,7 @@ public class LectureController {
 
     }
 
-    @GetMapping(value = "/{courseId}/lecture/{lectureId}" )
+    @GetMapping(value = "/{courseId}/lecture/{lectureId}")
     public Lecture get(@RequestHeader HttpHeaders headers,
                        @PathVariable(name = "courseId") int courseId,
                        @PathVariable(name = "lectureId") int lectureId) {
@@ -67,7 +67,7 @@ public class LectureController {
 
     /*Tested with Postman*/
     //TODO Assignment must be uploaded also
-    @PostMapping(value = "{id}/lecture",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "{id}/lecture", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void create(@RequestHeader HttpHeaders headers,
                        @RequestPart @Valid LectureDto lectureDto,
                        @RequestPart MultipartFile assignment,
@@ -89,7 +89,8 @@ public class LectureController {
     /*Tested with Postman*/
     @PutMapping("{courseId}/lecture/{id}")
     public void update(@RequestHeader HttpHeaders headers,
-                       @RequestBody @Valid LectureDto lectureDto,
+                       @RequestPart @Valid LectureDto lectureDto,
+                       @RequestPart(required = false) MultipartFile assignment,
                        @PathVariable(name = "courseId") int courseId,
                        @PathVariable(name = "id") int id
     ) {
@@ -99,10 +100,13 @@ public class LectureController {
             Lecture updateLecture = lectureDtoMapper.dtoToObject(lectureDto);
             updateLecture.setCourseId(courseId);
             updateLecture.setId(id);
-            lectureService.update(updateLecture, user);
+            if (lectureDto.getDescription()!=null){
+                updateLecture.setDescription(lectureDto.getDescription());
+            }
+            lectureService.update(updateLecture, user,assignment);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityDuplicateException e) {
+        } catch (EntityDuplicateException | UnsupportedFileTypeException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
@@ -126,13 +130,13 @@ public class LectureController {
 
     @PostMapping(value = "{courseId}/lecture/{lectureId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void uploadSolution(@RequestHeader HttpHeaders headers,
-                                         @PathVariable(name = "lectureId") int lectureId,
-                                         @PathVariable(name = "courseId") int courseId,
-                                         @RequestPart(name = "Solution") MultipartFile assignmentSolution) {
+                               @PathVariable(name = "lectureId") int lectureId,
+                               @PathVariable(name = "courseId") int courseId,
+                               @RequestPart(name = "solution") MultipartFile solution) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            lectureService.uploadSolution(courseId, lectureId, user, assignmentSolution);
+            lectureService.uploadSolution(courseId, lectureId, user, solution);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
