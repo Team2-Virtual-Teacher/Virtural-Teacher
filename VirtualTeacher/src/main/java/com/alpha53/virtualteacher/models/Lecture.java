@@ -2,6 +2,7 @@ package com.alpha53.virtualteacher.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +17,7 @@ public class Lecture {
 
     private String videoUrl;
 
-    private String assignment;
+    private String assignmentUrl;
 
     private int courseId;
 

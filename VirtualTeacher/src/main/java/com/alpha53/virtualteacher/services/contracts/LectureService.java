@@ -10,9 +10,12 @@ public interface LectureService {
 
     Lecture get(int courseId,int lectureId,User user);
     List<Lecture> getAllByCourseId(int courseId, User user);
-    void create(Lecture lecture,User user);
-    void update(Lecture lecture,User user);
+   // void create(Lecture lecture,User user);
+
+    void create(Lecture lecture, User user, MultipartFile assignment);
+
+    void update(Lecture lecture, User user);
     void delete(int courseId,int lectureId,User user);
-    void uploadAssignmentSolution(int courseId, int lectureId, User user, MultipartFile assignmentSolution);
+    void uploadSolution(int courseId, int lectureId, User user, MultipartFile assignmentSolution);
 }
 

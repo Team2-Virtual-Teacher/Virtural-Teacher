@@ -1,7 +1,7 @@
 package com.alpha53.virtualteacher.repositories.contracts;
 
-import com.alpha53.virtualteacher.models.Assignment;
 import com.alpha53.virtualteacher.models.Lecture;
+import com.alpha53.virtualteacher.models.Solution;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +20,4 @@ public interface LectureDao {
 
     Integer getCourseCreatorId(int lectureId);
 
-    void addSolution(int userId, int lectureId, String fileUrl);
-
-    void updateSolution(int userId, int lectureId, String fileUrl);
-
-    Optional<String> getSolutionUrl(int lectureId);
-
-    List<Assignment> getAllByLectureId(int lectureId);
 }

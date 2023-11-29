@@ -3,7 +3,7 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.config.StorageProperties;
 import com.alpha53.virtualteacher.exceptions.StorageException;
 import com.alpha53.virtualteacher.exceptions.StorageFileNotFoundException;
-import com.alpha53.virtualteacher.models.Assignment;
+import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.services.contracts.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -111,9 +110,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void deleteAll(List<Assignment> assignments) {
-        for (Assignment assignment : assignments) {
-            delete(assignment.getAssignmentUrl());
+    public void deleteAll(List<Solution> solutions) {
+        for (Solution solution : solutions) {
+            delete(solution.getSolutionUrl());
         }
     }
 

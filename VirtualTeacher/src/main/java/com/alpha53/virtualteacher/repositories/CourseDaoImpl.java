@@ -71,7 +71,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     @Override
     public Course getByTitle(String title) {
         String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating" +
-                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+                " FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
                 " WHERE courses.title=:title      ";

@@ -8,12 +8,10 @@ import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
 import jakarta.validation.Valid;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,7 +32,7 @@ public class LectureController {
 
     }
 
-    @GetMapping("/{courseId}/lecture/{lectureId}")
+    @GetMapping(value = "/{courseId}/lecture/{lectureId}" )
     public Lecture get(@RequestHeader HttpHeaders headers,
                        @PathVariable(name = "courseId") int courseId,
                        @PathVariable(name = "lectureId") int lectureId) {
@@ -69,16 +67,17 @@ public class LectureController {
 
     /*Tested with Postman*/
     //TODO Assignment must be uploaded also
-    @PostMapping("{id}/lecture")
+    @PostMapping(value = "{id}/lecture",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void create(@RequestHeader HttpHeaders headers,
-                       @RequestBody @Valid LectureDto lectureDto,
+                       @RequestPart @Valid LectureDto lectureDto,
+                       @RequestPart MultipartFile assignment,
                        @PathVariable(name = "id") int courseId) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Lecture lectureToCreate = lectureDtoMapper.dtoToObject(lectureDto);
             lectureToCreate.setCourseId(courseId);
-            lectureService.create(lectureToCreate, user);
+            lectureService.create(lectureToCreate, user, assignment);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -110,7 +109,6 @@ public class LectureController {
     }
 
     /*Tested with Postman*/
-    //TODO check why courseId is not used
     @DeleteMapping("{courseId}/lecture/{lectureId}")
     public void delete(@RequestHeader HttpHeaders headers,
                        @PathVariable(name = "lectureId") int lectureId,
@@ -134,7 +132,7 @@ public class LectureController {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            lectureService.uploadAssignmentSolution(courseId, lectureId, user, assignmentSolution);
+            lectureService.uploadSolution(courseId, lectureId, user, assignmentSolution);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

@@ -16,8 +16,6 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 public class LectureDto {
 
-    private Integer id;
-
     @NotNull
     @Size(min = 5, max = 50)
     private String title;
@@ -26,12 +24,6 @@ public class LectureDto {
     @NotBlank
     @Length(min = 10,max = 2048)
     private String videoUrl;
-
-    @NotNull
-    @NotBlank
-    private String assignment;
-
-    private int courseId;
 
     private LectureDescription description;
 }

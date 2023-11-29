@@ -3,9 +3,9 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Assignment;
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.Lecture;
+import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
@@ -78,7 +78,7 @@ public class LectureServiceImpl implements LectureService {
      * @param user    - logged user
      */
     @Override
-    public void create(Lecture lecture, User user) {
+    public void create(Lecture lecture, User user, MultipartFile assignment) {
         Course course = courseDao.get(lecture.getCourseId());
         if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
                 course.getCreator().getUserId() == user.getUserId()) {
@@ -120,12 +120,12 @@ public class LectureServiceImpl implements LectureService {
         Course course = courseDao.get(courseId);
         if (user.getRole().getRoleType().equalsIgnoreCase("admin") ||
                 course.getCreator().getUserId() == user.getUserId()) {
-           List<Assignment> assignmentList= lectureDao.getAllByLectureId(lectureId);
+           List<Solution> solutionList = solutionDao.getAllByLectureId(lectureId);
 
             if (lectureDao.delete(lectureId) == 0) {
                 throw new EntityNotFoundException("Lecture", "id", String.valueOf(lectureId));
             }
-            storageService.deleteAll(assignmentList);
+            storageService.deleteAll(solutionList);
 
         } else {
             throw new AuthorizationException(LECTURE_PERMIT_DELETE_EXCEPTION);
@@ -133,9 +133,9 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void uploadAssignmentSolution(int courseId, int lectureId, User user, MultipartFile assignmentSolution) {
+    public void uploadSolution(int courseId, int lectureId, User user, MultipartFile solution) {
 
-        FileValidator.fileTypeValidator(assignmentSolution, "text");
+        FileValidator.fileTypeValidator(solution, "text");
 
         if (courseDao.isUserEnrolled(user.getUserId(), courseId)) {
 
@@ -146,13 +146,13 @@ public class LectureServiceImpl implements LectureService {
                 throw new EntityNotFoundException("Lecture", "ID", String.valueOf(lectureId));
             }
 
-            Optional<String> result = lectureDao.getSolutionUrl(lectureId);
+            Optional<String> result = solutionDao.getSolutionUrl(lectureId);
 
-            String fileUrl = storageService.store(assignmentSolution);
+            String fileUrl = storageService.store(solution);
 
             if (result.isPresent()) {
                 storageService.delete(result.get());
-                lectureDao.updateSolution(user.getUserId(), lectureId, fileUrl);
+                solutionDao.updateSolution(user.getUserId(), lectureId, fileUrl);
             } else {
 
                 lectureDao.addSolution(user.getUserId(), lectureId, fileUrl);

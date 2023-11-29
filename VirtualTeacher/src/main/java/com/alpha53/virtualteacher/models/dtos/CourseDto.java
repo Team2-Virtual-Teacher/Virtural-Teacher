@@ -8,7 +8,6 @@ public class CourseDto {
 
     private int topicId;
 
-
     private String startingDate;
 
     private boolean isPublished;

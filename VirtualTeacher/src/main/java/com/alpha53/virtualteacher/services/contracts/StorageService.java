@@ -1,6 +1,6 @@
 package com.alpha53.virtualteacher.services.contracts;
 
-import com.alpha53.virtualteacher.models.Assignment;
+import com.alpha53.virtualteacher.models.Solution;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +19,7 @@ public interface StorageService {
     void delete(String filename);
 
     Resource loadAsResource(String filename);
-    void deleteAll(List<Assignment> assignments);
+    void deleteAll(List<Solution> solutions);
 
     void deleteAll();
 }

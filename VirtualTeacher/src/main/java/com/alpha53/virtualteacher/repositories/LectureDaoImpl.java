@@ -1,8 +1,8 @@
 package com.alpha53.virtualteacher.repositories;
 
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Assignment;
 import com.alpha53.virtualteacher.models.Lecture;
+import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.utilities.LectureMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -86,7 +86,7 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("title", lecture.getTitle());
         param.addValue("videoUrl", lecture.getVideoUrl());
-        param.addValue("assignment", lecture.getAssignment());
+        param.addValue("assignment", lecture.getAssignmentUrl());
         param.addValue("courseId", lecture.getCourseId());
 
         int executeResult = namedParameterJdbcTemplate.update(sql, param);
@@ -116,7 +116,7 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         params.addValue("lectureId", lecture.getId());
         params.addValue("title", lecture.getTitle());
         params.addValue("videoUrl", lecture.getVideoUrl());
-        params.addValue("assignment", lecture.getAssignment());
+        params.addValue("assignment", lecture.getAssignmentUrl());
         params.addValue("courseId", lecture.getCourseId());
 
         if (namedParameterJdbcTemplate.update(sql, params) == 0) {
@@ -189,29 +189,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         param.addValue("lectureId", lectureId);
 
         namedParameterJdbcTemplate.update(sql, param);
-    }
-
-    @Override
-    public Optional<String> getSolutionUrl(int lectureId) {
-        String sql = "SELECT solution_url FROM solutions WHERE lecture_id=:lectureId";
-        MapSqlParameterSource param = new MapSqlParameterSource();
-        param.addValue("lectureId", lectureId);
-        try {
-
-            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, param, String.class));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public List<Assignment> getAllByLectureId(int lectureId) {
-        String sql = "SELECT id as assignmentId,solution_url as assignmentUrl,user_id as userId, lecture_id as lectureId " +
-                "FROM solutions WHERE lecture_id=:lectureId";
-        MapSqlParameterSource param = new MapSqlParameterSource();
-        param.addValue("lectureId", lectureId);
-
-        return namedParameterJdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(Assignment.class));
     }
 
     /**

@@ -7,9 +7,9 @@ import lombok.*;
 @Setter
 @Getter
 @EqualsAndHashCode
-public class Assignment {
-    private int assignmentId;
-    private String assignmentUrl;
+public class Solution {
+    private int solutionId;
+    private String solutionUrl;
     private int userId;
     private int lectureId;
 
