@@ -3,6 +3,7 @@ package com.alpha53.virtualteacher.services.contracts;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,5 +23,5 @@ public interface UserService {
 
     void setUserRole(User loggedInUser, User userToGetRole, String roleName);
 
-    void uploadProfilePicture(String picturePath, User user, int id);
+    void uploadProfilePicture(MultipartFile file, User user, int id);
 }

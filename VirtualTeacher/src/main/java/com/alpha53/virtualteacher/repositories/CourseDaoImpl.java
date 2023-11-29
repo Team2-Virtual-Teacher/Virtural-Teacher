@@ -70,8 +70,8 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public Course getByTitle(String title) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating" +
-                " FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
+                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
                 " WHERE courses.title=:title      ";
@@ -202,7 +202,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
                 " LEFT JOIN users ON course_user.user_id = users.id "+
                 " LEFT JOIN topics ON courses.topic_id=topics.id " +
                 "  LEFT JOIN ratings ON courses.id = ratings.course_id "+
-                " WHERE user_id = :id";
+                " WHERE course_user.user_id = :id";
 
 
         MapSqlParameterSource in = new MapSqlParameterSource();
@@ -266,15 +266,34 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     @Override
     public List<Course> getCoursesByUser(int userId) {
         String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url," +
-                " is_published, passing_grade, topic, topic_id " +
+                " is_published, passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating  " +
                 "FROM course_user " +
                 "LEFT JOIN courses ON course_user.course_id = courses.id " +
                 "LEFT JOIN topics ON courses.topic_id = topics.id " +
                 "LEFT JOIN users ON courses.creator_id = users.id " +
-                "WHERE user_id = :id;";
+                "  LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                "WHERE course_user.user_id = :id;";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", userId);
+
+        return namedParameterJdbcTemplate.query(sql, in, courseMapper);
+
+    }
+
+    @Override
+    public List<Course> getCoursesByCreator(int creatorId) {
+        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url," +
+                " is_published, passing_grade, topic, topic_id , AVG(ratings.rating) AS avg_rating  " +
+                "FROM courses " +
+                "LEFT JOIN topics ON courses.topic_id = topics.id " +
+                "LEFT JOIN users ON courses.creator_id = users.id " +
+                "  LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                "WHERE creator_id = :id " +
+                "GROUP BY courses.id";
+
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("id", creatorId);
 
         return namedParameterJdbcTemplate.query(sql, in, courseMapper);
 

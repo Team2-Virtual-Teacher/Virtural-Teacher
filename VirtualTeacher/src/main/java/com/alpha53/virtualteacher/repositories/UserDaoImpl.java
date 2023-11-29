@@ -175,24 +175,11 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
 
     @Override
     public void delete(int id) {
-        deleteFromCourseUser(id);
-        deleteFromUsers(id);
-    }
-
-    private void deleteFromCourseUser(int id) {
-        String sql = "DELETE FROM course_user WHERE user_id = :id";
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("id", id);
-        namedParameterJdbcTemplate.update(sql, in);
-    }
-
-    private void deleteFromUsers(int id) {
         String sql = "DELETE FROM users WHERE id = :id";
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", id);
         namedParameterJdbcTemplate.update(sql, in);
     }
-
 
     public Role getRole(String roleType) {
         String query = "SELECT id as roleId, role as roleType " +

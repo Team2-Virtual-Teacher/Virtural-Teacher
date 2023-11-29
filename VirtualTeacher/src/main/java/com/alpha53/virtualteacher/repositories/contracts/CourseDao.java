@@ -5,6 +5,7 @@ import com.alpha53.virtualteacher.models.FilterOptions;
 import com.alpha53.virtualteacher.models.RatingDto;
 import com.alpha53.virtualteacher.models.User;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface CourseDao {
@@ -19,6 +20,7 @@ public interface CourseDao {
     void enrollUserForCourse(int userId, int courseId);
 
     List<Course> getCoursesByUser( int userId);
+    List<Course> getCoursesByCreator(int creatorId);
     void create(Course course);
 
     void update(Course course);

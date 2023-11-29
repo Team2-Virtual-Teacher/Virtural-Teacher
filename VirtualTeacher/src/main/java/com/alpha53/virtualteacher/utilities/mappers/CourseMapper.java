@@ -27,6 +27,7 @@ public class CourseMapper implements RowMapper<Course> {
         course.setPassingGrade(rs.getDouble("passing_grade"));
         //TODO course dto
 
+        // TODO: 29.11.23 Viktor: consider removing all user fields and leaving only the ID of the creator.
         creator.setUserId(rs.getInt("creator_id"));
         creator.setEmail(rs.getString("email"));
         creator.setFirstName(rs.getString("first_name"));

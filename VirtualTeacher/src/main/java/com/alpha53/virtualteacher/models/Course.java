@@ -23,7 +23,6 @@ public class Course {
     private double passingGrade;
     private double avgRating;
     private CourseDescription description;
-    @Getter
     private Set<Lecture> lectures = new HashSet<>();
 
 

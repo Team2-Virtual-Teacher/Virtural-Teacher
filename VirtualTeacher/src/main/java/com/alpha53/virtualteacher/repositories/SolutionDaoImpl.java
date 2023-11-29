@@ -25,7 +25,7 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
 
     @Override
     public List<Solution> getAllByLectureId(int lectureId) {
-        String sql = "SELECT id as assignmentId,solution_url as assignmentUrl,user_id as userId, lecture_id as lectureId " +
+        String sql = "SELECT id as solutionId,solution_url as solutionUrl,user_id as userId, lecture_id as lectureId " +
                 "FROM solutions WHERE lecture_id=:lectureId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("lectureId", lectureId);
@@ -35,7 +35,7 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
 
     @Override
     public List<Solution> getAllByUserId(int userId) {
-        String sql = "SELECT id as assignmentId,solution_url as assignmentUrl,user_id as userId, lecture_id as lectureId " +
+        String sql = "SELECT id as solutionId,solution_url as solutionUrl,user_id as userId, lecture_id as lectureId " +
                 "FROM solutions WHERE user_id=:userId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("userId", userId);

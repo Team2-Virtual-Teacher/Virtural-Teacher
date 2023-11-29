@@ -31,14 +31,12 @@ public class UserController {
     private final AuthenticationHelper authenticationHelper;
 
     private final UserMapperHelper userMapperHelper;
-    private final StorageService storageService;
 
     @Autowired
-    public UserController(UserService userService, AuthenticationHelper authenticationHelper, UserMapperHelper userMapperHelper, StorageService storageService) {
+    public UserController(UserService userService, AuthenticationHelper authenticationHelper, UserMapperHelper userMapperHelper) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.userMapperHelper = userMapperHelper;
-        this.storageService = storageService;
     }
 
     @GetMapping
@@ -129,8 +127,7 @@ public class UserController {
     public void uploadProfilePicture(@RequestHeader HttpHeaders headers,@PathVariable int id,@RequestParam("file") MultipartFile file) {
         User loggedInUser = authenticationHelper.tryGetUser(headers);
         try {
-            String picturePath = storageService.store(file);
-            userService.uploadProfilePicture(picturePath, loggedInUser, id);
+            userService.uploadProfilePicture(file, loggedInUser, id);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (StorageException e){
