@@ -172,7 +172,7 @@ public class UserServiceImpl implements UserService {
         if (user.getRole().getRoleType().equalsIgnoreCase("PendingTeacher")) {
             throw new AuthorizationException(PENDING_VALIDATION_EXCEPTION);
         }
-        // TODO: 29.11.23 add file validation afer you agree how it would work.
+        // TODO: 29.11.23 add file validation after we agree on how it would work.
         String currentUserPhotoUrl = user.getPictureUrl();
         if (!currentUserPhotoUrl.equals(DEFAULT_PHOTO_URL)) {
             storageService.delete(currentUserPhotoUrl);

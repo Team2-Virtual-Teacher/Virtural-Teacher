@@ -21,11 +21,11 @@ import java.util.*;
 @Repository
 public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements CourseDao {
 
-    // private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+   // private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final CourseMapper courseMapper;
 
-    /* //TODO
-     private static final CourseMapper COURSE_MAPPER = new CourseMapper();*/
+   /* //TODO
+    private static final CourseMapper COURSE_MAPPER = new CourseMapper();*/
     private final CourseDescriptionMapper courseDescriptionMapper;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -290,9 +290,9 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
                 "LEFT JOIN courses ON course_user.course_id = courses.id " +
                 "LEFT JOIN topics ON courses.topic_id = topics.id " +
                 "LEFT JOIN users ON courses.creator_id = users.id " +
-                "WHERE user_id = :id; " +
-                "  LEFT JOIN ratings ON courses.id = ratings.course_id " +
-                "GROUP BY courses.id";
+                "  LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                "WHERE course_user.user_id = :id " +
+                "GROUP BY courses.id;";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("id", userId);

@@ -4,7 +4,6 @@ import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
-import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.UserDao;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -24,11 +23,9 @@ import java.util.List;
 public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final CourseDao courseDao;
 
-    public UserDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CourseDao courseDao, DataSource dataSource) {
+    public UserDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.courseDao = courseDao;
         this.setDataSource(dataSource);
     }
 
