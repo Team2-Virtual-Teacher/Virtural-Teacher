@@ -85,6 +85,19 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/completed")
+    public List<Course> getUsersCompletedCourses(@RequestHeader HttpHeaders headers){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return courseService.getUsersCompletedCourses(user.getUserId());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
     @PostMapping("/{id}/enroll")
     public void enrollUserForCourse(@RequestHeader HttpHeaders headers, @PathVariable(name = "id") int id) {
         try {

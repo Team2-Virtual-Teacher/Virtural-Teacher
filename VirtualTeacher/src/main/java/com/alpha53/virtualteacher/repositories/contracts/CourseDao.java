@@ -16,6 +16,7 @@ public interface CourseDao {
     List<Course> get(FilterOptions filterOptions);
     List<Course> getPublicCourses(FilterOptions filterOptions);
     List<Course> getUsersEnrolledCourses(int userId);
+    List<Course> getUsersCompletedCourses(int userId);
     List<User> getStudentsWhichAreEnrolledForCourse(int courseId);
     void enrollUserForCourse(int userId, int courseId);
 

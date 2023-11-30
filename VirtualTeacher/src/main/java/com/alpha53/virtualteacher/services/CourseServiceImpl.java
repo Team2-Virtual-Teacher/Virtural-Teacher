@@ -13,6 +13,7 @@ import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -104,6 +105,11 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.getUsersEnrolledCourses(userId);
     }
 
+    @Override
+    public List<Course> getUsersCompletedCourses(int userId) {
+       return courseRepository.getUsersCompletedCourses(userId);
+    }
+
     public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser){
         if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin")){
             throw new AuthorizationException(COURSE_TRANSFER_EXCEPTION);
@@ -126,11 +132,16 @@ public class CourseServiceImpl implements CourseService {
     public void enrollUserForCourse(User user, int courseId) {
      List<Course> enrolledCourses = courseRepository.getUsersEnrolledCourses(user.getUserId());
      Course course = courseRepository.get(courseId);
+
      if (containsId(enrolledCourses, courseId)){
          throw new EntityDuplicateException("Record", "id", Integer.toString(courseId));
 
+     }else  if(!user.getRole().getRoleType().equalsIgnoreCase("student")) {
+         throw new AuthorizationException("Only student can enroll for course");
      } else  if(course.getCreator().getUserId()==user.getUserId()) {
          throw new AuthorizationException("You cannot enroll for course if you are creator");
+     } else  if(course.getStartingDate().isAfter(LocalDate.now())) {
+         throw new AuthorizationException("You cannot enroll beforre the starting date");
      } else{
              courseRepository.enrollUserForCourse(user.getUserId(), courseId);
          }
@@ -139,7 +150,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void rateCourse(RatingDto rating, int courseId, int raterId) {
-        //TODO student hass passed
+        //TODO student has passed
         courseRepository.rateCourse(rating, courseId, raterId);
     }
 
