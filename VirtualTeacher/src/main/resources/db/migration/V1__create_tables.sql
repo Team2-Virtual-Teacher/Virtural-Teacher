@@ -37,7 +37,7 @@ create table courses
         primary key,
     title         varchar(50) not null,
     topic_id      int         not null,
-    start_date    timestamp    not null,
+    start_date    datetime    not null,
     creator_id    int         not null,
     is_published  tinyint(1)  not null,
     passing_grade decimal     not null,
