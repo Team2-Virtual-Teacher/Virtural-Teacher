@@ -69,7 +69,7 @@ public class LectureServiceImpl implements LectureService {
             return lectureDao.getAllByCourseId(courseId);
         }
 
-        List<Course> enrolledCourses = courseDao.getUsersEnrolledCourses(user.getUserId());
+        List<Course> enrolledCourses = courseDao.getCoursesByUser(user.getUserId());
         if (enrolledCourses.stream().anyMatch(c -> c.getCourseId() == courseId)) {
             return lectureDao.getAllByCourseId(courseId);
         }

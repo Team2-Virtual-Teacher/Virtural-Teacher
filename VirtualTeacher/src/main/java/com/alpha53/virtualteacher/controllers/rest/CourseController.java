@@ -41,10 +41,17 @@ public class CourseController {
             @RequestParam(required = false) String topic,
             @RequestParam(required = false) String teacher,
             @RequestParam(required = false) String rating,
+            @RequestParam(required = false) String isPublic,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder
     ) {
-        FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, sortBy, sortOrder);
+        Boolean isPublicBool;
+        if (isPublic==null){
+            isPublicBool = null;
+        } else {
+            isPublicBool = Boolean.parseBoolean(isPublic);
+        }
+        FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, isPublicBool, sortBy, sortOrder);
         boolean isAuthenticated = true;
         User user = new User();
         try {

@@ -125,7 +125,8 @@ create table ratings
     id        int          auto_increment
         primary key,
     constraint ratings_courses_id_fk
-        foreign key (course_id) references courses (id),
+        foreign key (course_id) references courses (id)
+            ON DELETE CASCADE,
     constraint ratings_users_id_fk
         foreign key (user_id) references users (id)
 );

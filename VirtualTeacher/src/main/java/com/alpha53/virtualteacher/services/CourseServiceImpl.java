@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -74,11 +75,11 @@ public class CourseServiceImpl implements CourseService {
 
     public void delete(int id, User user) {
         Course course = courseRepository.get(id);
-        if (course.isPublished()==false || courseRepository.getStudentsWhichAreEnrolledForCourse(id).isEmpty()){
+        if (!course.isPublished() || courseRepository.getStudentsWhichAreEnrolledForCourse(id).isEmpty()){
             checkModifyPermissions(id, user);
             courseRepository.delete(id);
         } else {
-            throw new AuthorizationException("You can delete course only if there are no enrolled studens or the course is not public");
+            throw new AuthorizationException("You can delete course only if there are no enrolled students or the course is not public");
         }
 
     }
@@ -89,20 +90,20 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public List<Course> getPublic(FilterOptions filterOptions) {
-
-        return courseRepository.getPublicCourses(filterOptions);
+        filterOptions.setIsPublic(Optional.of(Boolean.TRUE));
+        return courseRepository.get(filterOptions);
     }
     public List<Course> get(FilterOptions filterOptions, User user) {
-        if (user.getRole().getRoleType().equalsIgnoreCase("Admin") || user.getRole().getRoleType().equalsIgnoreCase("teacher")){
-            return courseRepository.get(filterOptions);
+        if (user.getRole().getRoleType().equalsIgnoreCase("student") || user.getRole().getRoleType().equalsIgnoreCase("PendingTeacher")){
+            filterOptions.setIsPublic(Optional.of(Boolean.TRUE));
         }
 
-        return courseRepository.getPublicCourses(filterOptions);
+        return courseRepository.get(filterOptions);
     }
 
     @Override
     public List<Course> getUsersEnrolledCourses(int userId) {
-        return courseRepository.getUsersEnrolledCourses(userId);
+        return courseRepository.getCoursesByUser(userId);
     }
 
     @Override
@@ -130,18 +131,20 @@ public class CourseServiceImpl implements CourseService {
     }
     @Override
     public void enrollUserForCourse(User user, int courseId) {
-     List<Course> enrolledCourses = courseRepository.getUsersEnrolledCourses(user.getUserId());
+     List<Course> enrolledCourses = courseRepository.getCoursesByUser(user.getUserId());
      Course course = courseRepository.get(courseId);
 
      if (containsId(enrolledCourses, courseId)){
          throw new EntityDuplicateException("Record", "id", Integer.toString(courseId));
 
-     }else  if(!user.getRole().getRoleType().equalsIgnoreCase("student")) {
+     } else  if(!user.getRole().getRoleType().equalsIgnoreCase("student")) {
          throw new AuthorizationException("Only student can enroll for course");
      } else  if(course.getCreator().getUserId()==user.getUserId()) {
          throw new AuthorizationException("You cannot enroll for course if you are creator");
      } else  if(course.getStartingDate().isAfter(LocalDate.now())) {
-         throw new AuthorizationException("You cannot enroll beforre the starting date");
+         throw new AuthorizationException("You cannot enroll before the starting date");
+     } else  if(!course.isPublished()) {
+         throw new AuthorizationException("You cannot enroll for course which is not public");
      } else{
              courseRepository.enrollUserForCourse(user.getUserId(), courseId);
          }
@@ -150,8 +153,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void rateCourse(RatingDto rating, int courseId, int raterId) {
-        //TODO student has passed
-        courseRepository.rateCourse(rating, courseId, raterId);
+        if (courseRepository.hasUserPassedCourse(raterId, courseId)){
+            courseRepository.rateCourse(rating, courseId, raterId);
+        } else {
+            throw new AuthorizationException("You must pass course to leave rating");
+        }
+
     }
 
     public boolean containsId(final List<Course> list, final int id){
