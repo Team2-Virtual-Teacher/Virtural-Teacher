@@ -1,8 +1,10 @@
 package com.alpha53.virtualteacher.repositories;
 
+import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -70,7 +72,7 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
     }
 
     @Override
-    public void updateSolution(int userId, int lectureId, String fileUrl) {
+    public void updateSolutionUrl(int userId, int lectureId, String fileUrl) {
         String sql = "UPDATE solutions SET solution_url =:fileUrl WHERE lecture_id = :lectureId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("fileUrl", fileUrl);
@@ -78,4 +80,29 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
 
         namedParameterJdbcTemplate.update(sql, param);
     }
+
+    @Override
+    public Solution getSolution(int userId, int lectureId) {
+        String sql = "SELECT solution_url, user_id, lecture_id, id, grade FROM solutions WHERE lecture_id =:lectureId AND user_id=:lectureId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("lectureId", lectureId);
+        params.addValue("lectureId", lectureId);
+
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<>(Solution.class));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new EntityNotFoundException(userId, lectureId);
+        }
+    }
+
+    @Override
+    public void addGrade(Solution solution) {
+        String sql = "UPDATE solutions SET grade=:grade WHERE user_id=:userId AND lecture_id=:lectureId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("grade", solution.getGrade());
+        params.addValue("userId", solution.getUserId());
+        params.addValue("lectureId", solution.getLectureId());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
 }

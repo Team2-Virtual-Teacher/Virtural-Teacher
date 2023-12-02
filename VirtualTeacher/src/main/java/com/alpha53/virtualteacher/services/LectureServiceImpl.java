@@ -51,13 +51,7 @@ public class LectureServiceImpl implements LectureService {
         if (courseDao.isUserEnrolled(user.getUserId(), courseId)) {
             return lectureDao.get(lectureId);
         }
-       /* List<Course> enrolledCourses = courseDao.getUsersEnrolledCourses(user.getUserId());
-
-        if (enrolledCourses.stream().anyMatch(c -> c.getCourseId() == courseId)) {
-            return lectureDao.get(lectureId);
-        }*/
         throw new EntityNotFoundException(String.format("No lectures to show for user with ID: %d in course with ID: %d", user.getUserId(), courseId));
-
     }
 
     @Override
@@ -151,7 +145,7 @@ public class LectureServiceImpl implements LectureService {
 
             if (existingSolutionUrl.isPresent()) {
                 storageService.delete(existingSolutionUrl.get());
-                solutionDao.updateSolution(user.getUserId(), lectureId, fileUrl);
+                solutionDao.updateSolutionUrl(user.getUserId(), lectureId, fileUrl);
             } else {
                 solutionDao.addSolution(user.getUserId(), lectureId, fileUrl);
             }

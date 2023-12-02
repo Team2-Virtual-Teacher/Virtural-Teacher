@@ -20,11 +20,11 @@ import java.util.*;
 @Repository
 public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements CourseDao {
 
-   // private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    // private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final CourseMapper courseMapper;
 
-   /* //TODO
-    private static final CourseMapper COURSE_MAPPER = new CourseMapper();*/
+    /* //TODO
+     private static final CourseMapper COURSE_MAPPER = new CourseMapper();*/
     private final CourseDescriptionMapper courseDescriptionMapper;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -49,9 +49,9 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     public Course get(int id) {
 
         String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
-                     "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
-                     "  LEFT JOIN users ON courses.creator_id = users.id " +
-                "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+                "  LEFT JOIN users ON courses.creator_id = users.id " +
+                "   LEFT JOIN ratings ON courses.id = ratings.course_id " +
                 " WHERE courses.id=:id      " +
                 "GROUP BY courses.id";
 
@@ -72,7 +72,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id " +
-                "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                "   LEFT JOIN ratings ON courses.id = ratings.course_id " +
                 " WHERE courses.title=:title      " +
                 "GROUP BY courses.id";
 
@@ -87,14 +87,12 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         }
     }
 
-
-
     @Override
     public List<Course> get(FilterOptions filterOptions) {
         String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                 "FROM courses " +
                 " LEFT JOIN topics ON courses.topic_id = topics.id     " +
-                "  LEFT JOIN users ON courses.creator_id = users.id "+
+                "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id ";
 
 
@@ -148,7 +146,6 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     }
 
-
     //TODO refactor keywords in the query with capital letter pattern to follow consistency of the code
     // TODO: 26.11.23 we should consider combining this method with getCoursesByUser. Removing the throw statement here
     //  and adding a .isEmpty check in the service will most likely do the job. Discuss with team.
@@ -180,14 +177,13 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     @Override
     public List<Course> getUsersCompletedCourses(int userId) {
         String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating " +
-                " FROM course_user "+
-                " LEFT JOIN courses ON course_user.course_id = courses.id "+
-                " LEFT JOIN users ON course_user.user_id = users.id "+
-                " LEFT JOIN topics ON courses.topic_id=topics.id "+
-                " LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                " FROM course_user " +
+                " LEFT JOIN courses ON course_user.course_id = courses.id " +
+                " LEFT JOIN users ON course_user.user_id = users.id " +
+                " LEFT JOIN topics ON courses.topic_id=topics.id " +
+                " LEFT JOIN ratings ON courses.id = ratings.course_id " +
                 " WHERE course_user.user_id = :id AND course_user.ongoing = 0 " +
                 "GROUP BY courses.id";
-
 
 
         MapSqlParameterSource in = new MapSqlParameterSource();
@@ -374,8 +370,9 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         params.addValue("userId", userId);
         params.addValue("courseId", courseId);
 
-        return namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class) > 0;
+        Integer result = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
 
+        return result != null && result > 0;
     }
 
     @Override
@@ -387,6 +384,15 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         params.addValue("courseId", courseId);
 
         return namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class) > 0;
+    }
+
+    @Override
+    public void removeStudent(User user, Course course) {
+        String sql = "DELETE FROM course_user WHERE course_id=:courseId AND user_id =:userId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("courseId", course.getCourseId());
+        params.addValue("userId", user.getUserId());
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     private String generateOrderBy(FilterOptions filterOptions) {

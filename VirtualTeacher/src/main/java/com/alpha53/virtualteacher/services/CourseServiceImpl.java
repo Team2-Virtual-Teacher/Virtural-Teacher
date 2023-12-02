@@ -3,18 +3,18 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.FilterOptions;
-import com.alpha53.virtualteacher.models.RatingDto;
-import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
+import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 @Service
@@ -26,11 +26,13 @@ public class CourseServiceImpl implements CourseService {
     public static final String INVALID_CURRENT_TEACHER_EXCEPTION = "User with ID %d is not a Teacher.";
     private final CourseDao courseRepository;
     private final UserService userService;
+    private final LectureDao lectureDao;
 
     @Autowired
-    public CourseServiceImpl(CourseDao courseRepository, UserService userService) {
+    public CourseServiceImpl(CourseDao courseRepository, UserService userService, LectureDao lectureDao) {
         this.courseRepository = courseRepository;
         this.userService = userService;
+        this.lectureDao = lectureDao;
     }
 
     public void create(Course course, User user) {
@@ -85,7 +87,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public Course getCourseById(int id) {
-
+        Course course = courseRepository.get(id);
+        Set<Lecture> lectures = new HashSet<>(lectureDao.getAllByCourseId(id));
+        course.setLectures(lectures);
         return courseRepository.get(id);
     }
 
@@ -162,7 +166,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public boolean containsId(final List<Course> list, final int id){
-        return list.stream().filter(o -> o.getCourseId()==id).findFirst().isPresent();
+        return list.stream().anyMatch(o -> o.getCourseId()==id);
     }
 
     private void checkModifyPermissions(int courseId, User user) {
@@ -170,10 +174,6 @@ public class CourseServiceImpl implements CourseService {
         if (course.getCreator().getUserId() != user.getUserId() && !user.getRole().getRoleType().equalsIgnoreCase("admin")){
             throw new AuthorizationException(ONLY_CREATOR_CAN_MODIFY_A_COURSE);
         }
-
-
     }
-
-
 
 }

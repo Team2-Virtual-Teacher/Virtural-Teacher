@@ -32,5 +32,7 @@ public interface CourseDao {
     void rateCourse(RatingDto rating, int courseId, int raterId);
 
     boolean isUserEnrolled(int userId, int courseId);
+
+    void removeStudent(User user, Course course);
     boolean hasUserPassedCourse(int userId, int courseId);
 }

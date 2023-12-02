@@ -19,4 +19,7 @@ public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String message) {
         super(message);
     }
+    public EntityNotFoundException(int userId,int lectureId){
+        super(String.format("Solution not found for user with ID: %d in Lecture with ID: %d",userId,lectureId));
+    }
 }

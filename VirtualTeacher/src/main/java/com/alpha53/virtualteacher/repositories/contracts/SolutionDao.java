@@ -14,6 +14,11 @@ public interface SolutionDao {
 
     void addSolution(int userId, int lectureId, String fileUrl);
 
-    void updateSolution(int userId, int lectureId, String fileUrl);
+    void updateSolutionUrl(int userId, int lectureId, String fileUrl);
 
+   // boolean isSolutionExist(int userId, int lectureId);
+
+    Solution getSolution(int userId, int lectureId);
+
+    void addGrade(Solution solution);
 }

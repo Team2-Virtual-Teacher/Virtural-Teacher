@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/courses")
 public class CourseController {
-
     private final CourseService courseService;
     private final AuthenticationHelper authenticationHelper;
     private final CourseDtoMapper courseMapper;
