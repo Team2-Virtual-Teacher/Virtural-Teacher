@@ -16,6 +16,8 @@ public interface CourseService {
     public void delete(int id, User user);
 
     public Course getCourseById(int id);
+    public Course getCourseByIdAuth(int id, User user);
+
 
 
     void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser);

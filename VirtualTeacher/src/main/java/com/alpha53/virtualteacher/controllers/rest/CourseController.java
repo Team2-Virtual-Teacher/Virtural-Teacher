@@ -45,7 +45,7 @@ public class CourseController {
             @RequestParam(required = false) String sortOrder
     ) {
         Boolean isPublicBool;
-        if (isPublic==null){
+        if (isPublic == null) {
             isPublicBool = null;
         } else {
             isPublicBool = Boolean.parseBoolean(isPublic);
@@ -73,12 +73,33 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public Course get(@PathVariable(name = "id") int id) {
-        return courseService.getCourseById(id);
+    public Course get(
+            @RequestHeader(required = false) HttpHeaders headers, @PathVariable(name = "id") int id) {
+        boolean isAuthenticated = true;
+        User user = new User();
+        try {
+            user = authenticationHelper.tryGetUser(headers);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+
+            isAuthenticated = false;
+        }
+        if (isAuthenticated) {
+            return courseService.getCourseByIdAuth(id, user);
+        } else {
+            return courseService.getCourseById(id);
+        }
+
     }
 
     @GetMapping("/enrolled")
     public List<Course> getUsersEnrolledCourses(@RequestHeader HttpHeaders headers) {
+
+        //TODO remove unnecessary catch
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return courseService.getUsersEnrolledCourses(user.getUserId());
@@ -92,7 +113,8 @@ public class CourseController {
     }
 
     @GetMapping("/completed")
-    public List<Course> getUsersCompletedCourses(@RequestHeader HttpHeaders headers){
+    public List<Course> getUsersCompletedCourses(@RequestHeader HttpHeaders headers) {
+        //TODO remove unnecessary catch
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return courseService.getUsersCompletedCourses(user.getUserId());
@@ -104,6 +126,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @PostMapping("/{id}/enroll")
     public void enrollUserForCourse(@RequestHeader HttpHeaders headers, @PathVariable(name = "id") int id) {
         try {

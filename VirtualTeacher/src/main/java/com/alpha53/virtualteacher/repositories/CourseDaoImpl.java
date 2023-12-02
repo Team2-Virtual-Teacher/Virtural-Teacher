@@ -3,7 +3,6 @@ package com.alpha53.virtualteacher.repositories;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
-import com.alpha53.virtualteacher.utilities.mappers.CourseDescriptionMapper;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -13,26 +12,22 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 @Repository
 public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements CourseDao {
 
-    // private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     private final CourseMapper courseMapper;
 
     /* //TODO
      private static final CourseMapper COURSE_MAPPER = new CourseMapper();*/
-    private final CourseDescriptionMapper courseDescriptionMapper;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final UserMapper userMapper = new UserMapper();
 
-    public CourseDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource, CourseMapper courseMapper, CourseDescriptionMapper courseDescriptionMapper) {
+    public CourseDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource, CourseMapper courseMapper) {
         this.courseMapper = courseMapper;
-        this.courseDescriptionMapper = courseDescriptionMapper;
         this.setDataSource(dataSource);
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
@@ -87,6 +82,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         }
     }
 
+
     @Override
     public List<Course> get(FilterOptions filterOptions) {
         String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
@@ -97,22 +93,18 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
 
         List<String> filters = new ArrayList<>();
-        Map<String, Object> params = new HashMap<>();
         MapSqlParameterSource in = new MapSqlParameterSource();
 
         filterOptions.getTitle().ifPresent(value -> {
             filters.add("title like :title ");
-            params.put("title", String.format("%%%s%%", value));
             in.addValue("title", String.format("%%%s%%", value));
         });
         filterOptions.getTopic().ifPresent(value -> {
             filters.add("topic like :topic ");
-            params.put("topic", String.format("%%%s%%", value));
             in.addValue("topic", String.format("%%%s%%", value));
         });
         filterOptions.getTeacher().ifPresent(value -> {
             filters.add("email like :teacher ");
-            params.put("teacher", String.format("%%%s%%", value));
             in.addValue("teacher", String.format("%%%s%%", value));
 
         });
@@ -125,7 +117,6 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
 
         });
-        //filters.add(" is_published = 1 ");
 
 
         if (!filters.isEmpty()) {
@@ -246,7 +237,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
                 "LEFT JOIN topics ON courses.topic_id = topics.id " +
                 "LEFT JOIN users ON courses.creator_id = users.id " +
                 "  LEFT JOIN ratings ON courses.id = ratings.course_id " +
-                "WHERE course_user.user_id = :id " +
+                "WHERE course_user.user_id = :id AND course_user.ongoing = 1 " +
                 "GROUP BY courses.id";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
@@ -415,14 +406,6 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         return orderBy;
     }
 
-    private CourseDescription courseDescriptionRawMapper(ResultSet rs, int rowNum) throws SQLException {
-
-
-        CourseDescription courseDescription = new CourseDescription();
-        courseDescription.setCourseId(rs.getInt("course_id"));
-        courseDescription.setDescription(rs.getString("description"));
-        return courseDescription;
-    }
 
 
     private boolean isDescriptionExist(int courseId) {
