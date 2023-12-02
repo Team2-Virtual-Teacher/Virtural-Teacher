@@ -16,6 +16,7 @@ public class Solution {
     private int solutionId;
     private String solutionUrl;
     private double grade;
+    private int courseId;
 
     public Solution(int userId, int lectureId, double grade) {
         this.userId = userId;

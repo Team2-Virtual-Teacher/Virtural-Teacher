@@ -35,4 +35,6 @@ public interface CourseDao {
 
     void removeStudent(User user, Course course);
     boolean hasUserPassedCourse(int userId, int courseId);
+
+    List<Integer> getIdOngoingCourses();
 }

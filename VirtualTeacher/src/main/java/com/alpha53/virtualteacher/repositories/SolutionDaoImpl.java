@@ -3,6 +3,8 @@ package com.alpha53.virtualteacher.repositories;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -12,7 +14,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -105,4 +109,54 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
         namedParameterJdbcTemplate.update(sql, params);
     }
 
+
+/*    @Override
+    public Map<Integer, Double> getSolutionCountAndAVGPerStudent(int studentId, List<Integer> lecturesId) {
+          if (lecturesId.isEmpty()) {
+              throw new EntityNotFoundException("No solution found for Student with ID: " + studentId);
+          }
+
+          StringBuilder builder = new StringBuilder("SELECT COUNT(user_id) as solution_count,AVG(grade) as avg_grade FROM solutions WHERE user_id = :studentId AND grade > 1 AND ( ");
+          for (int i = 0; i < lecturesId.size() - 1; i++) {
+              builder.append("lecture_id = ").append(lecturesId.get(i)).append(" OR ");
+          }
+          builder.append("lecture_id = ").append(lecturesId.get(lecturesId.size() - 1)).append(" ) ");
+          String sql = builder.toString();
+          MapSqlParameterSource param = new MapSqlParameterSource();
+          param.addValue("studentId", studentId);
+
+          return namedParameterJdbcTemplate.queryForObject(sql, param, (rs, rowNum) -> {
+              Map<Integer, Double> result = new HashMap<>();
+              result.put(rs.getInt("solution_count"),
+                      (rs.getDouble("avg_grade")));
+              return result;
+          });
+      }*/
+    @Override
+    public Map<Integer, Double> getSolutionCountAndAVGPerStudent(int studentId, int courseId) {
+        String sql = "SELECT COUNT(user_id) as solution_count, AVG(grade) as avg_grade " +
+                " FROM solutions                                                       " +
+                " LEFT JOIN lectures ON solutions.lecture_id = lectures.id             " +
+                " WHERE user_id = :studentId                                           " +
+                "   AND grade >= 2                                                     " +
+                "   AND lectures.course_id = :courseId                                 " +
+                " GROUP BY lectures.course_id                                          ";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("studentId", studentId);
+        params.addValue("courseId", courseId);
+
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> {
+                Map<Integer, Double> result = new HashMap<>();
+                result.put(rs.getInt("solution_count"),
+                        (rs.getDouble("avg_grade")));
+                return result;
+            });
+        } catch (EmptyResultDataAccessException e) {
+           Map<Integer,Double> r = new HashMap<>();
+           r.put(0,0.0);
+           return r;
+        }
+    }
 }

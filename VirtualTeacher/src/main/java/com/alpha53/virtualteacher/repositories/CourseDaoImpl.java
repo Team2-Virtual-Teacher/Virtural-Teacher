@@ -378,6 +378,15 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     }
 
     @Override
+    public List<Integer> getIdOngoingCourses() {
+        String sql = "SELECT course_id " +
+                "FROM course_user " +
+                "WHERE ongoing=1 " +
+                "GROUP BY course_id";
+        return namedParameterJdbcTemplate.queryForList(sql,new MapSqlParameterSource(),Integer.class);
+    }
+
+    @Override
     public void removeStudent(User user, Course course) {
         String sql = "DELETE FROM course_user WHERE course_id=:courseId AND user_id =:userId";
         MapSqlParameterSource params = new MapSqlParameterSource();
