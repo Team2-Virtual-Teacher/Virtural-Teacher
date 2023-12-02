@@ -33,6 +33,7 @@ public class CourseMapper implements RowMapper<Course> {
         creator.setFirstName(rs.getString("first_name"));
         creator.setLastName(rs.getString("last_name"));
         creator.setPictureUrl(rs.getString("picture_url"));
+        creator.setVerified(rs.getBoolean("is_verified"));
         topic.setTopicId(rs.getInt("topic_id"));
         topic.setTopic(rs.getString("topic"));
 

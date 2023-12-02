@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 public class AuthenticationHelper {
 
     public static final String INVALID_AUTHENTICATION = "Invalid authentication!";
+    public static final String PROFILE_CONFIRMATION_EXCEPTION = "Your profile has not been confirmed. Please follow the link sent to your email.";
+
     public final UserService userService;
 
     @Autowired
@@ -37,6 +39,9 @@ public class AuthenticationHelper {
 
             if (!user.getPassword().equals(userPass)) {
                 throw new AuthorizationException(INVALID_AUTHENTICATION);
+            }
+            if (!user.isVerified()){
+                throw new AuthorizationException(PROFILE_CONFIRMATION_EXCEPTION);
             }
 
             return user;

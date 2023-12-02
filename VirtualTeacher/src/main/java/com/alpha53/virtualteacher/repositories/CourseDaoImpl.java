@@ -6,7 +6,6 @@ import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.utilities.mappers.CourseDescriptionMapper;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
-import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -49,7 +48,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     @Override
     public Course get(int id) {
 
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url, is_verified,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                      "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                      "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
@@ -70,7 +69,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public Course getByTitle(String title) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
@@ -90,7 +89,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> get(FilterOptions filterOptions) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating  " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating  " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id ";
@@ -139,7 +138,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> getPublicCourses(FilterOptions filterOptions) {
-        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
+        String sql = "SELECT courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                 "FROM courses " +
                 " LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id "+
@@ -194,7 +193,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     public List<Course> getUsersEnrolledCourses(int userId) {
 
         ///TODO check if should return only ongoing courses
-        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating " +
+        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating " +
                 " FROM course_user "+
                 " LEFT JOIN courses ON course_user.course_id = courses.id "+
                 " LEFT JOIN users ON course_user.user_id = users.id "+
@@ -217,7 +216,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> getUsersCompletedCourses(int userId) {
-        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_published,passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating " +
+        String sql = "SELECT  courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating " +
                 " FROM course_user "+
                 " LEFT JOIN courses ON course_user.course_id = courses.id "+
                 " LEFT JOIN users ON course_user.user_id = users.id "+
@@ -237,7 +236,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<User> getStudentsWhichAreEnrolledForCourse(int courseId) {
-        String sql = "SELECT users.id AS userId, email, password, first_name, last_name, picture_url, role_id, role " +
+        String sql = "SELECT users.id AS userId, email, password, first_name, last_name, picture_url, is_verified, role_id, role " +
                 "FROM course_user " +
                 "LEFT JOIN users ON course_user.user_id = users.id " +
                 "LEFT JOIN roles r ON r.id = users.role_id " +
@@ -284,7 +283,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 //    }
     @Override
     public List<Course> getCoursesByUser(int userId) {
-        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url," +
+        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url,is_verified," +
                 " is_published, passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating  " +
                 "FROM course_user " +
                 "LEFT JOIN courses ON course_user.course_id = courses.id " +
@@ -303,7 +302,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     @Override
     public List<Course> getCoursesByCreator(int creatorId) {
-        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url," +
+        String sql = "SELECT courses.id, title, start_date, creator_id, email, first_name, last_name, picture_url,is_verified, " +
                 " is_published, passing_grade, topic, topic_id , AVG(ratings.rating) AS avg_rating  " +
                 "FROM courses " +
                 "LEFT JOIN topics ON courses.topic_id = topics.id " +

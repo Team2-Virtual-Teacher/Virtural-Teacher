@@ -3,23 +3,25 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.exceptions.RegistrationException;
 import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
 import com.alpha53.virtualteacher.repositories.contracts.UserDao;
+import com.alpha53.virtualteacher.services.contracts.ConfirmationTokenService;
+import com.alpha53.virtualteacher.services.contracts.EmailService;
 import com.alpha53.virtualteacher.services.contracts.StorageService;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -32,19 +34,29 @@ public class UserServiceImpl implements UserService {
     public static final String CHANGE_ROLE_EXCEPTION = "You are not allowed to change the role of a %s to a %s";
     public static final String INVALID_ROLE_EXCEPTION = "%s is not a valid role!";
     public static final String DEFAULT_PHOTO_URL = "/resources/fileStorage/user-avatar.png";
+    public static final String CONFIRMATION_LINK = "http://localhost:8080/api/v1/users/confirm?token=";
+    public static final String REGISTRATION_CONFIRMATION_SUBJECT = "Registration confirmation";
+
+    // TODO: 2.12.23 add registration link later on here.
+    public static final String REGISTRATION_LINK = "REGISTRATION_LINK";
+    public static final String REFERRAL_SUBJECT = "Join Virtual Teacher";
+
 
     private final UserDao userDao;
     private final CourseDao courseDao;
     private final SolutionDao solutionDao;
     private final StorageService storageService;
-
+    private final ConfirmationTokenService confirmationTokenService;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserDao userRepository, CourseDao courseDao, SolutionDao solutionDao, StorageService storageService) {
+    public UserServiceImpl(UserDao userRepository, CourseDao courseDao, SolutionDao solutionDao, StorageService storageService, ConfirmationTokenService confirmationTokenService, EmailService emailService) {
         this.userDao = userRepository;
         this.courseDao = courseDao;
         this.solutionDao = solutionDao;
         this.storageService = storageService;
+        this.confirmationTokenService = confirmationTokenService;
+        this.emailService = emailService;
     }
 
 
@@ -81,9 +93,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(User user, String userRole) {
-        if (userDao.emailExists(user.getEmail())) {
-            throw new EntityDuplicateException("User", "Email", user.getEmail());
-        }
+        // TODO: 1.12.23 consider alternatives for the following 10 rows.
+        try {
+          User existingUser = userDao.get(user.getEmail());
+          if (!existingUser.isVerified()){
+              sendConfirmationToken(existingUser);
+              return;
+          }
+          throw new EntityDuplicateException("User", "email", user.getEmail());
+        } catch (EntityNotFoundException ignored){
+        };
+
+//        if (userDao.emailExists(user.getEmail())) {
+//            throw new EntityDuplicateException("User", "Email", user.getEmail());
+//        }
         if (!userRole.equalsIgnoreCase("Teacher") && !userRole.equalsIgnoreCase("User")) {
             throw new EntityNotFoundException(String.format(INVALID_ROLE_EXCEPTION, userRole));
         }
@@ -95,7 +118,27 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setPictureUrl(DEFAULT_PHOTO_URL);
         userDao.create(user);
+        sendConfirmationToken(user);
     }
+
+    @Override
+    public void confirmRegistration(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenService.get(token);
+        if (confirmationToken.getConfirmedAt() != null){
+            throw new RegistrationException("Registration has already been confirmed.");
+        }
+        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
+
+        if (expiredAt.isBefore(LocalDateTime.now())) {
+            throw new RegistrationException("Token has expired.");
+        }
+        User user = userDao.get(confirmationToken.getUserEmail());
+
+        confirmationTokenService.setConfirmedAt(token);
+        user.setVerified(true);
+        userDao.update(user);
+    }
+    
 
     @Override
     public void update(UserDto userDto, User user, int id) {
@@ -180,5 +223,21 @@ public class UserServiceImpl implements UserService {
         String picturePath = storageService.store(file);
         user.setPictureUrl(picturePath);
         userDao.update(user);
+    }
+
+    @Override
+    public void referFriend(User loggedInUser, String email) {
+        if (userDao.emailExists(email)) {
+            throw new EntityDuplicateException("User", "email", email);
+        }
+        String referralEmail = emailService.buildReferralEmail(loggedInUser.getFirstName(), loggedInUser.getLastName(), REGISTRATION_LINK);
+        emailService.send(email,referralEmail, REFERRAL_SUBJECT);
+    }
+
+    private void sendConfirmationToken(User user) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(user.getEmail());
+        confirmationTokenService.save(confirmationToken);
+        String link = CONFIRMATION_LINK.concat(confirmationToken.getToken());
+        emailService.send(user.getEmail(),emailService.buildConfirmationEmail(user.getFirstName(),link),REGISTRATION_CONFIRMATION_SUBJECT);
     }
 }

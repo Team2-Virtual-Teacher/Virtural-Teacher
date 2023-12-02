@@ -24,4 +24,8 @@ public interface UserService {
     void setUserRole(User loggedInUser, User userToGetRole, String roleName);
 
     void uploadProfilePicture(MultipartFile file, User user, int id);
+
+    void confirmRegistration(String token);
+
+    void referFriend(User loggedInUser, String email);
 }

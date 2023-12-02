@@ -1,9 +1,7 @@
 package com.alpha53.virtualteacher.controllers.rest;
 
-import com.alpha53.virtualteacher.exceptions.AuthorizationException;
-import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
-import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.exceptions.StorageException;
+import com.alpha53.virtualteacher.exceptions.*;
+import com.alpha53.virtualteacher.models.ConfirmationToken;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
@@ -56,7 +54,7 @@ public class UserController {
                     .collect(Collectors.toList());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -65,8 +63,8 @@ public class UserController {
     public UserDtoOut get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             authenticationHelper.tryGetUser(headers);
-            User loggedInUser = userService.get(id);
-            return userMapperHelper.userToUserDtoOut(loggedInUser);
+            User userToReturn = userService.get(id);
+            return userMapperHelper.userToUserDtoOut(userToReturn);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
@@ -87,8 +85,20 @@ public class UserController {
         }
     }
 
+    @GetMapping("/confirm")
+    public void confirmRegistration(@RequestParam String token) {
+        try {
+            userService.confirmRegistration(token);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (RegistrationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+    }
+
     @PutMapping("/{id}")
-    public void update(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserDto userDto , @PathVariable int id) {
+    public void update(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserDto userDto, @PathVariable int id) {
         try {
             User loggedInUser = authenticationHelper.tryGetUser(headers);
             userService.update(userDto, loggedInUser, id);
@@ -124,14 +134,27 @@ public class UserController {
     }
 
     @PostMapping("{id}/profilePicture")
-    public void uploadProfilePicture(@RequestHeader HttpHeaders headers,@PathVariable int id,@RequestParam("file") MultipartFile file) {
-        User loggedInUser = authenticationHelper.tryGetUser(headers);
+    public void uploadProfilePicture(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestParam("file") MultipartFile file) {
         try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
             userService.uploadProfilePicture(file, loggedInUser, id);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (StorageException e){
+        } catch (StorageException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+@PostMapping("/refer/{email}")
+    public void referFriend(@RequestHeader HttpHeaders headers, @PathVariable String email){
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            userService.referFriend(loggedInUser ,email);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityDuplicateException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+}
+
 }

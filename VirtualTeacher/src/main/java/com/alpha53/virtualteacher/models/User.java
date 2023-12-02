@@ -13,6 +13,8 @@ public class User {
     private Role role;
     private String pictureUrl;
 
+    private boolean isVerified;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<Course> courses;
 
@@ -103,5 +105,13 @@ public class User {
 
     public void setCourses(Set<Course> courses) {
         this.courses = courses;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
     }
 }

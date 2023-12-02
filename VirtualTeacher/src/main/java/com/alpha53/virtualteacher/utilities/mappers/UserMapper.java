@@ -22,6 +22,7 @@ public class UserMapper implements RowMapper<User> {
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));
         user.setPictureUrl(rs.getString("picture_url"));
+        user.setVerified(rs.getBoolean("is_verified"));
         user.setRole(role);
 
         return user;
