@@ -13,12 +13,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 @Component
 @EnableScheduling
 public class StudentsStatusDailyActualisation {
+    public static final String SUCCESSFUL_GRADUATION_TITLE = "Successful graduation of couse: %s";
     private final CourseDao courseDao;
     private final LectureDao lectureDao;
     private final SolutionDao solutionDao;
@@ -58,7 +58,7 @@ public class StudentsStatusDailyActualisation {
         }
     }*/
 
-    @Scheduled(cron = "15 52 * * * *")
+    @Scheduled(cron = "23 35 * * * *")
     private void informGraduatedStudents() {
         System.out.println("TEST");
         List<Integer> ongoingCoursesIds = courseDao.getIdOngoingCourses();
@@ -77,17 +77,13 @@ public class StudentsStatusDailyActualisation {
                 for (Map.Entry<Integer, Double> entry : map.entrySet()) {
                     if (entry.getKey() == course.getKey().getLectures().size() && entry.getValue() >= course.getKey().getPassingGrade()) {
                         courseDao.completeCourse(user.getUserId(), course.getKey().getCourseId());
-                        try {
-                            ByteArrayOutputStream certificate = CertificateGenerator.generateCertificate(user.getFirstName(), course.getKey().getTitle());
-                            emailService.send(user.getEmail(),
-                                    emailService.buildReferralEmail(user.getFirstName(),
-                                            user.getLastName(), ""),
-                                    "",
-                                    certificate,
-                                    "certificate");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        ByteArrayOutputStream certificate = CertificateGenerator.generateCertificate(user.getFirstName(), course.getKey().getTitle());
+                        String graduationEmail = emailService.generateGraduationEmail(user.getFirstName(), course.getKey().getTitle());
+                        emailService.send(user.getEmail(),
+                                graduationEmail,
+                                String.format(SUCCESSFUL_GRADUATION_TITLE, course.getKey().getTitle()),
+                                certificate,
+                                "Certificate");
                     }
                 }
             }

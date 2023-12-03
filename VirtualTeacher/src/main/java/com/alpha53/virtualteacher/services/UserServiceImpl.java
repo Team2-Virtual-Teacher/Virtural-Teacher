@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     // TODO: 2.12.23 add registration link later on here.
     public static final String REGISTRATION_LINK = "REGISTRATION_LINK";
-    public static final String REFERRAL_SUBJECT = "Join Virtual Teacher";
+    public static final String REFERRAL_SUBJECT = "Join Virtual Teacher now";
 
 
     private final UserDao userDao;
@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.emailExists(email)) {
             throw new EntityDuplicateException("User", "email", email);
         }
-        String referralEmail = emailService.buildReferralEmail(loggedInUser.getFirstName(), loggedInUser.getLastName(), REGISTRATION_LINK);
+        String referralEmail = emailService.generateReferralEmail(loggedInUser.getFirstName(), loggedInUser.getLastName(), REGISTRATION_LINK);
         emailService.send(email,referralEmail, REFERRAL_SUBJECT, null, null);
     }
 
@@ -238,7 +238,7 @@ public class UserServiceImpl implements UserService {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getEmail());
         confirmationTokenService.save(confirmationToken);
         String link = CONFIRMATION_LINK.concat(confirmationToken.getToken());
-        String confirmationEmail = emailService.buildConfirmationEmail(user.getFirstName(),link);
+        String confirmationEmail = emailService.generateConfirmationEmail(user.getFirstName(),link);
         emailService.send(user.getEmail(),confirmationEmail,REGISTRATION_CONFIRMATION_SUBJECT, null,null);
     }
 }

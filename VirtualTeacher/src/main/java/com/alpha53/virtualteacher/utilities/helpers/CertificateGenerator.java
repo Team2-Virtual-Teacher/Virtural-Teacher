@@ -1,16 +1,21 @@
 package com.alpha53.virtualteacher.utilities.helpers;
 
+import com.alpha53.virtualteacher.services.contracts.EmailService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class CertificateGenerator {
-    public static ByteArrayOutputStream generateCertificate(String studentName, String courseName) throws IOException {
+    private final static Logger LOGGER = LoggerFactory.getLogger(CertificateGenerator.class);
+
+    public static ByteArrayOutputStream generateCertificate(String studentName, String courseName)  {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
@@ -50,6 +55,9 @@ public class CertificateGenerator {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             document.save(outputStream);
             return outputStream;
+        } catch (IOException e) {
+            LOGGER.error("Error saving document", e);
+            throw new IllegalStateException("Failed to generate certificate.");
         }
     }
 }
