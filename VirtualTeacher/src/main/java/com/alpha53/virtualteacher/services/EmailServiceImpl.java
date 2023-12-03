@@ -4,12 +4,15 @@ import com.alpha53.virtualteacher.services.contracts.EmailService;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 @Service
@@ -24,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void send(String to, String email, String subject) {
+    public void send(String to, String email, String subject, ByteArrayOutputStream pdfStream, String pdfFileName) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
@@ -40,14 +43,18 @@ public class EmailServiceImpl implements EmailService {
 
         try {
 
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(
-                    Message.RecipientType.TO,
-                    InternetAddress.parse(to)
-            );
-            message.setSubject(subject);
-            message.setText(email);
+            MimeMessage message = new MimeMessage(session);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true); // true indicates multipart message
+
+            helper.setFrom(new InternetAddress(username));
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(email);
+
+            if (pdfFileName != null){
+                ByteArrayDataSource dataSource = new ByteArrayDataSource(pdfStream.toByteArray(), "application/pdf");
+                helper.addAttachment(pdfFileName, dataSource);
+            }
 
             Transport.send(message);
 

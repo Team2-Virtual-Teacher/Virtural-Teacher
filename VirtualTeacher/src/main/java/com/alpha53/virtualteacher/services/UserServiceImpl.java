@@ -231,13 +231,14 @@ public class UserServiceImpl implements UserService {
             throw new EntityDuplicateException("User", "email", email);
         }
         String referralEmail = emailService.buildReferralEmail(loggedInUser.getFirstName(), loggedInUser.getLastName(), REGISTRATION_LINK);
-        emailService.send(email,referralEmail, REFERRAL_SUBJECT);
+        emailService.send(email,referralEmail, REFERRAL_SUBJECT, null, null);
     }
 
     private void sendConfirmationToken(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getEmail());
         confirmationTokenService.save(confirmationToken);
         String link = CONFIRMATION_LINK.concat(confirmationToken.getToken());
-        emailService.send(user.getEmail(),emailService.buildConfirmationEmail(user.getFirstName(),link),REGISTRATION_CONFIRMATION_SUBJECT);
+        String confirmationEmail = emailService.buildConfirmationEmail(user.getFirstName(),link);
+        emailService.send(user.getEmail(),confirmationEmail,REGISTRATION_CONFIRMATION_SUBJECT, null,null);
     }
 }
