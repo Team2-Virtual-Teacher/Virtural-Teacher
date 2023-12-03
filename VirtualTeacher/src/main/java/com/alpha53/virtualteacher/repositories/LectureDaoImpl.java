@@ -193,9 +193,9 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("lectureId", lectureId);
 
-        //TODO Is it better way, because the query always will produce result.
-        // Is it better to replace with update method?
-        return namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class) > 0;
+        Integer result = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
+        return result!=null && result>0;
+
     }
 
     /**
@@ -235,6 +235,5 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         String sql = "UPDATE lecture_description SET description =:description WHERE lecture_id =:lectureId";
         namedParameterJdbcTemplate.update(sql, params);
     }
-
 
 }

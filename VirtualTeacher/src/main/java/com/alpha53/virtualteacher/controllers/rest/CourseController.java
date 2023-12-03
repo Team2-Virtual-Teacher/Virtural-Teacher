@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/courses")
 public class CourseController {
-
     private final CourseService courseService;
     private final AuthenticationHelper authenticationHelper;
     private final CourseDtoMapper courseMapper;
@@ -41,10 +40,17 @@ public class CourseController {
             @RequestParam(required = false) String topic,
             @RequestParam(required = false) String teacher,
             @RequestParam(required = false) String rating,
+            @RequestParam(required = false) String isPublic,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder
     ) {
-        FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, sortBy, sortOrder);
+        Boolean isPublicBool;
+        if (isPublic == null) {
+            isPublicBool = null;
+        } else {
+            isPublicBool = Boolean.parseBoolean(isPublic);
+        }
+        FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, isPublicBool, sortBy, sortOrder);
         boolean isAuthenticated = true;
         User user = new User();
         try {
@@ -67,12 +73,33 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public Course get(@PathVariable(name = "id") int id) {
-        return courseService.getCourseById(id);
+    public Course get(
+            @RequestHeader(required = false) HttpHeaders headers, @PathVariable(name = "id") int id) {
+        boolean isAuthenticated = true;
+        User user = new User();
+        try {
+            user = authenticationHelper.tryGetUser(headers);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e) {
+
+            isAuthenticated = false;
+        }
+        if (isAuthenticated) {
+            return courseService.getCourseByIdAuth(id, user);
+        } else {
+            return courseService.getCourseById(id);
+        }
+
     }
 
     @GetMapping("/enrolled")
     public List<Course> getUsersEnrolledCourses(@RequestHeader HttpHeaders headers) {
+
+        //TODO remove unnecessary catch
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return courseService.getUsersEnrolledCourses(user.getUserId());
@@ -86,7 +113,8 @@ public class CourseController {
     }
 
     @GetMapping("/completed")
-    public List<Course> getUsersCompletedCourses(@RequestHeader HttpHeaders headers){
+    public List<Course> getUsersCompletedCourses(@RequestHeader HttpHeaders headers) {
+        //TODO remove unnecessary catch
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return courseService.getUsersCompletedCourses(user.getUserId());
@@ -98,6 +126,7 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @PostMapping("/{id}/enroll")
     public void enrollUserForCourse(@RequestHeader HttpHeaders headers, @PathVariable(name = "id") int id) {
         try {

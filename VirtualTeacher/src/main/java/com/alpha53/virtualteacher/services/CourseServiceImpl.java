@@ -3,18 +3,19 @@ package com.alpha53.virtualteacher.services;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.FilterOptions;
-import com.alpha53.virtualteacher.models.RatingDto;
-import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
+import com.alpha53.virtualteacher.repositories.contracts.LectureDao;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -25,11 +26,13 @@ public class CourseServiceImpl implements CourseService {
     public static final String INVALID_CURRENT_TEACHER_EXCEPTION = "User with ID %d is not a Teacher.";
     private final CourseDao courseRepository;
     private final UserService userService;
+    private final LectureDao lectureDao;
 
     @Autowired
-    public CourseServiceImpl(CourseDao courseRepository, UserService userService) {
+    public CourseServiceImpl(CourseDao courseRepository, UserService userService, LectureDao lectureDao) {
         this.courseRepository = courseRepository;
         this.userService = userService;
+        this.lectureDao = lectureDao;
     }
 
     public void create(Course course, User user) {
@@ -74,97 +77,124 @@ public class CourseServiceImpl implements CourseService {
 
     public void delete(int id, User user) {
         Course course = courseRepository.get(id);
-        if (course.isPublished()==false || courseRepository.getStudentsWhichAreEnrolledForCourse(id).isEmpty()){
-            checkModifyPermissions(id, user);
+        checkModifyPermissions(id, user);
+        if (!course.isPublished() || courseRepository.getStudentsWhichAreEnrolledForCourse(id).isEmpty()) {
+
             courseRepository.delete(id);
         } else {
-            throw new AuthorizationException("You can delete course only if there are no enrolled studens or the course is not public");
+            throw new AuthorizationException("You can delete course only if there are no enrolled students or the course is not public");
         }
 
     }
 
     public Course getCourseById(int id) {
+        Course course = courseRepository.get(id);
+        if (!course.isPublished()) {
+            throw new AuthorizationException("Only teacher or admin can access a course which is not public");
+        } else {
+            Set<Lecture> lectures = new HashSet<>(lectureDao.getAllByCourseId(id));
+            course.setLectures(lectures);
+            return course;
+        }
 
-        return courseRepository.get(id);
+
+    }
+
+    @Override
+    public Course getCourseByIdAuth(int id, User user) {
+        Course course = courseRepository.get(id);
+        if (!course.isPublished() && (user.getRole().getRoleType().equalsIgnoreCase("student") || user.getRole().getRoleType().equalsIgnoreCase("PendingTeacher"))) {
+            throw new AuthorizationException("Only teacher or admin can access a course which is not public");
+        } else {
+            Set<Lecture> lectures = new HashSet<>(lectureDao.getAllByCourseId(id));
+            course.setLectures(lectures);
+            return course;
+        }
     }
 
     public List<Course> getPublic(FilterOptions filterOptions) {
-
-        return courseRepository.getPublicCourses(filterOptions);
+        filterOptions.setIsPublic(Optional.of(Boolean.TRUE));
+        return courseRepository.get(filterOptions);
     }
+
     public List<Course> get(FilterOptions filterOptions, User user) {
-        if (user.getRole().getRoleType().equalsIgnoreCase("Admin") || user.getRole().getRoleType().equalsIgnoreCase("teacher")){
-            return courseRepository.get(filterOptions);
+        if (user.getRole().getRoleType().equalsIgnoreCase("student") || user.getRole().getRoleType().equalsIgnoreCase("PendingTeacher")) {
+            filterOptions.setIsPublic(Optional.of(Boolean.TRUE));
         }
 
-        return courseRepository.getPublicCourses(filterOptions);
+        return courseRepository.get(filterOptions);
     }
 
     @Override
     public List<Course> getUsersEnrolledCourses(int userId) {
-        return courseRepository.getUsersEnrolledCourses(userId);
+        return courseRepository.getCoursesByUser(userId);
     }
 
     @Override
     public List<Course> getUsersCompletedCourses(int userId) {
-       return courseRepository.getUsersCompletedCourses(userId);
+        return courseRepository.getUsersCompletedCourses(userId);
     }
 
-    public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser){
-        if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin")){
+    public void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser) {
+        if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin")) {
             throw new AuthorizationException(COURSE_TRANSFER_EXCEPTION);
         }
         User previousTeacher = userService.get(teacherToTransferFromId);
-        if (!previousTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")){
-            throw new UnsupportedOperationException(String.format(INVALID_CURRENT_TEACHER_EXCEPTION,previousTeacher.getUserId()));
+        if (!previousTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")) {
+            throw new UnsupportedOperationException(String.format(INVALID_CURRENT_TEACHER_EXCEPTION, previousTeacher.getUserId()));
         }
         User newTeacher = userService.get(teacherToTransferToId);
         // TODO: 25.11.23 correct this later if we we decide to also transfer to Admins.
-        if (!newTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")){
+        if (!newTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")) {
             throw new UnsupportedOperationException(ASSIGN_COURSE_TO_USER_EXCEPTION);
         }
-        if (teacherToTransferToId == teacherToTransferFromId){
+        if (teacherToTransferToId == teacherToTransferFromId) {
             return;
         }
-        courseRepository.transferTeacherCourses(teacherToTransferFromId,teacherToTransferToId);
+        courseRepository.transferTeacherCourses(teacherToTransferFromId, teacherToTransferToId);
     }
+
     @Override
     public void enrollUserForCourse(User user, int courseId) {
-     List<Course> enrolledCourses = courseRepository.getUsersEnrolledCourses(user.getUserId());
-     Course course = courseRepository.get(courseId);
+        List<Course> enrolledCourses = courseRepository.getCoursesByUser(user.getUserId());
+        Course course = courseRepository.get(courseId);
 
-     if (containsId(enrolledCourses, courseId)){
-         throw new EntityDuplicateException("Record", "id", Integer.toString(courseId));
+        if (containsId(enrolledCourses, courseId)) {
+            throw new EntityDuplicateException("Record", "id", Integer.toString(courseId));
 
-     }else  if(!user.getRole().getRoleType().equalsIgnoreCase("student")) {
-         throw new AuthorizationException("Only student can enroll for course");
-     } else  if(course.getCreator().getUserId()==user.getUserId()) {
-         throw new AuthorizationException("You cannot enroll for course if you are creator");
-     } else  if(course.getStartingDate().isAfter(LocalDate.now())) {
-         throw new AuthorizationException("You cannot enroll beforre the starting date");
-     } else{
-             courseRepository.enrollUserForCourse(user.getUserId(), courseId);
-         }
+        } else if (!user.getRole().getRoleType().equalsIgnoreCase("student")) {
+            throw new AuthorizationException("Only student can enroll for course");
+        } else if (course.getCreator().getUserId() == user.getUserId()) {
+            throw new AuthorizationException("You cannot enroll for course if you are creator");
+        } else if (course.getStartingDate().isAfter(LocalDate.now())) {
+            throw new AuthorizationException("You cannot enroll before the starting date");
+        } else if (!course.isPublished()) {
+            throw new AuthorizationException("You cannot enroll for course which is not public");
+        } else {
+            courseRepository.enrollUserForCourse(user.getUserId(), courseId);
+        }
 
     }
 
     @Override
     public void rateCourse(RatingDto rating, int courseId, int raterId) {
-        //TODO student has passed
-        courseRepository.rateCourse(rating, courseId, raterId);
+        if (courseRepository.hasUserPassedCourse(raterId, courseId)) {
+            courseRepository.rateCourse(rating, courseId, raterId);
+        } else {
+            throw new AuthorizationException("You must pass course to leave rating");
+        }
+
     }
 
-    public boolean containsId(final List<Course> list, final int id){
-        return list.stream().filter(o -> o.getCourseId()==id).findFirst().isPresent();
+    private boolean containsId(final List<Course> list, final int id) {
+        return list.stream().anyMatch(o -> o.getCourseId() == id);
     }
 
     private void checkModifyPermissions(int courseId, User user) {
         Course course = courseRepository.get(courseId);
-        if (course.getCreator().getUserId() != user.getUserId() && !user.getRole().getRoleType().equalsIgnoreCase("admin")){
+        if (course.getCreator().getUserId() != user.getUserId() && !user.getRole().getRoleType().equalsIgnoreCase("admin")) {
             throw new AuthorizationException(ONLY_CREATOR_CAN_MODIFY_A_COURSE);
         }
-
-
     }
 
 

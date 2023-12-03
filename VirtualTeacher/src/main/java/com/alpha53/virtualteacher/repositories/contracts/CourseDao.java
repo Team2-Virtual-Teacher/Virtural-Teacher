@@ -5,7 +5,6 @@ import com.alpha53.virtualteacher.models.FilterOptions;
 import com.alpha53.virtualteacher.models.RatingDto;
 import com.alpha53.virtualteacher.models.User;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface CourseDao {
@@ -14,11 +13,11 @@ public interface CourseDao {
     Course getByTitle(String title);
 
     List<Course> get(FilterOptions filterOptions);
-    List<Course> getPublicCourses(FilterOptions filterOptions);
-    List<Course> getUsersEnrolledCourses(int userId);
+   // List<Course> getUsersEnrolledCourses(int userId);
     List<Course> getUsersCompletedCourses(int userId);
     List<User> getStudentsWhichAreEnrolledForCourse(int courseId);
     void enrollUserForCourse(int userId, int courseId);
+    void completeCourse(int userId, int courseId);
 
     List<Course> getCoursesByUser( int userId);
     List<Course> getCoursesByCreator(int creatorId);
@@ -33,4 +32,9 @@ public interface CourseDao {
     void rateCourse(RatingDto rating, int courseId, int raterId);
 
     boolean isUserEnrolled(int userId, int courseId);
+
+    void removeStudent(User user, Course course);
+    boolean hasUserPassedCourse(int userId, int courseId);
+
+    List<Integer> getIdOngoingCourses();
 }
