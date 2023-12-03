@@ -49,7 +49,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setFrom(new InternetAddress(username));
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(email);
+            helper.setText(email, true);
 
             if (pdfFileName != null){
                 ByteArrayDataSource dataSource = new ByteArrayDataSource(pdfStream.toByteArray(), "application/pdf");
@@ -65,7 +65,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public String buildConfirmationEmail(String name, String link) {
-        // TODO: 2.12.23 this is not visualising - no idea why. 
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -136,7 +135,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public String buildReferralEmail(String firstName, String lastName, String registrationLink) {
-        // TODO: 2.12.23 build a proper referral message after figuring out how.
+        // TODO: 2.12.23 build a proper referral message.
         return String.format("You have just been referred by %s, %s, to join Virtual teacher! %nDo so by following this link %s.",
                 firstName,lastName,registrationLink);
     }
