@@ -18,7 +18,7 @@ public class User {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<Course> courses;
 
-    public User(int userId, String email, String password, String firstName, String lastName, Role role, String pictureUrl, Set<Course> courses) {
+    public User(int userId, String email, String password, String firstName, String lastName, Role role, String pictureUrl, boolean isVerified, Set<Course> courses) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -26,6 +26,7 @@ public class User {
         this.lastName = lastName;
         this.role = role;
         this.pictureUrl = pictureUrl;
+        this.isVerified = isVerified;
         this.courses = courses;
     }
 
