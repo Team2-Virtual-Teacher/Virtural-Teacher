@@ -18,7 +18,7 @@ import java.util.*;
 @Component
 @EnableScheduling
 public class StudentsStatusDailyActualisation {
-    public static final String SUCCESSFUL_GRADUATION_TITLE = "Successful graduation of couse: %s";
+    public static final String SUCCESSFUL_GRADUATION_TITLE = "Successful graduation of course: %s";
     private final CourseDao courseDao;
     private final LectureDao lectureDao;
     private final SolutionDao solutionDao;
@@ -58,7 +58,7 @@ public class StudentsStatusDailyActualisation {
         }
     }*/
 
-    @Scheduled(cron = "23 35 * * * *")
+    @Scheduled(cron = "* 35 23 * * *")
     private void informGraduatedStudents() {
         System.out.println("TEST");
         List<Integer> ongoingCoursesIds = courseDao.getIdOngoingCourses();
