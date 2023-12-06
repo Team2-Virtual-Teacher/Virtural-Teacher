@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
 //        if (userDao.emailExists(user.getEmail())) {
 //            throw new EntityDuplicateException("User", "Email", user.getEmail());
 //        }
-        if (!userRole.equalsIgnoreCase("Teacher") && !userRole.equalsIgnoreCase("User")) {
+        if (!userRole.equalsIgnoreCase("Teacher") && !userRole.equalsIgnoreCase("Student")) {
             throw new EntityNotFoundException(String.format(INVALID_ROLE_EXCEPTION, userRole));
         }
         if (userRole.equalsIgnoreCase("Teacher")) {
@@ -195,9 +195,8 @@ public class UserServiceImpl implements UserService {
             return;
         }
         if (roleName.equalsIgnoreCase("Student") || roleName.equalsIgnoreCase("PendingTeacher") ||
-                (roleName.equalsIgnoreCase("Teacher")
-                        && !userToGetRole.getRole().getRoleType().equalsIgnoreCase("PendingTeacher"))
-                || (roleName.equalsIgnoreCase("Admin") && userToGetRole.getRole().getRoleType().equalsIgnoreCase("Student"))) {
+                (roleName.equalsIgnoreCase("Teacher")  && !userToGetRole.getRole().getRoleType().equalsIgnoreCase("PendingTeacher")) ||
+                (roleName.equalsIgnoreCase("Admin") && userToGetRole.getRole().getRoleType().equalsIgnoreCase("Student"))) {
             throw new AuthorizationException(String.format(CHANGE_ROLE_EXCEPTION, userToGetRole.getRole().getRoleType(), roleName));
         }
 
