@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:replace="~{index.html :: head('All Courses')}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</form>
+<body>
+<div th:replace = "~{index.html :: nav}"></div>
+<div th:each="course: ${courses}">
+  <a th:href="@{/courses/{id}(id=${course.getCourseId()})}"><p th:text="${course.title}"></p></a>
+
+  <p th:text="${course.topic.topic}"></p>
+  <p th:text="${course.creator.email}"></p>
+  <p th:text="${course.startingDate}"></p>
+  <p th:text="${course.passingGrade}"></p>
+  <p th:text="${course.avgRating}"></p>
+  <p th:text="${course.description}"></p>
+
+
+
+</div>
+</body>
+</html>

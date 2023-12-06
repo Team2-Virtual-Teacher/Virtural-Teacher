@@ -186,6 +186,16 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    @Override
+    public boolean isUserEnrolled(int userId, int courseId) {
+        return courseRepository.isUserEnrolled(userId,courseId);
+    }
+
+    @Override
+    public boolean hasUserPassedCourse(int userId, int courseId) {
+        return courseRepository.hasUserPassedCourse(userId, courseId);
+    }
+
     private boolean containsId(final List<Course> list, final int id) {
         return list.stream().anyMatch(o -> o.getCourseId() == id);
     }
