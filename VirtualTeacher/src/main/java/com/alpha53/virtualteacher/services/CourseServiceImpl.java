@@ -164,8 +164,6 @@ public class CourseServiceImpl implements CourseService {
 
         } else if (!user.getRole().getRoleType().equalsIgnoreCase("student")) {
             throw new AuthorizationException("Only student can enroll for course");
-        } else if (course.getCreator().getUserId() == user.getUserId()) {
-            throw new AuthorizationException("You cannot enroll for course if you are creator");
         } else if (course.getStartingDate().isAfter(LocalDate.now())) {
             throw new AuthorizationException("You cannot enroll before the starting date");
         } else if (!course.isPublished()) {
