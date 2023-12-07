@@ -29,4 +29,5 @@ public interface CourseService {
      void rateCourse(RatingDto rating, int courseId, int raterId);
     boolean isUserEnrolled(int userId, int courseId);
     boolean hasUserPassedCourse(int userId, int courseId);
+    Integer getCoursesCount();
 }

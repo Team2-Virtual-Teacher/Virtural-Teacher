@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<form th:replace="~{index.html :: head('All Courses')}">
+<form th:replace="~{index2.html :: head('All Courses')}">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </form>
 <body>
-<div th:replace = "~{index.html :: nav}"></div>
+<div th:replace = "~{index2.html :: nav}"></div>
   <p th:text="${course.title}"></p>
   <p th:text="${course.courseId}"></p>
   <p th:text="${course.topic.topic}"></p>
