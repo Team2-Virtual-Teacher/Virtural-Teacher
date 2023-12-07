@@ -207,6 +207,9 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    public Integer getCoursesCount(){
+     return courseRepository.getCoursesCount();
+    }
 
 
 }

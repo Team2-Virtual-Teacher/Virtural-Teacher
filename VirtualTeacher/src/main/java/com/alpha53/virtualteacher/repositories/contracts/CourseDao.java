@@ -37,4 +37,6 @@ public interface CourseDao {
     boolean hasUserPassedCourse(int userId, int courseId);
 
     List<Integer> getIdOngoingCourses();
+
+    Integer getCoursesCount();
 }

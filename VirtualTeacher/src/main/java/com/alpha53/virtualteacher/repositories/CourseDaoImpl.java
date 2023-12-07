@@ -393,6 +393,11 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         params.addValue("userId", user.getUserId());
         namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public Integer getCoursesCount(){
+        String sql = "SELECT COUNT(*) FROM courses WHERE is_published = 1";
+        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql,new MapSqlParameterSource(),Integer.class)).orElse(0);
+    }
 
     private String generateOrderBy(FilterOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {
