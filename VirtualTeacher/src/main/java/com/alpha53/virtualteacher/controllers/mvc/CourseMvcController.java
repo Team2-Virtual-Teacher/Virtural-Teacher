@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/courses")
@@ -36,8 +37,7 @@ public class CourseMvcController {
     }
 
     @GetMapping
-    public String showAllCourses( @RequestHeader(required = false) HttpHeaders headers,
-                                  @RequestParam(required = false) String title,
+    public String showAllCourses( @RequestParam(required = false) String title,
                                   @RequestParam(required = false) String topic,
                                   @RequestParam(required = false) String teacher,
                                   @RequestParam(required = false) String rating,
@@ -54,25 +54,20 @@ public class CourseMvcController {
             isPublicBool = Boolean.parseBoolean(isPublic);
         }
         FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, isPublicBool, sortBy, sortOrder);
-        boolean isAuthenticated = true;
-        User user = new User();
+        Optional<User> optionalUser = Optional.empty();
         try {
-            user = authenticationHelper.tryGetUser(headers);
+            optionalUser = Optional.of(authenticationHelper.tryGetCurrentUser(session));
 
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException ignored) {
 
-            isAuthenticated = false;
         }
-        List<Course> courses;
-        if (isAuthenticated) {
-            courses = courseService.get(filterOptions, user);
-        } else {
-            courses = courseService.getPublic(filterOptions);
-        }
+        List<Course> courses =courseService.get(filterOptions, optionalUser);
+
+
         model.addAttribute("courses", courses);
 
         return "CoursesView";

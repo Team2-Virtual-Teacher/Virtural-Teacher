@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/courses")
@@ -51,24 +52,20 @@ public class CourseController {
             isPublicBool = Boolean.parseBoolean(isPublic);
         }
         FilterOptions filterOptions = new FilterOptions(title, topic, teacher, rating, isPublicBool, sortBy, sortOrder);
-        boolean isAuthenticated = true;
-        User user = new User();
-        try {
-            user = authenticationHelper.tryGetUser(headers);
 
+        Optional<User> optionalUser = Optional.empty();
+        try {
+            optionalUser = Optional.of(authenticationHelper.tryGetUser(headers));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException ignored) {
 
-            isAuthenticated = false;
+
         }
-        if (isAuthenticated) {
-            return courseService.get(filterOptions, user);
-        } else {
-            return courseService.getPublic(filterOptions);
-        }
+
+            return courseService.get(filterOptions, optionalUser);
 
     }
 

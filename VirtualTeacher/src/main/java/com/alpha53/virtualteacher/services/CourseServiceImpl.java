@@ -117,11 +117,10 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.get(filterOptions);
     }
 
-    public List<Course> get(FilterOptions filterOptions, User user) {
-        if (user.getRole().getRoleType().equalsIgnoreCase("student") || user.getRole().getRoleType().equalsIgnoreCase("PendingTeacher")) {
+    public List<Course> get(FilterOptions filterOptions, Optional<User> optionalUser) {
+        if (optionalUser.isEmpty() || optionalUser.get().getRole().getRoleType().equalsIgnoreCase("student") || optionalUser.get().getRole().getRoleType().equalsIgnoreCase("PendingTeacher")){
             filterOptions.setIsPublic(Optional.of(Boolean.TRUE));
         }
-
         return courseRepository.get(filterOptions);
     }
 

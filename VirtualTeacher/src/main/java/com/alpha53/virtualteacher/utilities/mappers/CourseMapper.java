@@ -1,9 +1,6 @@
 package com.alpha53.virtualteacher.utilities.mappers;
 
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.Lecture;
-import com.alpha53.virtualteacher.models.Topic;
-import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +16,16 @@ public class CourseMapper implements RowMapper<Course> {
         Course course = new Course();
         Topic topic = new Topic();
         User creator = new User();
+        CourseDescription description = new CourseDescription();
 
+        description.setDescription(rs.getString("description"));
+        description.setCourseId(rs.getInt("id"));
         course.setCourseId(rs.getInt("id"));
         course.setTitle(rs.getString("title"));
         course.setStartingDate(rs.getDate("start_date").toLocalDate());
         course.setPublished(rs.getBoolean("is_published"));
         course.setPassingGrade(rs.getDouble("passing_grade"));
+
         //TODO course dto
 
         // TODO: 29.11.23 Viktor: consider removing all user fields and leaving only the ID of the creator.
@@ -40,6 +41,7 @@ public class CourseMapper implements RowMapper<Course> {
         course.setCreator(creator);
         course.setTopic(topic);
         course.setAvgRating(rs.getDouble("avg_rating"));
+        course.setDescription(description);
         return course;
     }
 

@@ -12,9 +12,14 @@
   <p th:text="${course.startingDate}"></p>
   <p th:text="${course.passingGrade}"></p>
   <p th:text="${course.avgRating}"></p>
-  <p th:text="${course.description}"></p>
+  <p th:text="${course.description.description}"></p>
 
-
+  <div th:unless="${course.lectures.isEmpty()}">
+    <h4>Lectures:</h4>
+    <div th:each="lecture: ${course.lectures}">
+      <p th:text="${lecture.title}"></p>
+    </div>
+  </div>
 <div th:if="${currentUserRole=='Student'}">
   <h3>user</h3>
   <div th:if="${isEnrolled}">

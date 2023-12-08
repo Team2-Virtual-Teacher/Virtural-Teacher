@@ -6,6 +6,7 @@ import com.alpha53.virtualteacher.models.RatingDto;
 import com.alpha53.virtualteacher.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CourseService {
      void create(Course course, User user);
@@ -21,7 +22,7 @@ public interface CourseService {
 
 
     void transferTeacherCourses(int teacherToTransferFromId, int teacherToTransferToId, User loggedUser);
-     List<Course> get(FilterOptions filterOptions, User user);
+     List<Course> get(FilterOptions filterOptions, Optional<User> optionalUser);
      List<Course> getPublic(FilterOptions filterOptions);
      List<Course> getUsersEnrolledCourses(int userId);
      List<Course> getUsersCompletedCourses(int userId);
