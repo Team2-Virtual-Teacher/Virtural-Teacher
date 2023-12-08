@@ -65,7 +65,7 @@ public class CourseController {
 
         }
 
-            return courseService.get(filterOptions, optionalUser);
+        return courseService.get(filterOptions, optionalUser);
 
     }
 
@@ -158,7 +158,7 @@ public class CourseController {
     @PutMapping("/{id}")
     public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody CourseDto courseDto) {
 
-
+    //TODO fromDto with two arguments may be is unnecessary we can discuss
         try {
             Course course = courseMapper.fromDto(id, courseDto);
             User user = authenticationHelper.tryGetUser(headers);

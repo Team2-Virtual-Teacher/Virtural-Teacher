@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
+import org.wikiclean.WikiClean;
+import org.wikiclean.languages.English;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,6 +28,7 @@ public class WikiServiceImpl implements WikiService {
     private static final String EXTRACT_PAGEID_AND_TITLE_URI = "https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&formatversion=2&srsearch=";
     private static final String EXTRACT_FULL_URI = "https://en.wikipedia.org/w/api.php?action=query&prop=info&inprop=url&format=json&pageids=";
     private final ObjectMapper objectMapper;
+
     public WikiServiceImpl(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
@@ -124,7 +127,9 @@ public class WikiServiceImpl implements WikiService {
             }
         }
 
+       // WikiClean wikiClean = new WikiClean.Builder().withLanguage(new English()).withTitle(false).withFooter(false).build();
         for (WikiResult wikiResult : resultList) {
+           // wikiResult.setContent(wikiClean.clean(contentMap.get(wikiResult.getPageid())));
             wikiResult.setContent(contentMap.get(wikiResult.getPageid()));
         }
 

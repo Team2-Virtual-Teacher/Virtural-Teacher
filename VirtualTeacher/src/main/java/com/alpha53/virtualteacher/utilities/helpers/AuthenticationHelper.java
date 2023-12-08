@@ -41,12 +41,16 @@ public class AuthenticationHelper {
 
     public User tryGetCurrentUser(HttpSession session) {
         String currentEmail = (String) session.getAttribute("currentUser");
+//TODO Check if commented part is useless
+        /*if (currentEmail == null) {
+            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        }*/
 
-        if (currentEmail == null) {
+        try {
+            return userService.get(currentEmail);
+        } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
-
-        return userService.get(currentEmail);
     }
 
     public User verifyAuthentication(String email, String password) {
@@ -56,7 +60,7 @@ public class AuthenticationHelper {
                 throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
             }
 
-            if (!user.isVerified()){
+            if (!user.isVerified()) {
                 throw new AuthorizationException(PROFILE_CONFIRMATION_EXCEPTION);
             }
 

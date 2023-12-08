@@ -14441,6 +14441,7 @@ span.transparent-button:hover i {
 }
 
 .select-label,
+.input-label,
 .rbt-label-style {
   font-size: 12px;
   font-weight: 600;
@@ -14857,7 +14858,7 @@ span.transparent-button:hover i {
   display: block;
 }
 .rbt-card .rbt-card-img a img {
-  width: 100%;
+  width: 30%;
   transition: 0.5s;
   object-fit: cover;
   border-radius: var(--radius);
@@ -21608,7 +21609,7 @@ ul.testimonial-thumb-wrapper li a.active .thumb img {
   transform: translate3d(0, -10px, 0);
 }
 /*---------------------------
-    Filter Exanded  
+    Filter Exanded
 -----------------------------*/
 .default-exp-wrapper {
   border-top: 1px solid var(--color-border);
@@ -22569,15 +22570,13 @@ body.modal-open {
   position: relative;
 }
 .rbt-search-style input {
-  background: transparent;
-  height: 50px;
+  background: white;
+  height: 55px;
   line-height: 50px;
-  padding: 0 20px;
-  padding-right: 60px;
-  border-radius: 500px;
-  min-width: 300px;
+  border-radius: 200px;
+  min-width: 100px;
   border: 2px solid var(--color-white);
-  color: var(--color-white);
+  color: var(--color-black);
 }
 .rbt-search-style input:focus {
   border-color: var(--color-white);
@@ -26521,9 +26520,9 @@ blockquote.has-text-align-right cite,
 .rbt-course-grid-column .course-grid-3,
 .rbt-course-grid-column .course-grid-2,
 .rbt-course-grid-column .course-grid-4 {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-top: 30px;
+  padding-right: 1%;
+  padding-left: 1%;
+  margin-top: 1%;
 }
 .rbt-course-grid-column .course-grid-3 .rbt-card,
 .rbt-course-grid-column .course-grid-2 .rbt-card,
@@ -26552,6 +26551,7 @@ blockquote.has-text-align-right cite,
 .rbt-course-grid-column .course-grid-3 {
   flex: 0 0 auto;
   width: 33.33%;
+
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .rbt-course-grid-column .course-grid-3 {
@@ -29219,3 +29219,5 @@ Course Sidebar
   }
 }
 /*# sourceMappingURL=../maps/style.css.map */
+
+}

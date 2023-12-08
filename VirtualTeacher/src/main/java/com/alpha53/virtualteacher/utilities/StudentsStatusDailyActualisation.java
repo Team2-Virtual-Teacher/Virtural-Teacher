@@ -30,37 +30,9 @@ public class StudentsStatusDailyActualisation {
         this.solutionDao = solutionDao;
         this.emailService = emailService;
     }
-
-   /* @Scheduled(cron = "22 42 * * * *")
-    private void informCompleteOrFailCourse() {
-
-        List<Integer> ongoingCoursesIds = courseDao.getIdOngoingCourses();
-        Map<Course, List<User>> enrolledStudents = new HashMap<>();
-
-        for (Integer ongoingCourse : ongoingCoursesIds) {
-            Course course = courseDao.get(ongoingCourse);
-            Set<Lecture> lectures = new HashSet<>(lectureDao.getAllByCourseId(ongoingCourse));
-            course.setLectures(lectures);
-            enrolledStudents.put(course, courseDao.getStudentsWhichAreEnrolledForCourse(ongoingCourse));
-        }
-
-        for (Map.Entry<Course, List<User>> course : enrolledStudents.entrySet()) {
-            List<Integer> lectures = new ArrayList<>();
-            course.getKey().getLectures().forEach(lecture -> lectures.add(lecture.getId()));
-            for (User user : course.getValue()) {
-                Map<Integer, Double> studentStatus = solutionDao.getSolutionCountAndAVGPerStudent(user.getUserId(), lectures);
-                for (Map.Entry<Integer, Double> entry : studentStatus.entrySet()) {
-                    if (entry.getKey() == course.getKey().getLectures().size() && entry.getValue() >= course.getKey().getPassingGrade()) {
-                        courseDao.completeCourse(user.getUserId(),course.getKey().getCourseId());
-                    }
-                }
-            }
-        }
-    }*/
-
-    @Scheduled(cron = "* 35 23 * * *")
+    @Scheduled(cron = "00 40 01 * * *")
     private void informGraduatedStudents() {
-        System.out.println("TEST");
+        System.out.println("Certificates sent");
         List<Integer> ongoingCoursesIds = courseDao.getIdOngoingCourses();
         Map<Course, List<User>> enrolledStudents = new HashMap<>();
 
@@ -83,11 +55,10 @@ public class StudentsStatusDailyActualisation {
                                 graduationEmail,
                                 String.format(SUCCESSFUL_GRADUATION_TITLE, course.getKey().getTitle()),
                                 certificate,
-                                "Certificate");
+                                "Certificate.pdf");
                     }
                 }
             }
         }
-
     }
 }

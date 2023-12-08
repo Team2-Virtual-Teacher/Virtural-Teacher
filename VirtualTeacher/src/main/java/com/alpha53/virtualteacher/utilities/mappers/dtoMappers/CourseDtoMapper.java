@@ -1,13 +1,16 @@
 package com.alpha53.virtualteacher.utilities.mappers.dtoMappers;
 
 import com.alpha53.virtualteacher.models.Course;
+import com.alpha53.virtualteacher.models.FilterOptions;
 import com.alpha53.virtualteacher.models.dtos.CourseDto;
+import com.alpha53.virtualteacher.models.dtos.FilterOptionDto;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.TopicDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Component
 public class CourseDtoMapper {
@@ -33,8 +36,6 @@ public class CourseDtoMapper {
         course.setDescription(dto.getDescription());
 
 
-
-
         return  course;
     }
     public Course fromDto(int id, CourseDto dto){
@@ -50,5 +51,7 @@ public class CourseDtoMapper {
 
         return  course;
     }
+
+
 }
 

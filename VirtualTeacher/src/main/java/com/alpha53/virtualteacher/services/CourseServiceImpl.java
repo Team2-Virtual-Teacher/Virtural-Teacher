@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -61,7 +58,7 @@ public class CourseServiceImpl implements CourseService {
         boolean duplicateExists = true;
         try {
             Course existingCourse = courseRepository.getByTitle(course.getTitle());
-            if (existingCourse.getCourseId() == course.getCourseId()) {
+            if (Objects.equals(existingCourse.getCourseId(), course.getCourseId())) {
                 duplicateExists = false;
             }
         } catch (EntityNotFoundException e) {

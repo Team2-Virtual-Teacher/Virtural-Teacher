@@ -48,7 +48,9 @@ public class AuthenticationMvcController {
 
         try {
             User user = authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
-            session.setAttribute("currentUser", login.getEmail());
+            session.setAttribute("currentUser", userService.get(login.getEmail()));
+
+//            TODO remove these things later on. Getting the entire user is more appropriate for now.
             session.setAttribute("currentUserRole", userService.get(login.getEmail()).getRole().getRoleType());
             session.setAttribute("isAdmin", user.getRole().getRoleType().equalsIgnoreCase("admin"));
             session.setAttribute("isStudent", user.getRole().getRoleType().equalsIgnoreCase("student"));

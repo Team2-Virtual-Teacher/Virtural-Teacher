@@ -52,7 +52,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         String query = "SELECT users.id as userId, email, password, first_name, last_name, " +
                        "picture_url, is_verified, role_id , role " +
                        "FROM users JOIN roles r on r.id = users.role_id " +
-                       "WHERE users.email = :email;";
+                       "WHERE users.email = :email";
 
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("email", email);

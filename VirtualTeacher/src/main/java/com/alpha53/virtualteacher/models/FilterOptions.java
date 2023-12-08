@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.util.Optional;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -27,6 +26,15 @@ public class FilterOptions {
         this.isPublic = Optional.ofNullable(isPublic);
         this.sortBy = Optional.ofNullable(sortBy);
         this.sortOrder = Optional.ofNullable(sortOrder);
+    }
+    public FilterOptions() {
+        this.title = Optional.empty();
+        this.topic = Optional.empty();
+        this.teacher = Optional.empty();
+        this.rating = Optional.empty();
+        this.isPublic = Optional.empty();
+        this.sortBy = Optional.empty();
+        this.sortOrder = Optional.empty();
     }
 
 }
