@@ -21637,8 +21637,8 @@ ul.testimonial-thumb-wrapper li a.active .thumb img {
   }
 }
 .default-exp-wrapper .filter-inner .filter-select-option {
-  flex-basis: 20%;
-  padding: 10px;
+  flex-basis: 16.66%;
+  padding: 5px;
   position: relative;
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {

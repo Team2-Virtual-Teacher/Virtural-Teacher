@@ -20,10 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CourseServiceImplTests {
@@ -265,7 +262,7 @@ public class CourseServiceImplTests {
     @Test
     public void get_Should_CallDaoWhenValidInput() {
         Course mockCourse = Helpers.createMockCourse();
-        User mockUser = Helpers.createMockTeacher();
+        Optional<User> mockUser = Optional.of(Helpers.createMockTeacher());
         FilterOptions filterOptions = new FilterOptions();
         Mockito.when(courseDao.get(filterOptions)).thenReturn(Arrays.asList(mockCourse, mockCourse, mockCourse));
         courseService.get(filterOptions, mockUser);

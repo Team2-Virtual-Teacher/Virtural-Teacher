@@ -39,20 +39,8 @@ public class LectureServiceImplTests {
         this.lectureService = lectureService;
     }
 
-    @Test
+
     public void get_Should_ReturnLecture_When_UserIsCreator(){
-      /*  User teacherCreator = Helpers.createMockTeacher();
-        Course course = Helpers.createMockCourse();
-        Lecture lecture = Helpers.createMockLecture();
-
-        Mockito.when(courseDao.get(course.getCourseId())).thenReturn(course);
-        Mockito.when(lectureDao.get(lecture.getId())).thenReturn(lecture);
-
-        Lecture result = lectureService.get(course.getCourseId(),lecture.getId(),teacherCreator);
-
-        Mockito.verify(courseDao,Mockito.times(1)).get(course.getCourseId());
-        Mockito.verify(lectureDao,Mockito.times(1)).get(course.getCourseId());
-        Assertions.assertEquals(lecture,result);*/
 
     }
 

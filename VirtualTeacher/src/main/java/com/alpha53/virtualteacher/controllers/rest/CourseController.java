@@ -40,7 +40,7 @@ public class CourseController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String topic,
             @RequestParam(required = false) String teacher,
-            @RequestParam(required = false) String rating,
+            @RequestParam(required = false) Double rating,
             @RequestParam(required = false) String isPublic,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder

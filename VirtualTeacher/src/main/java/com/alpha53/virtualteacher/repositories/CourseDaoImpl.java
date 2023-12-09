@@ -117,7 +117,6 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
                 filters.add("is_published = 0 ");
             }
 
-
         });
 
 
@@ -127,7 +126,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         }
         sql += " GROUP BY courses.id ";
         if (filterOptions.getRating().isPresent()) {
-            sql += String.format(" HAVING  AVG(ratings.rating) >= %f ", Double.parseDouble(filterOptions.getRating().get()));
+            sql += String.format(" HAVING  AVG(ratings.rating) >= %f ", filterOptions.getRating().get());
         }
 
         sql += generateOrderBy(filterOptions);

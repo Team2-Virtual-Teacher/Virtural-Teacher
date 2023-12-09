@@ -1458,10 +1458,13 @@
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label input-label d-block">Topic</span>
-                                    <select>
-                                        <option value="">Select topic</option>
-                                        <option>Paid</option>
-                                        <option>Premium</option>
+
+                                    <select th:field="*{topic}">
+                                        <option value="#" th:value="${null}" th:text="${'Select topic'}">Select topic</option>
+                                        <option th:each="topic : ${topics}"
+                                                th:value="${topic.topic}"
+                                                th:text="${topic.topic}">Paid
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -1469,17 +1472,33 @@
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Rating</span>
-                                    <select data-live-search="true">
-                                        <option value="">Rating</option>
-                                        <option>Graphic</option>
+                                    <select th:field="*{rating}">
+                                        <option value="#" th:value="${null}" th:text="${'Select rating'}" >Rating</option>
+                                        <option th:text="${1}" th:value="${1}">1</option>
+                                        <option th:text="${2}" th:value="${2}">2</option>
+                                        <option th:text="${3}" th:value="${3}">3</option>
+                                        <option th:text="${4}" th:value="${4}">4</option>
+                                        <option th:text="${5}" th:value="${5}">5</option>
                                     </select>
                                 </div>
                             </div>
+
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Sort By</span>
+                                    <select th:field="*{sortOrder}">
+                                        <option value="#" th:value="${null}" th:text="${'Sort By'}" >Sort by</option>
+                                        <option th:text="${'name'}" th:value="${1}">name</option>
+                                        <option th:text="${'rating'}" th:value="${2}">rating</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select">
+                                    <span class="select-label d-block">Order</span>
                                     <select>
-                                        <option value="">Sort by</option>
+                                        <option value="">Order</option>
                                         <option>Graphic</option>
                                     </select>
                                 </div>

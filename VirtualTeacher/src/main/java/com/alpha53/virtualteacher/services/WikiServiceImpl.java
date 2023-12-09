@@ -127,10 +127,13 @@ public class WikiServiceImpl implements WikiService {
             }
         }
 
-       // WikiClean wikiClean = new WikiClean.Builder().withLanguage(new English()).withTitle(false).withFooter(false).build();
+        WikiClean wikiClean = new WikiClean.Builder().withLanguage(new English()).withTitle(true).build();
         for (WikiResult wikiResult : resultList) {
-           // wikiResult.setContent(wikiClean.clean(contentMap.get(wikiResult.getPageid())));
-            wikiResult.setContent(contentMap.get(wikiResult.getPageid()));
+            String xmlStartTag = "<text xml:space=\"preserve\">";
+            String xmlEndTag = "</text>";
+            String articleWithXml = xmlStartTag + contentMap.get(wikiResult.getPageid()) + xmlEndTag;
+            String plainText = wikiClean.clean(articleWithXml);
+            wikiResult.setContent(plainText);
         }
 
     }

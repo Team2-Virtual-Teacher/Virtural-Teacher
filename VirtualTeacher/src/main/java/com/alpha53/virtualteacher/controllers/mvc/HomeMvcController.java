@@ -40,8 +40,6 @@ public class HomeMvcController {
         model.addAttribute("coursesCount", courseService.getCoursesCount());
         model.addAttribute("topics", topicService.getAll());
 
-//TODO To refactor after course service is set right.
-
         Optional<User> user;
 
         if (session.getAttribute("currentUser") == null) {
@@ -51,8 +49,8 @@ public class HomeMvcController {
         }
         FilterOptions filterOption = FilterMapper.fromFilterOptionsDtoToFilterOptions(filterOptionDto);
 
-        model.addAttribute("filterOptions", filterOptionDto);
         model.addAttribute("courses", courseService.get(filterOption, user));
+        model.addAttribute("filterOptions", filterOptionDto);
 
         return "index";
     }

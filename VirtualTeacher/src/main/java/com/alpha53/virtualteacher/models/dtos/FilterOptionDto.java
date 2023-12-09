@@ -7,7 +7,7 @@ public class FilterOptionDto {
     private String title;
     private String topic;
     private String teacher;
-    private String rating;
+    private Double rating;
     private Boolean  isPublic;
     private String sortBy;
     private String sortOrder;
