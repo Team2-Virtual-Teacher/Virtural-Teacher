@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public static final String USERS_CANNOT_CHANGE_ROLES_EXCEPTION = "Only admins can change roles of other users";
     public static final String CHANGE_ROLE_EXCEPTION = "You are not allowed to change the role of a %s to a %s";
     public static final String INVALID_ROLE_EXCEPTION = "%s is not a valid role!";
-    public static final String DEFAULT_PHOTO_URL = "/resources/fileStorage/user-avatar.png";
+    public static final String DEFAULT_PHOTO_URL = "/assets/fileStorage/user-avatar.png";
     public static final String CONFIRMATION_LINK = "http://localhost:8080/api/v1/users/confirm?token=";
     public static final String REGISTRATION_CONFIRMATION_SUBJECT = "Registration confirmation";
 

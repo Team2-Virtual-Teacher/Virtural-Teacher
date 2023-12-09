@@ -85,7 +85,7 @@ public class StorageServiceImpl implements StorageService {
     public void delete(String filename) {
 
         try {
-            Path path = Paths.get("src/main" + filename);
+            Path path = Paths.get("src/main/resources/static" + filename);
             Files.deleteIfExists(path);
         } catch (IOException e){
             throw new StorageException("Unable to delete file.");
@@ -135,7 +135,7 @@ public class StorageServiceImpl implements StorageService {
 
     private String extractFilePath(Path fileLocation) {
         String filePath = fileLocation.toString();
-        int startingPoint = filePath.indexOf("resources");
+        int startingPoint = filePath.indexOf("assets");
         return filePath.substring(startingPoint-1);
     }
 
