@@ -1444,14 +1444,18 @@
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select rbt-search-style me-0">
                                     <span class="select-label d-block">Course name</span>
-                                    <input type="text" th:field="*{title}">
+                                    <label>
+                                        <input type="text" th:field="*{title}">
+                                    </label>
                                 </div>
                             </div>
 
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select rbt-search-style me-0">
                                     <span class="select-label input-label d-block">Teacher</span>
-                                    <input type="text" th:field="*{teacher}">
+                                    <label>
+                                        <input type="text" th:field="*{teacher}">
+                                    </label>
                                 </div>
                             </div>
 
@@ -1459,13 +1463,16 @@
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label input-label d-block">Topic</span>
 
-                                    <select th:field="*{topic}">
-                                        <option value="#" th:value="${null}" th:text="${'Select topic'}">Select topic</option>
-                                        <option th:each="topic : ${topics}"
-                                                th:value="${topic.topic}"
-                                                th:text="${topic.topic}">Paid
-                                        </option>
-                                    </select>
+                                    <div>
+                                        <select th:field="*{topic}">
+                                            <option value="#" th:value="${null}" th:text="${'none'}">Select topic</option>
+                                            <option th:each="topic : ${topics}"
+                                                    th:value="${topic.topic}"
+                                                    th:text="${topic.topic}">
+                                                Topic
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1473,7 +1480,8 @@
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Rating</span>
                                     <select th:field="*{rating}">
-                                        <option value="#" th:value="${null}" th:text="${'Select rating'}" >Rating</option>
+                                       <!-- <option value="#" th:value="${null}" th:text="${'Select rating'}" >Rating</option>-->
+                                        <option th:text="${0}" th:value="${0}">0</option>
                                         <option th:text="${1}" th:value="${1}">1</option>
                                         <option th:text="${2}" th:value="${2}">2</option>
                                         <option th:text="${3}" th:value="${3}">3</option>
@@ -1486,21 +1494,26 @@
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Sort By</span>
-                                    <select th:field="*{sortOrder}">
-                                        <option value="#" th:value="${null}" th:text="${'Sort By'}" >Sort by</option>
-                                        <option th:text="${'name'}" th:value="${1}">name</option>
-                                        <option th:text="${'rating'}" th:value="${2}">rating</option>
-                                    </select>
+                                    <div>
+                                            <select th:field="*{sortBy}">
+                                               <!-- <option value="#" th:value="${null}" th:text="${'Sort By'}" >Sort by</option>-->
+                                                <option th:text="${'title'}" th:value="${'title'}">name</option>
+                                                <option th:text="${'rating'}" th:value="${'rating'}">rating</option>
+                                            </select>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Order</span>
-                                    <select>
-                                        <option value="">Order</option>
-                                        <option>Graphic</option>
-                                    </select>
+                                        <div>
+                                            <select th:field="*{sortOrder}">
+                                                <!--<option value="#" th:value="${null}" th:text="${'Order'}" >Order</option>-->
+                                                <option th:text="${'Ascending'}" th:value="${null}">name</option>
+                                                <option th:text="${'Descending'}" th:value="${'desc'}">rating</option>
+                                            </select>
+                                        </div>
                                 </div>
                             </div>
                             <button class="rbt-btn btn-gradient btn-sm" href="#" type="submit">Filter</button>
@@ -1545,7 +1558,11 @@
                                        th:utext="${#temporals.format(course.getStartingDate(),'dd/MM/yyyy')}"></i></li>
                             </ul>
                             <p class="rbt-card-text"
-                               th:text="${#strings.substring(course.getDescription().getDescription(),0,300)+'...'}">It
+                              th:if="${course.getDescription().getDescription()!=null}" th:text="${#strings.substring(course.getDescription().getDescription(),0,300)+'...'}">It
+                                is a long established fact that a reader will be
+                                distracted.</p>
+                            <p class="rbt-card-text"
+                               th:unless="${course.getDescription().getDescription()!=null}" th:text="${'Description not available'}">It
                                 is a long established fact that a reader will be
                                 distracted.</p>
                             <div class="rbt-author-meta mb--10">

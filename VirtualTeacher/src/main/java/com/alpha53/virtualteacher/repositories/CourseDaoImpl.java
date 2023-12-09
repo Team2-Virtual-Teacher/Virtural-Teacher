@@ -44,10 +44,10 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     public Course get(int id) {
 
         String sql = "SELECT description, courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url, is_verified,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
-                     "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
-                     "  LEFT JOIN users ON courses.creator_id = users.id " +
+                "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
+                "  LEFT JOIN users ON courses.creator_id = users.id " +
                 "   LEFT JOIN ratings ON courses.id = ratings.course_id " +
-                " LEFT JOIN course_description on courses.id = course_description.course_id "+
+                " LEFT JOIN course_description on courses.id = course_description.course_id " +
                 " WHERE courses.id=:id      " +
                 "GROUP BY courses.id";
 
@@ -68,7 +68,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         String sql = "SELECT description, courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade,topic,topic_id, AVG(ratings.rating) AS avg_rating " +
                 "FROM courses LEFT JOIN topics ON courses.topic_id = topics.id     " +
                 "  LEFT JOIN users ON courses.creator_id = users.id " +
-                "   LEFT JOIN ratings ON courses.id = ratings.course_id "+
+                "   LEFT JOIN ratings ON courses.id = ratings.course_id " +
                 " LEFT JOIN course_description on courses.id = course_description.course_id " +
                 " WHERE courses.title=:title      " +
                 "GROUP BY courses.id";
@@ -97,28 +97,27 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         List<String> filters = new ArrayList<>();
         MapSqlParameterSource in = new MapSqlParameterSource();
 
-        filterOptions.getTitle().ifPresent(value -> {
+        if (filterOptions.getTitle().isPresent() && !filterOptions.getTitle().get().isEmpty()) {
             filters.add("title like :title ");
-            in.addValue("title", String.format("%%%s%%", value));
-        });
-        filterOptions.getTopic().ifPresent(value -> {
-            filters.add("topic like :topic ");
-            in.addValue("topic", String.format("%%%s%%", value));
-        });
-        filterOptions.getTeacher().ifPresent(value -> {
-            filters.add("email like :teacher ");
-            in.addValue("teacher", String.format("%%%s%%", value));
+            in.addValue("title", String.format("%%%s%%", filterOptions.getTitle().get()));
+        }
 
-        });
+        if (filterOptions.getTopic().isPresent() && !filterOptions.getTopic().get().isEmpty()) {
+            filters.add("topic like :topic ");
+            in.addValue("topic", String.format("%%%s%%", filterOptions.getTopic().get()));
+        }
+        if (filterOptions.getTeacher().isPresent() && !filterOptions.getTeacher().get().isEmpty()) {
+            filters.add("email like :teacher ");
+            in.addValue("teacher", String.format("%%%s%%", filterOptions.getTeacher().get()));
+        }
+
         filterOptions.getIsPublic().ifPresent(value -> {
             if (value) {
                 filters.add("is_published = 1 ");
             } else {
                 filters.add("is_published = 0 ");
             }
-
         });
-
 
         if (!filters.isEmpty()) {
             sql += " WHERE ";
@@ -126,15 +125,18 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         }
         sql += " GROUP BY courses.id ";
         if (filterOptions.getRating().isPresent()) {
-            sql += String.format(" HAVING  AVG(ratings.rating) >= %f ", filterOptions.getRating().get());
+            if (filterOptions.getRating().get()==0){
+
+                sql += String.format(" HAVING  AVG(ratings.rating) >= %f OR avg_rating IS NULL", filterOptions.getRating().get());
+            }else{
+                sql += String.format(" HAVING  AVG(ratings.rating) >= %f ", filterOptions.getRating().get());
+            }
         }
 
         sql += generateOrderBy(filterOptions);
-        try {
-            return namedParameterJdbcTemplate.query(sql, in, courseMapper);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            throw new EntityNotFoundException();
-        }
+
+        return namedParameterJdbcTemplate.query(sql, in, courseMapper);
+
 
     }
 
@@ -169,12 +171,12 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     @Override
     public List<Course> getUsersCompletedCourses(int userId) {
         String sql = "SELECT  description, courses.id,title,start_date,creator_id,email,first_name,last_name,picture_url,is_verified,is_published,passing_grade, topic, topic_id, AVG(ratings.rating) AS avg_rating " +
-                " FROM course_user "+
-                " LEFT JOIN courses ON course_user.course_id = courses.id "+
-                " LEFT JOIN users ON course_user.user_id = users.id "+
-                " LEFT JOIN topics ON courses.topic_id=topics.id "+
+                " FROM course_user " +
+                " LEFT JOIN courses ON course_user.course_id = courses.id " +
+                " LEFT JOIN users ON course_user.user_id = users.id " +
+                " LEFT JOIN topics ON courses.topic_id=topics.id " +
                 " LEFT JOIN ratings ON courses.id = ratings.course_id " +
-                " LEFT JOIN course_description on courses.id = course_description.course_id "+
+                " LEFT JOIN course_description on courses.id = course_description.course_id " +
                 " WHERE course_user.user_id = :id AND course_user.ongoing = 0 " +
                 "GROUP BY courses.id";
 
@@ -239,7 +241,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
                 "LEFT JOIN topics ON courses.topic_id = topics.id " +
                 "LEFT JOIN users ON courses.creator_id = users.id " +
                 "  LEFT JOIN ratings ON courses.id = ratings.course_id " +
-                " LEFT JOIN course_description on courses.id = course_description.course_id "+
+                " LEFT JOIN course_description on courses.id = course_description.course_id " +
                 "WHERE course_user.user_id = :id AND course_user.ongoing = 1 " +
                 "GROUP BY courses.id";
 // TODO: 3.12.23 this method should return all courses for the user, not only the ones he is enrolled for.
@@ -387,7 +389,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
                 "FROM course_user " +
                 "WHERE ongoing=1 " +
                 "GROUP BY course_id";
-        return namedParameterJdbcTemplate.queryForList(sql,new MapSqlParameterSource(),Integer.class);
+        return namedParameterJdbcTemplate.queryForList(sql, new MapSqlParameterSource(), Integer.class);
     }
 
     @Override
@@ -398,14 +400,15 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
         params.addValue("userId", user.getUserId());
         namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
-    public Integer getCoursesCount(){
+    public Integer getCoursesCount() {
         String sql = "SELECT COUNT(*) FROM courses WHERE is_published = 1";
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql,new MapSqlParameterSource(),Integer.class)).orElse(0);
+        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class)).orElse(0);
     }
 
     private String generateOrderBy(FilterOptions filterOptions) {
-        if (filterOptions.getSortBy().isEmpty()) {
+        if (filterOptions.getSortBy().isEmpty() || filterOptions.getSortBy().get().isEmpty()) {
             return "";
         }
 
@@ -423,7 +426,6 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
         return orderBy;
     }
-
 
 
     private boolean isDescriptionExist(int courseId) {
