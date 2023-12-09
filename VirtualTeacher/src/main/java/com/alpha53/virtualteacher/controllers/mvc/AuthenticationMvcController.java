@@ -3,6 +3,7 @@ package com.alpha53.virtualteacher.controllers.mvc;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.LoginDto;
+import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import jakarta.servlet.http.HttpSession;
@@ -20,11 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthenticationMvcController {
 
     private final AuthenticationHelper authenticationHelper;
-    private final UserService userService;
 
-    public AuthenticationMvcController(AuthenticationHelper authenticationHelper, UserService userService) {
+    public AuthenticationMvcController(AuthenticationHelper authenticationHelper) {
         this.authenticationHelper = authenticationHelper;
-        this.userService = userService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -49,16 +48,25 @@ public class AuthenticationMvcController {
         try {
             User user = authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
             session.setAttribute("currentUserEmail", user.getEmail());
-            session.setAttribute("currentUser",user);
+            session.setAttribute("currentUser", user);
 
-//            TODO remove these things later on. Getting the entire user is more appropriate for now.
-            session.setAttribute("currentUserRole", userService.get(login.getEmail()).getRole().getRoleType());
-            session.setAttribute("isAdmin", user.getRole().getRoleType().equalsIgnoreCase("admin"));
-            session.setAttribute("isStudent", user.getRole().getRoleType().equalsIgnoreCase("student"));
             return "redirect:/";
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("email", "auth_error", e.getMessage());
             return "LoginView";
         }
+    }
+
+    @GetMapping("/logout")
+    public String handleLogout(HttpSession session) {
+        session.removeAttribute("currentUser");
+        session.removeAttribute("currentUser");
+        return "redirect:/";
+    }
+
+    @GetMapping("/register")
+    public String showRegisterPage(Model model) {
+        model.addAttribute("register", new UserDto());
+        return "register";
     }
 }

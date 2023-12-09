@@ -14,22 +14,22 @@
 
     <!-- CSS
 	============================================ -->
-    <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/vendor/slick.css">
-    <link rel="stylesheet" href="../static/css/vendor/slick-theme.css">
-    <link rel="stylesheet" href="../static/css/plugins/sal.css">
-    <link rel="stylesheet" href="../static/css/plugins/feather.css">
-    <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css">
-    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css">
-    <link rel="stylesheet" href="../static/css/plugins/swiper.css">
-    <link rel="stylesheet" href="../static/css/plugins/magnify.css">
-    <link rel="stylesheet" href="../static/css/plugins/odometer.css">
-    <link rel="stylesheet" href="../static/css/plugins/animation.css">
-    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css">
-    <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css">
-    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css">
-    <link rel="stylesheet" href="../static/css/plugins/plyr.css">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css" th:href="@{/css/vendor/bootstrap.min.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick.css" th:href="@{/css/vendor/slick.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick-theme.css" th:href="@{/css/vendor/slick-theme.css}">
+    <link rel="stylesheet" href="../static/css/plugins/sal.css" th:href="@{/css/plugins/sal.css}">
+    <link rel="stylesheet" href="../static/css/plugins/feather.css" th:href="@{/css/plugins/feather.css}">
+    <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css" th:href="@{/css/plugins/fontawesome.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css" th:href="@{/css/plugins/euclid-circulara.css}">
+    <link rel="stylesheet" href="../static/css/plugins/swiper.css" th:href="@{/css/plugins/swiper.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnify.css" th:href="@{/css/plugins/magnify.css}">
+    <link rel="stylesheet" href="../static/css/plugins/odometer.css" th:href="@{/css/plugins/odometer.css}">
+    <link rel="stylesheet" href="../static/css/plugins/animation.css" th:href="@{/css/plugins/animation.css}">
+    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css" th:href="@{/css/plugins/bootstrap-select.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css" th:href="@{/css/plugins/jquery-ui.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css" th:href="@{/css/plugins/magnigy-popup.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/plyr.css" th:href="@{/css/plugins/plyr.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
 </head>
 
 <body class="rbt-header-sticky">
@@ -398,7 +398,12 @@
 
                             <div class="form-group">
                                 <input name="register_user" type="text">
-                                <label>Username *</label>
+                                <label>First Name *</label>
+                                <span class="focus-border"></span>
+                            </div>
+                            <div class="form-group">
+                                <input name="register_user" type="text">
+                                <label>Last Name *</label>
                                 <span class="focus-border"></span>
                             </div>
 
@@ -413,7 +418,13 @@
                                 <label>Confirm Password *</label>
                                 <span class="focus-border"></span>
                             </div>
-
+                            <div class="form-group">
+                                <label for="role">Role *</label>
+                                <select id="role" name="role" required>
+                                    <option value="teacher">Student</option>
+                                    <option value="student">Teacher</option>
+                                </select>
+                            </div>
                             <div class="form-submit-group">
                                 <button type="submit" class="rbt-btn btn-md btn-gradient hover-icon-reverse w-100">
                                     <span class="icon-reverse-wrapper">
@@ -444,35 +455,35 @@
     <!-- JS
 ============================================ -->
     <!-- Modernizer JS -->
-    <script src="../static/js/vendor/modernizr.min.js"></script>
+    <script src="/js/vendor/modernizr.min.js"></script>
     <!-- jQuery JS -->
-    <script src="../static/js/vendor/jquery.js"></script>
+    <script src="/js/vendor/jquery.js"></script>
     <!-- Bootstrap JS -->
-    <script src="../static/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/vendor/bootstrap.min.js"></script>
     <!-- sal.js -->
-    <script src="../static/js/vendor/sal.js"></script>
-    <script src="../static/js/vendor/swiper.js"></script>
-    <script src="../static/js/vendor/magnify.min.js"></script>
-    <script src="../static/js/vendor/jquery-appear.js"></script>
-    <script src="../static/js/vendor/odometer.js"></script>
-    <script src="../static/js/vendor/backtotop.js"></script>
-    <script src="../static/js/vendor/isotop.js"></script>
-    <script src="../static/js/vendor/imageloaded.js"></script>
+    <script src="/js/vendor/sal.js"></script>
+    <script src="/js/vendor/swiper.js"></script>
+    <script src="/js/vendor/magnify.min.js"></script>
+    <script src="/js/vendor/jquery-appear.js"></script>
+    <script src="/js/vendor/odometer.js"></script>
+    <script src="/js/vendor/backtotop.js"></script>
+    <script src="/js/vendor/isotop.js"></script>
+    <script src="/js/vendor/imageloaded.js"></script>
 
-    <script src="../static/js/vendor/wow.js"></script>
-    <script src="../static/js/vendor/waypoint.min.js"></script>
-    <script src="../static/js/vendor/easypie.js"></script>
-    <script src="../static/js/vendor/text-type.js"></script>
-    <script src="../static/js/vendor/jquery-one-page-nav.js"></script>
-    <script src="../static/js/vendor/bootstrap-select.min.js"></script>
-    <script src="../static/js/vendor/jquery-ui.js"></script>
-    <script src="../static/js/vendor/magnify-popup.min.js"></script>
-    <script src="../static/js/vendor/paralax-scroll.js"></script>
-    <script src="../static/js/vendor/paralax.min.js"></script>
-    <script src="../static/js/vendor/countdown.js"></script>
-    <script src="../static/js/vendor/plyr.js"></script>
+    <script src="/js/vendor/wow.js"></script>
+    <script src="/js/vendor/waypoint.min.js"></script>
+    <script src="/js/vendor/easypie.js"></script>
+    <script src="/js/vendor/text-type.js"></script>
+    <script src="/js/vendor/jquery-one-page-nav.js"></script>
+    <script src="/js/vendor/bootstrap-select.min.js"></script>
+    <script src="/js/vendor/jquery-ui.js"></script>
+    <script src="/js/vendor/magnify-popup.min.js"></script>
+    <script src="/js/vendor/paralax-scroll.js"></script>
+    <script src="/js/vendor/paralax.min.js"></script>
+    <script src="/js/vendor/countdown.js"></script>
+    <script src="/js/vendor/plyr.js"></script>
     <!-- Main JS -->
-    <script src="../static/js/main.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 
 </html>

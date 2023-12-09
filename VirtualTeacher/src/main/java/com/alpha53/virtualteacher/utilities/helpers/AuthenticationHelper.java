@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationHelper {
 
-    public static final String INVALID_AUTHENTICATION = "Invalid authentication!";
     public static final String PROFILE_CONFIRMATION_EXCEPTION = "Your profile has not been confirmed. Please follow the link sent to your email.";
-
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
     public final UserService userService;
@@ -47,7 +45,9 @@ public class AuthenticationHelper {
         }*/
 
         try {
-            return userService.get(currentEmail);
+           User user = userService.get(currentEmail);
+           throwIfNotVerified(user);
+           return user;
         } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
@@ -59,14 +59,16 @@ public class AuthenticationHelper {
             if (!user.getPassword().equals(password)) {
                 throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
             }
-
-            if (!user.isVerified()) {
-                throw new AuthorizationException(PROFILE_CONFIRMATION_EXCEPTION);
-            }
-
+            throwIfNotVerified(user);
             return user;
         } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        }
+    }
+
+    private static void throwIfNotVerified(User user) {
+        if (!user.isVerified()) {
+            throw new AuthorizationException(PROFILE_CONFIRMATION_EXCEPTION);
         }
     }
 
