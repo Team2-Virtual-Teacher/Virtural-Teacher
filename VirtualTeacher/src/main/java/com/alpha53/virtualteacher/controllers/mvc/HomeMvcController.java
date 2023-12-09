@@ -41,7 +41,6 @@ public class HomeMvcController {
         model.addAttribute("topics", topicService.getAll());
 
         Optional<User> user;
-
         if (session.getAttribute("currentUser") == null) {
             user = Optional.empty();
         } else {

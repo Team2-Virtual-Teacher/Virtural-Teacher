@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Register</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/assets/images/favicon.png">
+
+    <!-- CSS
+	============================================ -->
+    <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/vendor/slick.css">
+    <link rel="stylesheet" href="../static/css/vendor/slick-theme.css">
+    <link rel="stylesheet" href="../static/css/plugins/sal.css">
+    <link rel="stylesheet" href="../static/css/plugins/feather.css">
+    <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css">
+    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css">
+    <link rel="stylesheet" href="../static/css/plugins/swiper.css">
+    <link rel="stylesheet" href="../static/css/plugins/magnify.css">
+    <link rel="stylesheet" href="../static/css/plugins/odometer.css">
+    <link rel="stylesheet" href="../static/css/plugins/animation.css">
+    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css">
+    <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css">
+    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css">
+    <link rel="stylesheet" href="../static/css/plugins/plyr.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body class="rbt-header-sticky">
+
+    <!-- Start Header Area -->
+    <header class="rbt-header rbt-header-10">
+        <div class="rbt-sticky-placeholder"></div>
+        <div class="rbt-sticky-placeholder"></div>
+        <div class="rbt-header-wrapper header-space-betwween header-sticky">
+            <div class="container-fluid">
+                <div class="mainbar-row rbt-navigation-center align-items-center">
+                    <div class="header-left rbt-header-content">
+                        <div class="header-info">
+                            <div class="logo">
+                                <a href="index.html">
+                                    <img src="/static/assets/images/logo/logo.png" alt="Education Logo Images"
+                                         th:src="@{/assets/images/logo/logo.png}">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rbt-main-navigation d-none d-xl-block">
+                        <nav class="mainmenu-nav">
+                            <ul class="mainmenu">
+                                <li class="with-megamenu has-menu-child-item position-static">
+                                    <a href="#">Home <i></i></a>
+                                </li>
+                                <li class="has-dropdown has-menu-child-item">
+                                    <a href="#">Courses
+                                        <i class="feather-chevron-down"></i>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="has-dropdown"><a href="#">All courses</a>
+                                        </li>
+                                        <li class="has-dropdown"><a href="#">My courses</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="with-megamenu has-menu-child-item position-static">
+                                    <a href="#">About <i></i></a>
+                                </li>
+                                <li class="with-megamenu has-menu-child-item position-static">
+                                    <a href="#">Contact us <i></i></a>
+                                </li>
+
+                                <li class="has-dropdown has-menu-child-item" th:if="${session.currentUser != null and (session.currentUser.role.roleType =='teacher' or session.currentUser.role.roleType == 'admin')}"
+
+                                >
+                                    <a href="#">Admin panel
+                                        <i class="feather-chevron-down"></i>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="has-dropdown"><a href="#">Search users</a>
+                                        </li>
+                                        <li class="has-dropdown"><a href="#">Something else</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="with-megamenu has-menu-child-item position-static">
+                                    <a href="#">Elements <i class="feather-chevron-down"></i></a>
+                                    <!-- Start Mega Menu  -->
+                                    <div class="rbt-megamenu grid-item-3">
+                                        <div class="wrapper">
+                                            <div class="row row--15 single-dropdown-menu-presentation">
+                                                <div class="col-lg-4 col-xxl-4 single-mega-item">
+                                                    <ul class="mega-menu-item">
+                                                        <li><a href="style-guide.html">Style Guide <span
+                                                                class="rbt-badge-card">Hot</span></a></li>
+                                                        <li><a href="accordion.html">Accordion</a></li>
+                                                        <li><a href="advancetab.html">Advance Tab</a></li>
+                                                        <li><a href="brand.html">Brand</a></li>
+                                                        <li><a href="button.html">Button</a></li>
+                                                        <li><a href="badge.html">Badge</a></li>
+                                                        <li><a href="card.html">Card</a></li>
+                                                        <li><a href="call-to-action.html">Call To Action</a></li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="col-lg-4 col-xxl-4 single-mega-item">
+                                                    <ul class="mega-menu-item">
+                                                        <li><a href="counterup.html">Counter</a></li>
+                                                        <li><a href="category.html">Categories</a></li>
+                                                        <li><a href="header.html">Header Style</a></li>
+                                                        <li><a href="newsletter.html">Newsletter</a></li>
+                                                        <li><a href="team.html">Team</a></li>
+                                                        <li><a href="social.html">Social</a></li>
+                                                        <li><a href="list-style.html">List Style</a></li>
+                                                        <li><a href="gallery.html">Gallery</a></li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="col-lg-4 col-xxl-4 single-mega-item">
+                                                    <ul class="mega-menu-item">
+                                                        <li><a href="pricing.html">Pricing</a></li>
+                                                        <li><a href="progressbar.html">Progressbar</a></li>
+                                                        <li><a href="testimonial.html">Testimonial</a></li>
+                                                        <li><a href="service.html">Service</a></li>
+                                                        <li><a href="split.html">Split Area</a></li>
+                                                        <li><a href="search.html">Search Style</a></li>
+                                                        <li><a href="instagram.html">Instagram Style</a></li>
+                                                        <li><a href="#">& More Coming</a></li>
+
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="btn-wrapper">
+                                                        <a class="rbt-btn btn-gradient hover-icon-reverse square btn-xl w-100 text-center mt--30 hover-transform-none"
+                                                           href="#">
+                                                            <span class="icon-reverse-wrapper">
+                                        <span class="btn-text">Visit Histudy Template</span>
+                                                            <span class="btn-icon"><i
+                                                                    class="feather-arrow-right"></i></span>
+                                                            <span class="btn-icon"><i
+                                                                    class="feather-arrow-right"></i></span>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Mega Menu  -->
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="header-right">
+
+                        <!-- Navbar Icons -->
+                        <ul class="quick-access">
+
+                            <li class="account-access rbt-user-wrapper d-none d-xl-block"
+                                th:if="${session.currentUser == null}">
+                                <a href="#" th:href="@{/auth/login}"><i class="feather-user"></i>Login</a>
+                            </li>
+                            <li class="account-access rbt-user-wrapper d-none d-xl-block"
+                                th:if="${session.currentUser != null}">
+                                <a href="#"><i class="feather-user"></i>User</a>
+                                <div class="rbt-user-menu-list-wrapper">
+                                    <div class="inner">
+                                        <div class="rbt-admin-profile">
+                                            <div class="admin-thumbnail">
+                                                <img src="../static/assets/images/team/avatar.jpg" alt="User Images" th:src="${session.currentUser.pictureUrl}">
+                                            </div>
+                                            <div class="admin-info">
+                                                <span class="name" th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Viktor Mitrev</span>
+                                            </div>
+                                        </div>
+                                        <ul class="user-list-wrapper">
+                                            <li>
+                                                <a href="instructor-dashboard.html" th:href="@{/users/{id}(id=${session.currentUser.userId})}">
+                                                    <i class="feather-home"></i>
+                                                    <span >My Profile</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="instructor-enrolled-courses.html">
+                                                    <i class="feather-shopping-bag"></i>
+                                                    <span>Enrolled Courses</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="instructor-reviews.html">
+                                                    <i class="feather-star"></i>
+                                                    <span>Reviews</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="instructor-my-quiz-attempts.html">
+                                                    <i class="feather-list"></i>
+                                                    <span>My Quiz Attempts</span>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                        <hr class="mt--10 mb--10">
+                                        <ul class="user-list-wrapper">
+                                            <li>
+                                                <a href="instructor-settings.html">
+                                                    <i class="feather-settings"></i>
+                                                    <span>Settings</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="index.html">
+                                                    <i class="feather-log-out"></i>
+                                                    <span>Logout</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="rbt-btn-wrapper d-none d-xl-block">
+                            <a class="rbt-btn  btn-border-gradient radius-round btn-sm " href="#"
+                               th:if="${session.currentUser == null}">
+                                <span data-text="Enroll Now">Register</span>
+                            </a>
+                            <a th:if="${session.currentUser != null}"
+                               class="rbt-btn btn-border-gradient radius-round btn-sm" href="/referral">
+                                <span data-text="Refer Friend">Refer Friend</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Start Side Vav -->
+        <div class="rbt-offcanvas-side-menu rbt-category-sidemenu">
+            <div class="inner-wrapper">
+                <div class="inner-top">
+                    <div class="inner-title">
+                        <h4 class="title">Course Category</h4>
+                    </div>
+                    <div class="rbt-btn-close">
+                        <button class="rbt-close-offcanvas rbt-round-btn"><i class="feather-x"></i></button>
+                    </div>
+                </div>
+                <nav class="side-nav w-100">
+                    <ul class="rbt-vertical-nav-list-wrapper vertical-nav-menu">
+                        <li class="vertical-nav-item">
+                            <a href="#">Course School</a>
+                            <div class="vartical-nav-content-menu-wrapper">
+                                <div class="vartical-nav-content-menu">
+                                    <h3 class="rbt-short-title">Course Title</h3>
+                                    <ul class="rbt-vertical-nav-list-wrapper">
+                                        <li><a href="#">Web Design</a></li>
+                                        <li><a href="#">Art</a></li>
+                                        <li><a href="#">Figma</a></li>
+                                        <li><a href="#">Adobe</a></li>
+                                    </ul>
+                                </div>
+                                <div class="vartical-nav-content-menu">
+                                    <h3 class="rbt-short-title">Course Title</h3>
+                                    <ul class="rbt-vertical-nav-list-wrapper">
+                                        <li><a href="#">Photo</a></li>
+                                        <li><a href="#">English</a></li>
+                                        <li><a href="#">Math</a></li>
+                                        <li><a href="#">Read</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="vertical-nav-item">
+                            <a href="#">Online School</a>
+                            <div class="vartical-nav-content-menu-wrapper">
+                                <div class="vartical-nav-content-menu">
+                                    <h3 class="rbt-short-title">Course Title</h3>
+                                    <ul class="rbt-vertical-nav-list-wrapper">
+                                        <li><a href="#">Photo</a></li>
+                                        <li><a href="#">English</a></li>
+                                        <li><a href="#">Math</a></li>
+                                        <li><a href="#">Read</a></li>
+                                    </ul>
+                                </div>
+                                <div class="vartical-nav-content-menu">
+                                    <h3 class="rbt-short-title">Course Title</h3>
+                                    <ul class="rbt-vertical-nav-list-wrapper">
+                                        <li><a href="#">Web Design</a></li>
+                                        <li><a href="#">Art</a></li>
+                                        <li><a href="#">Figma</a></li>
+                                        <li><a href="#">Adobe</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="vertical-nav-item">
+                            <a href="#">kindergarten</a>
+                            <div class="vartical-nav-content-menu-wrapper">
+                                <div class="vartical-nav-content-menu">
+                                    <h3 class="rbt-short-title">Course Title</h3>
+                                    <ul class="rbt-vertical-nav-list-wrapper">
+                                        <li><a href="#">Photo</a></li>
+                                        <li><a href="#">English</a></li>
+                                        <li><a href="#">Math</a></li>
+                                        <li><a href="#">Read</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="vertical-nav-item">
+                            <a href="#">Classic LMS</a>
+                            <div class="vartical-nav-content-menu-wrapper">
+                                <div class="vartical-nav-content-menu">
+                                    <h3 class="rbt-short-title">Course Title</h3>
+                                    <ul class="rbt-vertical-nav-list-wrapper">
+                                        <li><a href="#">Web Design</a></li>
+                                        <li><a href="#">Art</a></li>
+                                        <li><a href="#">Figma</a></li>
+                                        <li><a href="#">Adobe</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="read-more-btn">
+                        <div class="rbt-btn-wrapper mt--20">
+                            <a class="rbt-btn btn-border-gradient radius-round btn-sm hover-transform-none w-100 justify-content-center text-center" href="#">
+                                <span>Learn More</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="rbt-offcanvas-footer">
+
+                </div>
+            </div>
+        </div>
+        <!-- End Side Vav -->
+        <a class="rbt-close_side_menu" href="javascript:void(0);"></a>
+    </header>
+    <!-- Mobile Menu Section -->
+    <div class="popup-mobile-menu">
+        <div class="inner-wrapper">
+            <div class="inner-top">
+                <div class="content">
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="../static/assets/images/logo/logo.png" alt="Education Logo Images">
+                        </a>
+                    </div>
+                    <div class="rbt-btn-close">
+                        <button class="close-button rbt-round-btn"><i class="feather-x"></i></button>
+                    </div>
+                </div>
+                <p class="description">Histudy is a education website template. You can customize all.</p>
+                <ul class="navbar-top-left rbt-information-list justify-content-start">
+                    <li>
+                        <a href="mailto:hello@example.com"><i class="feather-mail"></i>example@gmail.com</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="feather-phone"></i>(302) 555-0107</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="rbt-elements-area bg-color-white rbt-section-gap">
+        <div class="container">
+            <div class="row gy-5 row--30">
+
+                <div class="col-lg-7 mx-auto">
+                    <div class="rbt-contact-form contact-form-style-1 max-width-auto">
+                        <h3 class="title">Register</h3>
+                        <form class="max-width-auto">
+                            <div class="form-group">
+                                <input name="register-email" type="text" />
+                                <label>Email address *</label>
+                                <span class="focus-border"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input name="register_user" type="text">
+                                <label>Username *</label>
+                                <span class="focus-border"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input name="register_password" type="password">
+                                <label>Password *</label>
+                                <span class="focus-border"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input name="register_conpassword" type="password">
+                                <label>Confirm Password *</label>
+                                <span class="focus-border"></span>
+                            </div>
+
+                            <div class="form-submit-group">
+                                <button type="submit" class="rbt-btn btn-md btn-gradient hover-icon-reverse w-100">
+                                    <span class="icon-reverse-wrapper">
+                                        <span class="btn-text">Register</span>
+                                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
+                                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
+                                    </span>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="rbt-progress-parent">
+        <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+
+    <!-- JS
+============================================ -->
+    <!-- Modernizer JS -->
+    <script src="../static/js/vendor/modernizr.min.js"></script>
+    <!-- jQuery JS -->
+    <script src="../static/js/vendor/jquery.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="../static/js/vendor/bootstrap.min.js"></script>
+    <!-- sal.js -->
+    <script src="../static/js/vendor/sal.js"></script>
+    <script src="../static/js/vendor/swiper.js"></script>
+    <script src="../static/js/vendor/magnify.min.js"></script>
+    <script src="../static/js/vendor/jquery-appear.js"></script>
+    <script src="../static/js/vendor/odometer.js"></script>
+    <script src="../static/js/vendor/backtotop.js"></script>
+    <script src="../static/js/vendor/isotop.js"></script>
+    <script src="../static/js/vendor/imageloaded.js"></script>
+
+    <script src="../static/js/vendor/wow.js"></script>
+    <script src="../static/js/vendor/waypoint.min.js"></script>
+    <script src="../static/js/vendor/easypie.js"></script>
+    <script src="../static/js/vendor/text-type.js"></script>
+    <script src="../static/js/vendor/jquery-one-page-nav.js"></script>
+    <script src="../static/js/vendor/bootstrap-select.min.js"></script>
+    <script src="../static/js/vendor/jquery-ui.js"></script>
+    <script src="../static/js/vendor/magnify-popup.min.js"></script>
+    <script src="../static/js/vendor/paralax-scroll.js"></script>
+    <script src="../static/js/vendor/paralax.min.js"></script>
+    <script src="../static/js/vendor/countdown.js"></script>
+    <script src="../static/js/vendor/plyr.js"></script>
+    <!-- Main JS -->
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>

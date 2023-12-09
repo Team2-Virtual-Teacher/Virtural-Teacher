@@ -40,7 +40,7 @@ public class AuthenticationHelper {
 
 
     public User tryGetCurrentUser(HttpSession session) {
-        String currentEmail = (String) session.getAttribute("currentUser");
+        String currentEmail = (String) session.getAttribute("currentUserEmail");
 //TODO Check if commented part is useless
         /*if (currentEmail == null) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);

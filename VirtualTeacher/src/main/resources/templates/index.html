@@ -81,16 +81,18 @@
                                 <a href="#">Contact us <i></i></a>
                             </li>
 
-                            <!--  <li class="has-dropdown has-menu-child-item" th:if="${session.currentUser != null and session.currentUser.role.roleType.equalsIgnoreCase('teacher') or session.currentUser.role.roleType.equalsIgnoreCase('admin')}">-->
-                            <a href="#">Admin panel
-                                <i class="feather-chevron-down"></i>
-                            </a>
-                            <ul class="submenu">
-                                <li class="has-dropdown"><a href="#">Search users</a>
-                                </li>
-                                <li class="has-dropdown"><a href="#">Something else</a>
-                                </li>
-                            </ul>
+                            <li class="has-dropdown has-menu-child-item"
+                                th:if="${session.currentUser != null and (session.currentUser.role.roleType =='Teacher' or session.currentUser.role.roleType == 'Admin')}"
+                            >
+                                <a href="#">Admin panel
+                                    <i class="feather-chevron-down"></i>
+                                </a>
+                                <ul class="submenu">
+                                    <li class="has-dropdown"><a href="#">Search users</a>
+                                    </li>
+                                    <li class="has-dropdown"><a href="#">Something else</a>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li class="with-megamenu has-menu-child-item position-static">
@@ -173,7 +175,7 @@
 
                         <li class="account-access rbt-user-wrapper d-none d-xl-block"
                             th:if="${session.currentUser == null}">
-                            <a href="#"><i class="feather-user"></i>Login</a>
+                            <a href="#" th:href="@{/auth/login}"><i class="feather-user"></i>Login</a>
                         </li>
                         <li class="account-access rbt-user-wrapper d-none d-xl-block"
                             th:if="${session.currentUser != null}">
@@ -182,16 +184,18 @@
                                 <div class="inner">
                                     <div class="rbt-admin-profile">
                                         <div class="admin-thumbnail">
-                                            <img src="../static/assets/images/team/avatar.jpg" alt="User Images">
+                                            <img src="../static/assets/images/team/avatar.jpg" alt="User Images"
+                                                 th:src="${session.currentUser.pictureUrl}">
                                         </div>
                                         <div class="admin-info">
-                                            <span class="name">Viktor Mitrev</span>
-                                            <a class="rbt-btn-link color-primary" href="profile.html">View Profile</a>
+                                            <span class="name"
+                                                  th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Viktor Mitrev</span>
                                         </div>
                                     </div>
                                     <ul class="user-list-wrapper">
                                         <li>
-                                            <a href="instructor-dashboard.html">
+                                            <a href="instructor-dashboard.html"
+                                               th:href="@{/users/{id}(id=${session.currentUser.userId})}">
                                                 <i class="feather-home"></i>
                                                 <span>My Profile</span>
                                             </a>
@@ -1038,7 +1042,7 @@
                                         <li><a href="checkout.html">Checkout</a></li>
                                         <li><a href="wishlist.html">Wishlist Page</a></li>
                                         <li><a href="my-account.html">My Acount</a></li>
-                                        <li><a href="login.html">Login & Register</a></li>
+                                        <li><a href="register.html">Login & Register</a></li>
                                         <li><a href="subscription.html">Subscription</a></li>
                                     </ul>
                                 </div>
@@ -1572,7 +1576,8 @@
                                              th:src="${course.getCreator().getPictureUrl()}">
                                     </a>
                                 </div>
-                                <div class="rbt-author-info" th:text="${course.getCreator().getFirstName()}">
+                                <div class="rbt-author-info"
+                                     th:text="${course.creator.firstName + ' ' + course.creator.lastName}">
                                     By <a href="profile.html">Angela</a>
                                 </div>
                             </div>
