@@ -1,11 +1,14 @@
 package com.alpha53.virtualteacher.controllers.mvc;
 
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
+import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
+import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.LoginDto;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
+import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UserMapperHelper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -21,9 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthenticationMvcController {
 
     private final AuthenticationHelper authenticationHelper;
+    private final UserMapperHelper userMapperHelper;
 
-    public AuthenticationMvcController(AuthenticationHelper authenticationHelper) {
+    private final UserService userService;
+
+    public AuthenticationMvcController(AuthenticationHelper authenticationHelper, UserMapperHelper userMapperHelper, UserService userService) {
         this.authenticationHelper = authenticationHelper;
+        this.userMapperHelper = userMapperHelper;
+        this.userService = userService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -67,6 +75,28 @@ public class AuthenticationMvcController {
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("register", new UserDto());
-        return "register";
+        return "RegisterView";
+    }
+
+    @PostMapping("/register")
+    public String handleRegister(@Valid @ModelAttribute("register") UserDto registerDto,
+                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "RegisterView";
+        }
+
+        User user = userMapperHelper.userDtoToUser(registerDto);
+
+        try {
+            userService.create(user, registerDto.getRole());
+            return "EmailConfirmationView";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("email", "email_error", e.getMessage());
+            return "RegisterView";
+        } catch (EntityNotFoundException e) {
+            bindingResult.rejectValue("role", "role_error", e.getMessage());
+            return "RegisterView";
+            // TODO: 10.12.23 this also throws an illegalStateException because of the sending of the email.
+        }
     }
 }

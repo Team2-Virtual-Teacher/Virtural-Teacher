@@ -56,29 +56,29 @@
                         <nav class="mainmenu-nav">
                             <ul class="mainmenu">
                                 <li class="with-megamenu has-menu-child-item position-static">
-                                    <a href="#">Home <i></i></a>
+                                    <a href="#" th:href="@{/}">Home <i></i></a>
                                 </li>
-                                <li class="has-dropdown has-menu-child-item">
-                                    <a href="#">Courses
-                                        <i class="feather-chevron-down"></i>
-                                    </a>
-                                    <ul class="submenu">
-                                        <li class="has-dropdown"><a href="#">All courses</a>
-                                        </li>
-                                        <li class="has-dropdown"><a href="#">My courses</a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                <!--                            <li class="has-dropdown has-menu-child-item">-->
+                                <!--                                <a href="#">Courses-->
+                                <!--                                    <i class="feather-chevron-down"></i>-->
+                                <!--                                </a>-->
+                                <!--                                <ul class="submenu">-->
+                                <!--                                    <li class="has-dropdown"><a href="#">All courses</a>-->
+                                <!--                                    </li>-->
+                                <!--                                    <li class="has-dropdown"><a href="#">My courses</a>-->
+                                <!--                                    </li>-->
+                                <!--                                </ul>-->
+                                <!--                            </li>-->
 
                                 <li class="with-megamenu has-menu-child-item position-static">
-                                    <a href="#">About <i></i></a>
+                                    <a href="#" th:href="@{/about}">About <i></i></a>
                                 </li>
                                 <li class="with-megamenu has-menu-child-item position-static">
-                                    <a href="#">Contact us <i></i></a>
+                                    <a href="#" th:href="@{/contacts}">Contact us <i></i></a>
                                 </li>
 
-                                <li class="has-dropdown has-menu-child-item" th:if="${session.currentUser != null and (session.currentUser.role.roleType =='teacher' or session.currentUser.role.roleType == 'admin')}"
-
+                                <li class="has-dropdown has-menu-child-item"
+                                    th:if="${session.currentUser != null and (session.currentUser.role.roleType =='Teacher' or session.currentUser.role.roleType == 'Admin')}"
                                 >
                                     <a href="#">Admin panel
                                         <i class="feather-chevron-down"></i>
@@ -89,75 +89,6 @@
                                         <li class="has-dropdown"><a href="#">Something else</a>
                                         </li>
                                     </ul>
-                                </li>
-
-                                <li class="with-megamenu has-menu-child-item position-static">
-                                    <a href="#">Elements <i class="feather-chevron-down"></i></a>
-                                    <!-- Start Mega Menu  -->
-                                    <div class="rbt-megamenu grid-item-3">
-                                        <div class="wrapper">
-                                            <div class="row row--15 single-dropdown-menu-presentation">
-                                                <div class="col-lg-4 col-xxl-4 single-mega-item">
-                                                    <ul class="mega-menu-item">
-                                                        <li><a href="style-guide.html">Style Guide <span
-                                                                class="rbt-badge-card">Hot</span></a></li>
-                                                        <li><a href="accordion.html">Accordion</a></li>
-                                                        <li><a href="advancetab.html">Advance Tab</a></li>
-                                                        <li><a href="brand.html">Brand</a></li>
-                                                        <li><a href="button.html">Button</a></li>
-                                                        <li><a href="badge.html">Badge</a></li>
-                                                        <li><a href="card.html">Card</a></li>
-                                                        <li><a href="call-to-action.html">Call To Action</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="col-lg-4 col-xxl-4 single-mega-item">
-                                                    <ul class="mega-menu-item">
-                                                        <li><a href="counterup.html">Counter</a></li>
-                                                        <li><a href="category.html">Categories</a></li>
-                                                        <li><a href="header.html">Header Style</a></li>
-                                                        <li><a href="newsletter.html">Newsletter</a></li>
-                                                        <li><a href="team.html">Team</a></li>
-                                                        <li><a href="social.html">Social</a></li>
-                                                        <li><a href="list-style.html">List Style</a></li>
-                                                        <li><a href="gallery.html">Gallery</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="col-lg-4 col-xxl-4 single-mega-item">
-                                                    <ul class="mega-menu-item">
-                                                        <li><a href="pricing.html">Pricing</a></li>
-                                                        <li><a href="progressbar.html">Progressbar</a></li>
-                                                        <li><a href="testimonial.html">Testimonial</a></li>
-                                                        <li><a href="service.html">Service</a></li>
-                                                        <li><a href="split.html">Split Area</a></li>
-                                                        <li><a href="search.html">Search Style</a></li>
-                                                        <li><a href="instagram.html">Instagram Style</a></li>
-                                                        <li><a href="#">& More Coming</a></li>
-
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="btn-wrapper">
-                                                        <a class="rbt-btn btn-gradient hover-icon-reverse square btn-xl w-100 text-center mt--30 hover-transform-none"
-                                                           href="#">
-                                                            <span class="icon-reverse-wrapper">
-                                        <span class="btn-text">Visit Histudy Template</span>
-                                                            <span class="btn-icon"><i
-                                                                    class="feather-arrow-right"></i></span>
-                                                            <span class="btn-icon"><i
-                                                                    class="feather-arrow-right"></i></span>
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- End Mega Menu  -->
                                 </li>
 
                             </ul>
@@ -180,17 +111,20 @@
                                     <div class="inner">
                                         <div class="rbt-admin-profile">
                                             <div class="admin-thumbnail">
-                                                <img src="../static/assets/images/team/avatar.jpg" alt="User Images" th:src="${session.currentUser.pictureUrl}">
+                                                <img src="../static/assets/images/team/avatar.jpg" alt="User Images"
+                                                     th:src="${session.currentUser.pictureUrl}">
                                             </div>
                                             <div class="admin-info">
-                                                <span class="name" th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Viktor Mitrev</span>
+                                            <span class="name"
+                                                  th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Viktor Mitrev</span>
                                             </div>
                                         </div>
                                         <ul class="user-list-wrapper">
                                             <li>
-                                                <a href="instructor-dashboard.html" th:href="@{/users/{id}(id=${session.currentUser.userId})}">
+                                                <a href="instructor-dashboard.html"
+                                                   th:href="@{/users/{id}(id=${session.currentUser.userId})}">
                                                     <i class="feather-home"></i>
-                                                    <span >My Profile</span>
+                                                    <span>My Profile</span>
                                                 </a>
                                             </li>
                                             <li>
@@ -222,7 +156,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="index.html">
+                                                <a href="index.html" th:href="@{/auth/logout}">
                                                     <i class="feather-log-out"></i>
                                                     <span>Logout</span>
                                                 </a>
@@ -235,7 +169,7 @@
 
                         <div class="rbt-btn-wrapper d-none d-xl-block">
                             <a class="rbt-btn  btn-border-gradient radius-round btn-sm " href="#"
-                               th:if="${session.currentUser == null}">
+                               th:if="${session.currentUser == null}" th:href="@{/auth/register}">
                                 <span data-text="Enroll Now">Register</span>
                             </a>
                             <a th:if="${session.currentUser != null}"
@@ -389,41 +323,49 @@
                 <div class="col-lg-7 mx-auto">
                     <div class="rbt-contact-form contact-form-style-1 max-width-auto">
                         <h3 class="title">Register</h3>
-                        <form class="max-width-auto">
+                        <form class="max-width-auto" th:action="@{/auth/register}" th:object="${register}" method="post" id="registrationForm" onsubmit="return validatePassword()">
+                            <label class="form-error" style="color: red" th:errors="*{email}">Email error placeholder</label>
                             <div class="form-group">
-                                <input name="register-email" type="text" />
+                                <input name="register-email" type="email" th:field="*{email}"/>
                                 <label>Email address *</label>
                                 <span class="focus-border"></span>
                             </div>
 
+                            <label class="form-error" style="color: red" th:errors="*{firstName}">First Name error placeholder</label>
                             <div class="form-group">
-                                <input name="register_user" type="text">
+                                <input name="register_user" type="text" th:field="*{firstName}">
                                 <label>First Name *</label>
                                 <span class="focus-border"></span>
                             </div>
+                            <label class="form-error" style="color: red" th:errors="*{lastName}">Last Name error placeholder</label>
                             <div class="form-group">
-                                <input name="register_user" type="text">
+                                <input name="register_user" type="text" th:field="*{lastName}">
                                 <label>Last Name *</label>
                                 <span class="focus-border"></span>
                             </div>
-
+                            <div id="confirmPasswordError" style="color: red" class="form-error">
+                            <label class="form-error" style="color: red" th:errors="*{password}">Password error placeholder</label>
+                            </div>
                             <div class="form-group">
-                                <input name="register_password" type="password">
+                                <input name="register_password" type="password" th:field="*{password}" id="password">
                                 <label>Password *</label>
                                 <span class="focus-border"></span>
                             </div>
 
                             <div class="form-group">
-                                <input name="register_conpassword" type="password">
+                                <input name="register_conpassword" type="password" id="confirmPassword">
                                 <label>Confirm Password *</label>
                                 <span class="focus-border"></span>
                             </div>
+
+                            <label class="form-error" style="color: red" th:errors="*{role}">Role error placeholder</label>
+                            <div class="filter-select rbt-modern-select">
                             <div class="form-group">
-                                <label for="role">Role *</label>
-                                <select id="role" name="role" required>
-                                    <option value="teacher">Student</option>
-                                    <option value="student">Teacher</option>
+                                <select id="role" name="role" required th:field="*{role}">
+                                    <option value="student">Student</option>
+                                    <option value="teacher">Teacher</option>
                                 </select>
+                            </div>
                             </div>
                             <div class="form-submit-group">
                                 <button type="submit" class="rbt-btn btn-md btn-gradient hover-icon-reverse w-100">
@@ -434,7 +376,6 @@
                                     </span>
                                 </button>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -443,7 +384,30 @@
         </div>
     </div>
 
+    <script>
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            var confirmPasswordError = document.getElementById("confirmPasswordError");
 
+            if (!confirmPasswordError) {
+                console.error("Element with ID 'confirmPasswordError' not found");
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = "Passwords do not match";
+                return false;
+            } else {
+                confirmPasswordError.textContent = "";
+                return true;
+            }
+        }
+
+        document.getElementById("registrationForm").onsubmit = function () {
+            return validatePassword();
+        };
+    </script>
 
 
     <div class="rbt-progress-parent">

@@ -56,13 +56,13 @@ public class HomeMvcController {
 
     @GetMapping("/about")
     public String showAboutPage() {
-        return "aboutView";
+        return "AboutView";
     }
 
     //contacts
     @GetMapping("/contacts")
     public String showContacts() {
-        return "contactsView";
+        return "ContactsView";
     }
 
 }
