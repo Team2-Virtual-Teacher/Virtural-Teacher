@@ -7,16 +7,22 @@ import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.Course;
 import com.alpha53.virtualteacher.models.FilterOptions;
 import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.dtos.CourseDto;
+import com.alpha53.virtualteacher.services.TopicServiceImpl;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
+import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.CourseDtoMapper;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +31,14 @@ import java.util.Optional;
 public class CourseMvcController {
     private final CourseService courseService;
     private final AuthenticationHelper authenticationHelper;
+    private final TopicServiceImpl topicService;
+    private final CourseDtoMapper courseDtoMapper;
 
-    public CourseMvcController(CourseService courseService, AuthenticationHelper authenticationHelper) {
+    public CourseMvcController(CourseService courseService, AuthenticationHelper authenticationHelper, TopicServiceImpl topicService, CourseDtoMapper courseDtoMapper) {
         this.courseService = courseService;
         this.authenticationHelper = authenticationHelper;
+        this.topicService = topicService;
+        this.courseDtoMapper = courseDtoMapper;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -103,7 +113,9 @@ public class CourseMvcController {
             model.addAttribute("course", course);
             model.addAttribute("currentUserRole",  session.getAttribute("currentUserRole"));
             model.addAttribute("isStudent", session.getAttribute("isStudent"));
-
+            model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
+            model.addAttribute("hasStarted", LocalDate.now().isAfter(course.getStartingDate()));
+            model.addAttribute("isCreator", course.getCreator().getUserId()==user.getUserId());
 
             return "SingleCourseView";
         } catch (EntityNotFoundException e) {
@@ -113,6 +125,8 @@ public class CourseMvcController {
         } catch (AuthorizationException e) {
             course = courseService.getCourseById(id);
             model.addAttribute("course", course);
+            model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
+
             return "SingleCourseView";
         }
     }
@@ -137,4 +151,104 @@ public class CourseMvcController {
         }
 
     }
+
+
+
+    @GetMapping("/new")
+    public String createCourse(Model model) {
+        model.addAttribute("course", new CourseDto());
+        model.addAttribute("topics", topicService.getAll());
+        return "NewCourseView";
+    }
+
+
+    @PostMapping("/new")
+    public String handleNewCourse(@Valid @ModelAttribute("course") CourseDto course,
+                                BindingResult bindingResult,
+                                HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "NewCourseView";
+        }
+
+        try {
+            if (course.getDescription().getDescription().isEmpty()){
+                course.setDescription(null);
+            }
+            Course c = courseDtoMapper.fromDto(course);
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            courseService.create(c, user);
+
+
+            return "redirect:/";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("title", "title_error", e.getMessage());
+            return "NewCourseView";
+        }
+    }
+
+
+
+
+
+
+    @GetMapping("/{id}/delete")
+    public String deleteCourse(@PathVariable int id, Model model, HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+
+
+            courseService.delete(id, user);
+            return "redirect:/courses";
+
+    }
+
+
+    @GetMapping("/{id}/update")
+    public String showEditCoursePage(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            User user =  authenticationHelper.tryGetCurrentUser(session);
+            Course course = courseService.getCourseByIdAuth(id, user);
+            CourseDto courseDto = courseDtoMapper.toDto(course);
+            model.addAttribute("topics", topicService.getAll());
+            model.addAttribute("courseId", id);
+            model.addAttribute("course", courseDto);
+            return "EditCourseView";
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+
+    }
+    @PostMapping("/{id}/update")
+    public String handleEditCourse(@PathVariable int id, @Valid @ModelAttribute("course") CourseDto course,
+                                  BindingResult bindingResult,
+                                  HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            System.out.println("error");
+            System.out.println(bindingResult.toString());
+            return "EditCourseView";
+        }
+
+        try {
+            if (course.getDescription().getDescription().isEmpty()){
+                course.setDescription(null);
+            }
+            Course c = courseDtoMapper.fromDto(course);
+            c.setCourseId(id);
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            courseService.update(c, user);
+
+
+            return "redirect:/";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("title", "title_error", e.getMessage());
+            return "EditCourseView";
+        }
+    }
+
 }

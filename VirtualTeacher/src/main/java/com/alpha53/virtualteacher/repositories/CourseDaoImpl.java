@@ -4,6 +4,7 @@ import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.utilities.mappers.CourseMapper;
+import com.alpha53.virtualteacher.utilities.mappers.RatingMapper;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -25,6 +26,7 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final UserMapper userMapper = new UserMapper();
+    private final RatingMapper ratingMapper = new RatingMapper();
 
     public CourseDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource, CourseMapper courseMapper) {
         this.courseMapper = courseMapper;
@@ -405,6 +407,19 @@ public class CourseDaoImpl extends NamedParameterJdbcDaoSupport implements Cours
     public Integer getCoursesCount() {
         String sql = "SELECT COUNT(*) FROM courses WHERE is_published = 1";
         return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class)).orElse(0);
+    }
+
+    @Override
+    public List<Rating> getRatingsByCourseId(int courseId) {
+        String sql = "SELECT rating, comment, user_id, course_id, email, first_name, last_name, picture_url " +
+                " FROM ratings " +
+                " LEFT JOIN users ON ratings.user_id = users.id " +
+                " WHERE ratings.course_id = :id ";
+
+        MapSqlParameterSource in = new MapSqlParameterSource();
+        in.addValue("id", courseId);
+
+        return namedParameterJdbcTemplate.query(sql, in, ratingMapper);
     }
 
     private String generateOrderBy(FilterOptions filterOptions) {

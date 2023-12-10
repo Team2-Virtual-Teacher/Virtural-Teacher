@@ -1,9 +1,6 @@
 package com.alpha53.virtualteacher.repositories.contracts;
 
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.FilterOptions;
-import com.alpha53.virtualteacher.models.RatingDto;
-import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 
 import java.util.List;
 
@@ -39,4 +36,6 @@ public interface CourseDao {
     List<Integer> getIdOngoingCourses();
 
     Integer getCoursesCount();
+
+    List<Rating> getRatingsByCourseId(int courseId);
 }

@@ -1,9 +1,6 @@
 package com.alpha53.virtualteacher.services.contracts;
 
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.FilterOptions;
-import com.alpha53.virtualteacher.models.RatingDto;
-import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +28,5 @@ public interface CourseService {
     boolean isUserEnrolled(int userId, int courseId);
     boolean hasUserPassedCourse(int userId, int courseId);
     Integer getCoursesCount();
+    List<Rating> getRatingsByCourseId(int courseId);
 }

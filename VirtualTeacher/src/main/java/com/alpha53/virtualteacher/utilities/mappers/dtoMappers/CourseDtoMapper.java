@@ -53,5 +53,15 @@ public class CourseDtoMapper {
     }
 
 
+    public CourseDto toDto(Course course){
+        CourseDto courseDto = new CourseDto();
+        courseDto.setTitle(course.getTitle());
+        courseDto.setPassingGrade(course.getPassingGrade());
+        courseDto.setStartingDate(course.getStartingDate().toString());
+        courseDto.setTopicId(course.getTopic().getTopicId());
+        courseDto.setDescription(course.getDescription());
+        courseDto.setPublished(course.isPublished());
+        return courseDto;
+    }
 }
 

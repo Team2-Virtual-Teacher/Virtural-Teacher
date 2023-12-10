@@ -34,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
 
     public void create(Course course, User user) {
         //TODO fix description dto
+
         boolean duplicateExists = true;
         try {
             courseRepository.getByTitle(course.getTitle());
@@ -69,6 +70,7 @@ public class CourseServiceImpl implements CourseService {
             throw new EntityDuplicateException("Course", "title", course.getTitle());
         }
         checkModifyPermissions(course.getCourseId(), user);
+        course.setCreator(user);
         courseRepository.update(course);
     }
 
@@ -203,6 +205,11 @@ public class CourseServiceImpl implements CourseService {
 
     public Integer getCoursesCount(){
      return courseRepository.getCoursesCount();
+    }
+
+    @Override
+    public List<Rating> getRatingsByCourseId(int courseId) {
+        return courseRepository.getRatingsByCourseId(courseId);
     }
 
 
