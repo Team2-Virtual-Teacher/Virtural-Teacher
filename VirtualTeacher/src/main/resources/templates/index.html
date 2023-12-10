@@ -8,10 +8,8 @@
     <meta name="robots" content="noindex, follow"/>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="../static/assets/images/favicon.png">
-
     <!-- CSS
 	============================================ -->
     <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css" th:href="@{/css/vendor/bootstrap.min.css}">
@@ -20,28 +18,21 @@
     <link rel="stylesheet" href="../static/css/plugins/sal.css" th:href="@{/css/plugins/sal.css}">
     <link rel="stylesheet" href="../static/css/plugins/feather.css" th:href="@{/css/plugins/feather.css}">
     <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css"
-          th:href="@{/css/plugins/euclid-circulara.css}">
+    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css" th:href="@{/css/plugins/euclid-circulara.css}">
     <link rel="stylesheet" href="../static/css/plugins/swiper.css" th:href="@{/css/plugins/swiper.css}">
     <link rel="stylesheet" href="../static/css/plugins/magnify.css" th:href="@{/css/plugins/magnify.css}">
     <link rel="stylesheet" href="../static/css/plugins/odometer.css" th:href="@{/css/plugins/odometer.css}">
     <link rel="stylesheet" href="../static/css/plugins/animation.css" th:href="@{/css/plugins/animation.css}">
-    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css"
-          th:href="@{/css/plugins/bootstrap-select.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css" th:href="@{/css/plugins/bootstrap-select.min.css}">
     <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css" th:href="@{/css/plugins/jquery-ui.css}">
-    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css"
-          th:href="@{/css/plugins/magnigy-popup.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css" th:href="@{/css/plugins/magnigy-popup.min.css}">
     <link rel="stylesheet" href="../static/css/plugins/plyr.css" th:href="@{/css/plugins/plyr.css}">
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
-
 </head>
-
 <body class="rbt-header-sticky">
-
 <!-- Start Header Area -->
 <header class="rbt-header rbt-header-10">
-    <div class="rbt-sticky-placeholder"></div>
-
+    <!--<div class="rbt-sticky-placeholder"></div>-->
     <div class="rbt-header-wrapper header-space-betwween header-sticky">
         <div class="container-fluid">
             <div class="mainbar-row rbt-navigation-center align-items-center">
@@ -55,25 +46,12 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="rbt-main-navigation d-none d-xl-block">
                     <nav class="mainmenu-nav">
                         <ul class="mainmenu">
                             <li class="with-megamenu has-menu-child-item position-static">
                                 <a href="#" th:href="@{/}">Home <i></i></a>
                             </li>
-<!--                            <li class="has-dropdown has-menu-child-item">-->
-<!--                                <a href="#">Courses-->
-<!--                                    <i class="feather-chevron-down"></i>-->
-<!--                                </a>-->
-<!--                                <ul class="submenu">-->
-<!--                                    <li class="has-dropdown"><a href="#">All courses</a>-->
-<!--                                    </li>-->
-<!--                                    <li class="has-dropdown"><a href="#">My courses</a>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </li>-->
-
                             <li class="with-megamenu has-menu-child-item position-static">
                                 <a href="#">About <i></i></a>
                             </li>
@@ -82,8 +60,7 @@
                             </li>
 
                             <li class="has-dropdown has-menu-child-item"
-                                th:if="${session.currentUser != null and (session.currentUser.role.roleType =='Teacher' or session.currentUser.role.roleType == 'Admin')}"
-                            >
+                                th:if="${session.currentUser != null and (session.currentUser.role.roleType =='Teacher' or session.currentUser.role.roleType == 'Admin')}">
                                 <a href="#">Admin panel
                                     <i class="feather-chevron-down"></i>
                                 </a>
@@ -94,89 +71,16 @@
                                     </li>
                                 </ul>
                             </li>
-
-                            <li class="with-megamenu has-menu-child-item position-static">
-                                <a href="#">Elements <i class="feather-chevron-down"></i></a>
-                                <!-- Start Mega Menu  -->
-                                <div class="rbt-megamenu grid-item-3">
-                                    <div class="wrapper">
-                                        <div class="row row--15 single-dropdown-menu-presentation">
-                                            <div class="col-lg-4 col-xxl-4 single-mega-item">
-                                                <ul class="mega-menu-item">
-                                                    <li><a href="style-guide.html">Style Guide <span
-                                                            class="rbt-badge-card">Hot</span></a></li>
-                                                    <li><a href="accordion.html">Accordion</a></li>
-                                                    <li><a href="advancetab.html">Advance Tab</a></li>
-                                                    <li><a href="brand.html">Brand</a></li>
-                                                    <li><a href="button.html">Button</a></li>
-                                                    <li><a href="badge.html">Badge</a></li>
-                                                    <li><a href="card.html">Card</a></li>
-                                                    <li><a href="call-to-action.html">Call To Action</a></li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="col-lg-4 col-xxl-4 single-mega-item">
-                                                <ul class="mega-menu-item">
-                                                    <li><a href="counterup.html">Counter</a></li>
-                                                    <li><a href="category.html">Categories</a></li>
-                                                    <li><a href="header.html">Header Style</a></li>
-                                                    <li><a href="newsletter.html">Newsletter</a></li>
-                                                    <li><a href="team.html">Team</a></li>
-                                                    <li><a href="social.html">Social</a></li>
-                                                    <li><a href="list-style.html">List Style</a></li>
-                                                    <li><a href="gallery.html">Gallery</a></li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="col-lg-4 col-xxl-4 single-mega-item">
-                                                <ul class="mega-menu-item">
-                                                    <li><a href="pricing.html">Pricing</a></li>
-                                                    <li><a href="progressbar.html">Progressbar</a></li>
-                                                    <li><a href="testimonial.html">Testimonial</a></li>
-                                                    <li><a href="service.html">Service</a></li>
-                                                    <li><a href="split.html">Split Area</a></li>
-                                                    <li><a href="search.html">Search Style</a></li>
-                                                    <li><a href="instagram.html">Instagram Style</a></li>
-                                                    <li><a href="#">& More Coming</a></li>
-
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="btn-wrapper">
-                                                    <a class="rbt-btn btn-gradient hover-icon-reverse square btn-xl w-100 text-center mt--30 hover-transform-none"
-                                                       href="#">
-                                                            <span class="icon-reverse-wrapper">
-                                        <span class="btn-text">Visit Histudy Template</span>
-                                                            <span class="btn-icon"><i
-                                                                    class="feather-arrow-right"></i></span>
-                                                            <span class="btn-icon"><i
-                                                                    class="feather-arrow-right"></i></span>
-                                                            </span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Mega Menu  -->
                             </li>
-
                         </ul>
                     </nav>
                 </div>
-
                 <div class="header-right">
-
                     <!-- Navbar Icons -->
                     <ul class="quick-access">
-
                         <li class="account-access rbt-user-wrapper d-none d-xl-block"
                             th:if="${session.currentUser == null}">
-                            <a href="#" th:href="@{/auth/login}"><i class="feather-user"></i>Login</a>
-                        </li>
+                            <a href="#" th:href="@{/auth/login}"><i class="feather-user"></i>Login</a></li>
                         <li class="account-access rbt-user-wrapper d-none d-xl-block"
                             th:if="${session.currentUser != null}">
                             <a href="#"><i class="feather-user"></i>User</a>
@@ -239,7 +143,6 @@
                             </div>
                         </li>
                     </ul>
-
                     <div class="rbt-btn-wrapper d-none d-xl-block">
                         <a class="rbt-btn  btn-border-gradient radius-round btn-sm " href="#"
                            th:if="${session.currentUser == null}" th:href="@{/auth/register}">
@@ -250,272 +153,10 @@
                             <span data-text="Refer Friend">Refer Friend</span>
                         </a>
                     </div>
-
                 </div>
-            </div>
-        </div>
-        <!-- Start Search Dropdown  -->
-        <div class="rbt-search-dropdown">
-            <div class="wrapper">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <form action="#">
-                            <input type="text" placeholder="What are you looking for?">
-                            <div class="submit-btn">
-                                <a class="rbt-btn btn-gradient btn-md" href="#">Search</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="rbt-separator-mid">
-                    <hr class="rbt-separator m-0">
-                </div>
-
-                <div class="row g-4 pt--30 pb--60">
-                    <div class="col-lg-12">
-                        <div class="section-title">
-                            <h5 class="rbt-title-style-2">Our Top Course</h5>
-                        </div>
-                    </div>
-
-                    <!-- Start Single Card  -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="rbt-card variation-01 rbt-hover">
-                            <div class="rbt-card-img">
-                                <a href="course-details.html">
-                                    <img src="../static/assets/images/course/course-online-01.jpg" alt="Card image">
-                                </a>
-                            </div>
-                            <div class="rbt-card-body">
-                                <h5 class="rbt-card-title"><a href="course-details.html">React Js</a>
-                                </h5>
-                                <div class="rbt-review">
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="rating-count"> (15 Reviews)</span>
-                                </div>
-                                <div class="rbt-card-bottom">
-                                    <div class="rbt-price">
-                                        <span class="current-price">$15</span>
-                                        <span class="off-price">$25</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Card  -->
-
-                    <!-- Start Single Card  -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="rbt-card variation-01 rbt-hover">
-                            <div class="rbt-card-img">
-                                <a href="course-details.html">
-                                    <img src="../static/assets/images/course/course-online-02.jpg" alt="Card image">
-                                </a>
-                            </div>
-                            <div class="rbt-card-body">
-                                <h5 class="rbt-card-title"><a href="course-details.html">Java Program</a>
-                                </h5>
-                                <div class="rbt-review">
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="rating-count"> (15 Reviews)</span>
-                                </div>
-                                <div class="rbt-card-bottom">
-                                    <div class="rbt-price">
-                                        <span class="current-price">$10</span>
-                                        <span class="off-price">$40</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Card  -->
-
-                    <!-- Start Single Card  -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="rbt-card variation-01 rbt-hover">
-                            <div class="rbt-card-img">
-                                <a href="course-details.html">
-                                    <img src="../static/assets/images/course/course-online-03.jpg" alt="Card image">
-                                </a>
-                            </div>
-                            <div class="rbt-card-body">
-                                <h5 class="rbt-card-title"><a href="course-details.html">Web Design</a>
-                                </h5>
-                                <div class="rbt-review">
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="rating-count"> (15 Reviews)</span>
-                                </div>
-                                <div class="rbt-card-bottom">
-                                    <div class="rbt-price">
-                                        <span class="current-price">$10</span>
-                                        <span class="off-price">$20</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Card  -->
-
-                    <!-- Start Single Card  -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="rbt-card variation-01 rbt-hover">
-                            <div class="rbt-card-img">
-                                <a href="course-details.html">
-                                    <img src="../static/assets/images/course/course-online-04.jpg" alt="Card image">
-                                </a>
-                            </div>
-                            <div class="rbt-card-body">
-                                <h5 class="rbt-card-title"><a href="course-details.html">Web Design</a>
-                                </h5>
-                                <div class="rbt-review">
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="rating-count"> (15 Reviews)</span>
-                                </div>
-                                <div class="rbt-card-bottom">
-                                    <div class="rbt-price">
-                                        <span class="current-price">$20</span>
-                                        <span class="off-price">$40</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Card  -->
-                </div>
-
-            </div>
-        </div>
-        <!-- End Search Dropdown  -->
-    </div>
-    <!-- Start Side Vav -->
-    <div class="rbt-offcanvas-side-menu rbt-category-sidemenu">
-        <div class="inner-wrapper">
-            <div class="inner-top">
-                <div class="inner-title">
-                    <h4 class="title">Course Category</h4>
-                </div>
-                <div class="rbt-btn-close">
-                    <button class="rbt-close-offcanvas rbt-round-btn"><i class="feather-x"></i></button>
-                </div>
-            </div>
-            <nav class="side-nav w-100">
-                <ul class="rbt-vertical-nav-list-wrapper vertical-nav-menu">
-                    <li class="vertical-nav-item">
-                        <a href="#">Course School</a>
-                        <div class="vartical-nav-content-menu-wrapper">
-                            <div class="vartical-nav-content-menu">
-                                <h3 class="rbt-short-title">Course Title</h3>
-                                <ul class="rbt-vertical-nav-list-wrapper">
-                                    <li><a href="#">Web Design</a></li>
-                                    <li><a href="#">Art</a></li>
-                                    <li><a href="#">Figma</a></li>
-                                    <li><a href="#">Adobe</a></li>
-                                </ul>
-                            </div>
-                            <div class="vartical-nav-content-menu">
-                                <h3 class="rbt-short-title">Course Title</h3>
-                                <ul class="rbt-vertical-nav-list-wrapper">
-                                    <li><a href="#">Photo</a></li>
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">Math</a></li>
-                                    <li><a href="#">Read</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="vertical-nav-item">
-                        <a href="#">Online School</a>
-                        <div class="vartical-nav-content-menu-wrapper">
-                            <div class="vartical-nav-content-menu">
-                                <h3 class="rbt-short-title">Course Title</h3>
-                                <ul class="rbt-vertical-nav-list-wrapper">
-                                    <li><a href="#">Photo</a></li>
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">Math</a></li>
-                                    <li><a href="#">Read</a></li>
-                                </ul>
-                            </div>
-                            <div class="vartical-nav-content-menu">
-                                <h3 class="rbt-short-title">Course Title</h3>
-                                <ul class="rbt-vertical-nav-list-wrapper">
-                                    <li><a href="#">Web Design</a></li>
-                                    <li><a href="#">Art</a></li>
-                                    <li><a href="#">Figma</a></li>
-                                    <li><a href="#">Adobe</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="vertical-nav-item">
-                        <a href="#">kindergarten</a>
-                        <div class="vartical-nav-content-menu-wrapper">
-                            <div class="vartical-nav-content-menu">
-                                <h3 class="rbt-short-title">Course Title</h3>
-                                <ul class="rbt-vertical-nav-list-wrapper">
-                                    <li><a href="#">Photo</a></li>
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">Math</a></li>
-                                    <li><a href="#">Read</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="vertical-nav-item">
-                        <a href="#">Classic LMS</a>
-                        <div class="vartical-nav-content-menu-wrapper">
-                            <div class="vartical-nav-content-menu">
-                                <h3 class="rbt-short-title">Course Title</h3>
-                                <ul class="rbt-vertical-nav-list-wrapper">
-                                    <li><a href="#">Web Design</a></li>
-                                    <li><a href="#">Art</a></li>
-                                    <li><a href="#">Figma</a></li>
-                                    <li><a href="#">Adobe</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="read-more-btn">
-                    <div class="rbt-btn-wrapper mt--20">
-                        <a class="rbt-btn btn-border-gradient radius-round btn-sm hover-transform-none w-100 justify-content-center text-center"
-                           href="#">
-                            <span>Learn More</span>
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="rbt-offcanvas-footer">
-
             </div>
         </div>
     </div>
-    <!-- End Side Vav -->
-    <a class="rbt-close_side_menu" href="javascript:void(0);"></a>
 </header>
 <!-- Mobile Menu Section -->
 <div class="popup-mobile-menu">
@@ -541,7 +182,6 @@
                 </li>
             </ul>
         </div>
-
         <nav class="mainmenu-nav">
             <ul class="mainmenu">
                 <li class="with-megamenu has-menu-child-item position-static">
@@ -550,345 +190,7 @@
                     <div class="rbt-megamenu menu-skin-dark">
                         <div class="wrapper">
                             <div class="row row--15 home-plesentation-wrapper single-dropdown-menu-presentation">
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="01-main-demo.html"><img
-                                                        src="../static/assets/images/splash/demo/h1.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="01-main-demo.html">Home Demo <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="12-marketplace.html"><img
-                                                        src="../static/assets/images/splash/demo/h12.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="12-marketplace.html">Marketplace <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="04-kindergarten.html"><img
-                                                        src="../static/assets/images/splash/demo/h4.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="04-kindergarten.html">kindergarten <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="13-university-classic.html"><img
-                                                        src="../static/assets/images/splash/demo/h13.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="13-university-classic.html">University
-                                                    Classic <span class="btn-icon"><i
-                                                            class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="14-home-elegant.html"><img
-                                                        src="../static/assets/images/splash/demo/h14.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="14-home-elegant.html">Home Elegant <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="09-gym-coaching.html"><img
-                                                        src="../static/assets/images/splash/demo/h9.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="09-gym-coaching.html">Gym Coaching <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="03-online-school.html"><img
-                                                        src="../static/assets/images/splash/demo/h3.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="03-online-school.html">Online School <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="06-university-status.html"><img
-                                                        src="../static/assets/images/splash/demo/h6.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="06-university-status.html">University Status
-                                                    <span class="btn-icon"><i
-                                                            class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="15-home-technology.html"><img
-                                                        src="../static/assets/images/splash/demo/h15.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="15-home-technology.html">Home Technology
-                                                    <span class="btn-icon"><i
-                                                            class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="07-instructor-portfolio.html"><img
-                                                        src="../static/assets/images/splash/demo/h7.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="07-instructor-portfolio.html">Instructor
-                                                    Portfolio <span class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="08-language-academy.html"><img
-                                                        src="../static/assets/images/splash/demo/h8.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="08-language-academy.html">Language Academy
-                                                    <span class="btn-icon"><i
-                                                            class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="11-single-course.html"><img
-                                                        src="../static/assets/images/splash/demo/h11.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="11-single-course.html">Single Course <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="10-online-course.html"><img
-                                                        src="../static/assets/images/splash/demo/h10.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="10-online-course.html">Online Course <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="05-classic-lms.html"><img
-                                                        src="../static/assets/images/splash/demo/h5.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="05-classic-lms.html">Classic Lms <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="02-course-school.html"><img
-                                                        src="../static/assets/images/splash/demo/h2.jpg"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="02-course-school.html">Course School <span
-                                                        class="btn-icon"><i class="feather-arrow-right"></i></span></a>
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item coming-soon">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="#"><img
-                                                        src="../static/assets/images/splash/demo/coming-soon-1.png"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="#">Coming Soon <span class="btn-icon"><i
-                                                        class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item coming-soon">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="#"><img
-                                                        src="../static/assets/images/splash/demo/coming-soon-2.png"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="#">Coming Soon 2 <span class="btn-icon"><i
-                                                        class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
-
-                                <!-- Start Single Demo  -->
-                                <div class="col-lg-12 col-xl-2 col-xxl-2 col-md-12 col-sm-12 col-12 single-mega-item coming-soon">
-                                    <div class="demo-single">
-                                        <div class="inner">
-                                            <div class="thumbnail">
-                                                <a href="#"><img
-                                                        src="../static/assets/images/splash/demo/coming-soon-3.png"
-                                                        alt="Demo Images"></a>
-                                            </div>
-                                            <div class="content">
-                                                <h4 class="title"><a href="#">Coming Soon 3 <span class="btn-icon"><i
-                                                        class="feather-arrow-right"></i></span></a></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Single Demo  -->
                             </div>
-
                             <div class="load-demo-btn text-center">
                                 <a class="rbt-btn-link color-white" href="#">Scroll to view more
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -904,16 +206,13 @@
                 </li>
             </ul>
         </nav>
-
     </div>
 </div>
-
 <div class="rbt-page-banner-wrapper">
     <!-- Start Banner BG Image  -->
     <div class="rbt-banner-image"></div>
     <!-- End Banner BG Image  -->
     <div class="rbt-banner-content">
-
         <!-- Start Banner Content Top  -->
         <div class="rbt-banner-content-top">
             <div class="container">
@@ -930,7 +229,7 @@
                         <!-- End Breadcrumb Area  -->
                         <div class=" title-wrapper">
                             <h1 class="title mb--0">All Courses</h1>
-                            <div href="#" class="rbt-badge-2" th:text="${coursesCount}">
+                            <div href="#" class="rbt-badge-2" th:text="${coursesCount} + ' Courses'">
                                 <div></div>
                                 50 Courses
                             </div>
@@ -941,7 +240,6 @@
             </div>
         </div>
         <!-- End Banner Content Top  -->
-
         <!-- Start Course Top  -->
         <div class="rbt-course-top-wrapper mt--40 mt_sm--20">
             <div class="container">
@@ -960,9 +258,9 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="rbt-short-item">
+                           <!-- <div class="rbt-short-item">
                                 <span class="course-index">Showing 1-9 of 19 results</span>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -978,7 +276,6 @@
                                     </label>
                                 </div>
                             </div>
-
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select rbt-search-style me-0">
                                     <span class="select-label input-label d-block">Teacher</span>
@@ -987,14 +284,13 @@
                                     </label>
                                 </div>
                             </div>
-
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label input-label d-block">Topic</span>
-
                                     <div>
                                         <select th:field="*{topic}">
-                                            <option value="#" th:value="${null}" th:text="${'none'}">Select topic</option>
+                                            <option value="#" th:value="${null}" th:text="${'none'}">Select topic
+                                            </option>
                                             <option th:each="topic : ${topics}"
                                                     th:value="${topic.topic}"
                                                     th:text="${topic.topic}">
@@ -1004,12 +300,11 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Rating</span>
                                     <select th:field="*{rating}">
-                                       <!-- <option value="#" th:value="${null}" th:text="${'Select rating'}" >Rating</option>-->
+                                        <!-- <option value="#" th:value="${null}" th:text="${'Select rating'}" >Rating</option>-->
                                         <option th:text="${0}" th:value="${0}">0</option>
                                         <option th:text="${1}" th:value="${1}">1</option>
                                         <option th:text="${2}" th:value="${2}">2</option>
@@ -1019,56 +314,50 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Sort By</span>
                                     <div>
-                                            <select th:field="*{sortBy}">
-                                               <!-- <option value="#" th:value="${null}" th:text="${'Sort By'}" >Sort by</option>-->
-                                                <option th:text="${'title'}" th:value="${'title'}">name</option>
-                                                <option th:text="${'rating'}" th:value="${'rating'}">rating</option>
-                                            </select>
+                                        <select th:field="*{sortBy}">
+                                            <
+                                            <option value="#" th:value="${null}" th:text="${'Sort By'}">Sort by</option>
+                                            >
+                                            <option th:text="${'title'}" th:value="${'title'}">name</option>
+                                            <option th:text="${'rating'}" th:value="${'rating'}">rating</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="filter-select-option">
                                 <div class="filter-select rbt-modern-select">
                                     <span class="select-label d-block">Order</span>
-                                        <div>
-                                            <select th:field="*{sortOrder}">
-                                                <!--<option value="#" th:value="${null}" th:text="${'Order'}" >Order</option>-->
-                                                <option th:text="${'Ascending'}" th:value="${null}">name</option>
-                                                <option th:text="${'Descending'}" th:value="${'desc'}">rating</option>
-                                            </select>
-                                        </div>
+                                    <div>
+                                        <select th:field="*{sortOrder}">
+                                            <!--<option value="#" th:value="${null}" th:text="${'Order'}" >Order</option>-->
+                                            <option th:text="${'Ascending'}" th:value="${null}">name</option>
+                                            <option th:text="${'Descending'}" th:value="${'desc'}">rating</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <button class="rbt-btn btn-gradient btn-sm" href="#" type="submit">Filter</button>
-
                         </div>
                     </div>
                 </form>
             </div>
-
-
             <!-- End Filter Toggle  -->
         </div>
     </div>
     <!-- End Course Top  -->
 </div>
 </div>
-
 <div class="rbt-section-overlayping-top rbt-section-gapBottom">
     <div class="inner">
         <div class="container">
             <div class="rbt-course-grid-column">
-
                 <!-- Start Single Card  -->
-
-                <div class="course-grid-3" th:each="course: ${courses}">
-                    <div class="rbt-card variation-01 rbt-hover">
+                <ul class="course-grid-3 content-course" th:each="course: ${courses}">
+                    <li class="rbt-card variation-01 rbt-hover">
                         <div class="rbt-card-body">
                             <div class="rbt-card-top">
                                 <div class="rbt-review">
@@ -1077,22 +366,24 @@
                                     </div>
                                 </div>
                             </div>
-
                             <h4 class="rbt-card-title">
                                 <a href="course-details.html" th:href="@{/courses/{id}(id=${course.getCourseId()})}"
                                    th:text="${course.getTitle()}">React Front To Back</a>
                             </h4>
-                            <ul class="rbt-meta">
-                                <li><i class="feather-book"
-                                       th:utext="${#temporals.format(course.getStartingDate(),'dd/MM/yyyy')}"></i></li>
-                            </ul>
+                            <p class="rbt-meta">
+                                <i class="feather-book"
+                                   th:utext="${#temporals.format(course.getStartingDate(),'dd/MM/yyyy')}">
+                                    12/12/2023</i>
+                            </p>
                             <p class="rbt-card-text"
-                              th:if="${course.getDescription().getDescription()!=null}" th:text="${#strings.substring(course.getDescription().getDescription(),0,300)+'...'}">It
-                                is a long established fact that a reader will be
+                               th:if="${course.getDescription().getDescription()!=null}"
+                               th:text="${#strings.substring(course.getDescription().getDescription(),0,300)+'...'}">It
+                                is a long-established fact that a reader will be
                                 distracted.</p>
                             <p class="rbt-card-text"
-                               th:unless="${course.getDescription().getDescription()!=null}" th:text="${'Description not available'}">It
-                                is a long established fact that a reader will be
+                               th:unless="${course.getDescription().getDescription()!=null}"
+                               th:text="${'Description not available'}">It
+                                is a long-established fact that a reader will be
                                 distracted.</p>
                             <div class="rbt-author-meta mb--10">
                                 <div class="rbt-avater">
@@ -1107,36 +398,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                </ul>
                 <!-- End Single Card  -->
-
-            </div>
-            <div class="row">
-                <div class="col-lg-12 mt--60">
-                    <nav>
-                        <ul class="rbt-pagination">
-                            <li><a href="#" aria-label="Previous"><i class="feather-chevron-left"></i></a></li>
-                            <li><a href="#">1</a></li>
-                            <li class="active"><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#" aria-label="Next"><i class="feather-chevron-right"></i></a></li>
-                        </ul>
-                    </nav>
-                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-<div class="rbt-separator-mid">
-    <div class="container">
-        <hr class="rbt-separator m-0">
-    </div>
-</div>
-
-
 <!-- JS
 ============================================ -->
 <!-- Modernizer JS -->
