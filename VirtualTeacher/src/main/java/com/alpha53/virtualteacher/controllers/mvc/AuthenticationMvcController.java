@@ -56,6 +56,7 @@ public class AuthenticationMvcController {
         try {
             User user = authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
             session.setAttribute("currentUserEmail", user.getEmail());
+            // TODO: 11.12.23 consider adding userDtoOut here if we do not need the pass! 
             session.setAttribute("currentUser", user);
 
             return "redirect:/";
