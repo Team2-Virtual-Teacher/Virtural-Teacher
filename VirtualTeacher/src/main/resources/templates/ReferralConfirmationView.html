@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Email Confirmation</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/assets/images/favicon.png">
+
+    <!-- CSS
+	============================================ -->
+    <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css" th:href="@{/css/vendor/bootstrap.min.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick.css" th:href="@{/css/vendor/slick.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick-theme.css" th:href="@{/css/vendor/slick-theme.css}">
+    <link rel="stylesheet" href="../static/css/plugins/sal.css" th:href="@{/css/plugins/sal.css}">
+    <link rel="stylesheet" href="../static/css/plugins/feather.css" th:href="@{/css/plugins/feather.css}">
+    <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css" th:href="@{/css/plugins/fontawesome.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css" th:href="@{/css/plugins/euclid-circulara.css}">
+    <link rel="stylesheet" href="../static/css/plugins/swiper.css" th:href="@{/css/plugins/swiper.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnify.css" th:href="@{/css/plugins/magnify.css}">
+    <link rel="stylesheet" href="../static/css/plugins/odometer.css" th:href="@{/css/plugins/odometer.css}">
+    <link rel="stylesheet" href="../static/css/plugins/animation.css" th:href="@{/css/plugins/animation.css}">
+    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css" th:href="@{/css/plugins/bootstrap-select.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css" th:href="@{/css/plugins/jquery-ui.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css" th:href="@{/css/plugins/magnigy-popup.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/plyr.css" th:href="@{/css/plugins/plyr.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+</head>
+
+<body class="rbt-header-sticky">
+
+<!-- Start Header Area -->
+<header class="rbt-header rbt-header-10">
+    <div class="rbt-sticky-placeholder"></div>
+    <div class="rbt-header-wrapper header-space-betwween header-sticky">
+        <div class="container-fluid">
+            <div class="mainbar-row rbt-navigation-center align-items-center">
+                <div class="header-left rbt-header-content">
+                    <div class="header-info">
+                        <div class="logo">
+                            <a href="index.html">
+                                <img src="/static/assets/images/logo/logo.png" alt="Education Logo Images"
+                                     th:src="@{/assets/images/logo/logo.png}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rbt-main-navigation d-none d-xl-block">
+                    <nav class="mainmenu-nav">
+                        <ul class="mainmenu">
+                            <li class="with-megamenu has-menu-child-item position-static">
+                                <a href="#" th:href="@{/}">Home <i></i></a>
+                            </li>
+                            <!--                            <li class="has-dropdown has-menu-child-item">-->
+                            <!--                                <a href="#">Courses-->
+                            <!--                                    <i class="feather-chevron-down"></i>-->
+                            <!--                                </a>-->
+                            <!--                                <ul class="submenu">-->
+                            <!--                                    <li class="has-dropdown"><a href="#">All courses</a>-->
+                            <!--                                    </li>-->
+                            <!--                                    <li class="has-dropdown"><a href="#">My courses</a>-->
+                            <!--                                    </li>-->
+                            <!--                                </ul>-->
+                            <!--                            </li>-->
+
+                            <li class="with-megamenu has-menu-child-item position-static">
+                                <a href="#">About <i></i></a>
+                            </li>
+                            <li class="with-megamenu has-menu-child-item position-static">
+                                <a href="#">Contact us <i></i></a>
+                            </li>
+
+                            <li class="has-dropdown has-menu-child-item"
+                                th:if="${session.currentUser != null and (session.currentUser.role.roleType =='Teacher' or session.currentUser.role.roleType == 'Admin')}"
+                            >
+                                <a href="#">Admin panel
+                                    <i class="feather-chevron-down"></i>
+                                </a>
+                                <ul class="submenu">
+                                    <li class="has-dropdown"><a href="#">Search users</a>
+                                    </li>
+                                    <li class="has-dropdown"><a href="#">Something else</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="header-right">
+
+                    <!-- Navbar Icons -->
+                    <ul class="quick-access">
+
+                        <li class="account-access rbt-user-wrapper d-none d-xl-block"
+                            th:if="${session.currentUser == null}">
+                            <a href="#" th:href="@{/auth/login}"><i class="feather-user"></i>Login</a>
+                        </li>
+                        <li class="account-access rbt-user-wrapper d-none d-xl-block"
+                            th:if="${session.currentUser != null}">
+                            <a href="#"><i class="feather-user"></i>User</a>
+                            <div class="rbt-user-menu-list-wrapper">
+                                <div class="inner">
+                                    <div class="rbt-admin-profile">
+                                        <div class="admin-thumbnail">
+                                            <img src="../static/assets/images/team/avatar.jpg" alt="User Images"
+                                                 th:src="${session.currentUser.pictureUrl}">
+                                        </div>
+                                        <div class="admin-info">
+                                            <span class="name"
+                                                  th:text="${session.currentUser.firstName + ' ' + session.currentUser.lastName}">Viktor Mitrev</span>
+                                        </div>
+                                    </div>
+                                    <ul class="user-list-wrapper">
+                                        <li>
+                                            <a href="instructor-dashboard.html"
+                                               th:href="@{/users/{id}(id=${session.currentUser.userId})}">
+                                                <i class="feather-home"></i>
+                                                <span>My Profile</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="instructor-enrolled-courses.html">
+                                                <i class="feather-shopping-bag"></i>
+                                                <span>Enrolled Courses</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="instructor-reviews.html">
+                                                <i class="feather-star"></i>
+                                                <span>Reviews</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="instructor-my-quiz-attempts.html">
+                                                <i class="feather-list"></i>
+                                                <span>My Quiz Attempts</span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                    <hr class="mt--10 mb--10">
+                                    <ul class="user-list-wrapper">
+                                        <li>
+                                            <a href="instructor-settings.html">
+                                                <i class="feather-settings"></i>
+                                                <span>Settings</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="index.html" th:href="@{/auth/logout}">
+                                                <i class="feather-log-out"></i>
+                                                <span>Logout</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="rbt-btn-wrapper d-none d-xl-block">
+                        <a class="rbt-btn  btn-border-gradient radius-round btn-sm " href="#"
+                           th:if="${session.currentUser == null}" th:href="@{/auth/register}">
+                            <span data-text="Enroll Now">Register</span>
+                        </a>
+                        <a th:if="${session.currentUser != null}"
+                           class="rbt-btn btn-border-gradient radius-round btn-sm" href="/referral">
+                            <span data-text="Refer Friend">Refer Friend</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <a class="rbt-close_side_menu" href="javascript:void(0);"></a>
+</header>
+
+
+
+<div class="rbt-elements-area bg-color-white rbt-section-gap">
+    <div class="container">
+        <div class="row gy-5 row--30">
+
+            <div class="col-lg-6 mx-auto">
+                <div class="rbt-contact-form contact-form-style-1 max-width-auto">
+                    <h5 class="title">You have successfully referred a friend!</h5>
+                        <a class="nav-link" href="#" th:href="@{/}">
+                            <h6 style="color: blue"> Take me home!
+                            </h6>
+                        </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="rbt-progress-parent">
+    <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
+        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+    </svg>
+</div>
+
+<!-- JS
+============================================ -->
+<!-- Modernizer JS -->
+<script src="/js/vendor/modernizr.min.js"></script>
+<!-- jQuery JS -->
+<script src="/js/vendor/jquery.js"></script>
+<!-- Bootstrap JS -->
+<script src="/js/vendor/bootstrap.min.js"></script>
+<!-- sal.js -->
+<script src="/js/vendor/sal.js"></script>
+<script src="/js/vendor/swiper.js"></script>
+<script src="/js/vendor/magnify.min.js"></script>
+<script src="/js/vendor/jquery-appear.js"></script>
+<script src="/js/vendor/odometer.js"></script>
+<script src="/js/vendor/backtotop.js"></script>
+<script src="/js/vendor/isotop.js"></script>
+<script src="/js/vendor/imageloaded.js"></script>
+
+<script src="/js/vendor/wow.js"></script>
+<script src="/js/vendor/waypoint.min.js"></script>
+<script src="/js/vendor/easypie.js"></script>
+<script src="/js/vendor/text-type.js"></script>
+<script src="/js/vendor/jquery-one-page-nav.js"></script>
+<script src="/js/vendor/bootstrap-select.min.js"></script>
+<script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/vendor/magnify-popup.min.js"></script>
+<script src="/js/vendor/paralax-scroll.js"></script>
+<script src="/js/vendor/paralax.min.js"></script>
+<script src="/js/vendor/countdown.js"></script>
+<script src="/js/vendor/plyr.js"></script>
+<!-- Main JS -->
+<script src="/js/main.js"></script>
+</body>
+
+</html>

@@ -36,9 +36,7 @@ public class UserServiceImpl implements UserService {
     public static final String DEFAULT_PHOTO_URL = "/assets/fileStorage/user-avatar.png";
     public static final String CONFIRMATION_LINK = "http://localhost:8080/api/v1/users/confirm?token=";
     public static final String REGISTRATION_CONFIRMATION_SUBJECT = "Registration confirmation";
-
-    // TODO: 2.12.23 add registration link later on here.
-    public static final String REGISTRATION_LINK = "REGISTRATION_LINK";
+    public static final String REGISTRATION_LINK = "http://localhost:8080/auth/register";
     public static final String REFERRAL_SUBJECT = "Join Virtual Teacher now";
 
 
