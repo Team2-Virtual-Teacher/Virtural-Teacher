@@ -39,10 +39,7 @@
     <div class="rbt-sticky-placeholder"></div>
     <div class="rbt-header-wrapper header-space-betwween header-sticky">
         <form th:replace="~{forms.html::header}"></form>
-
     </div>
-
-    <a class="rbt-close_side_menu" href="javascript:void(0);"></a>
 </header>
 
 
@@ -96,7 +93,7 @@
                                             <ul class="dashboard-mainmenu rbt-default-sidebar-list">
                                                 <li><a href="UserPageView.html" th:href="@{/users/{id}/profile(id=${userProfile.userId})}"><i class="feather-user"></i><span>My Profile</span></a></li>
                                                 <li><a href="student-enrolled-courses.html" th:href="@{/users/{id}/courses/enrolled(id=${userProfile.userId})}"><i class="feather-book-open"></i><span th:text="${userProfile.role.roleType == 'Student' ? 'Enrolled Courses' : 'Managed Courses'}">Enrolled Courses</span></a></li>
-                                                <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}"><a href="student-enrolled-courses.html" th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"><i class="feather-book-open"></i><span>Completed Courses</span></a></li>
+                                                <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}"><a th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"><i class="feather-book-open"></i><span>Completed Courses</span></a></li>
                                             </ul>
                                         </nav>
 

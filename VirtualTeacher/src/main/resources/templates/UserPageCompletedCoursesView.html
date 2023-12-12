@@ -70,7 +70,7 @@
                             <div class="tutor-content">
                                 <h5 class="title" th:text="${userProfile.firstName + ' ' + userProfile.lastName}">Emily Hannah</h5>
                                 <ul class="rbt-meta rbt-meta-white mt--5">
-                                    <li><i class="feather-book " th:if="${userProfile != null and (userProfile.role.roleType == 'Teacher' or userProfile.role.roleType == 'Admin')}" th:text="${userProfile.courses.size() + ' ' + 'Courses managed'}"></i></li>
+                                    <li><i class="feather-book " th:if="${userProfile != null and (userProfile.role.roleType == 'Teacher' or userProfile.role.roleType == 'Admin')}" th:text="${completedCourses.size() + ' ' + 'Courses managed'}"></i></li>
                                     <li><i class="feather-book " th:if="${userProfile != null and userProfile.role.roleType == 'Student'}" th:text="${userProfile.courses.size() + ' ' + 'Courses completed'}"></i></li>
                                 </ul>
                             </div>
@@ -96,7 +96,7 @@
                                             <ul class="dashboard-mainmenu rbt-default-sidebar-list">
                                                 <li><a href="UserPageView.html" th:href="@{/users/{id}/profile(id=${userProfile.userId})}"><i class="feather-user"></i><span>My Profile</span></a></li>
                                                 <li><a href="student-enrolled-courses.html" th:href="@{/users/{id}/courses/enrolled(id=${userProfile.userId})}"><i class="feather-book-open"></i><span th:text="${userProfile.role.roleType == 'Student' ? 'Enrolled Courses' : 'Managed Courses'}">Enrolled Courses</span></a></li>
-                                                <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}"><a href="student-enrolled-courses.html"><i class="feather-book-open"  th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"></i><span>Completed Courses</span></a></li>
+                                                <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}"><a th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"><i class="feather-book-open"></i><span>Completed Courses</span></a></li>
                                             </ul>
                                         </nav>
 
