@@ -58,6 +58,7 @@ public class AuthenticationMvcController {
             session.setAttribute("currentUserEmail", user.getEmail());
             // TODO: 11.12.23 consider adding userDtoOut here if we do not need the pass! 
             session.setAttribute("currentUser", user);
+            session.setAttribute("currentUserRole", user.getRole().getRoleType());
 
             return "redirect:/";
         } catch (AuthorizationException e) {

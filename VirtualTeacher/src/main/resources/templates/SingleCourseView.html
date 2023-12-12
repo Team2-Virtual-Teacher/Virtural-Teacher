@@ -1180,13 +1180,27 @@
                                     <span class="btn-icon"><i class="feather-arrow-right"></i></span>
                                   </a>
                                 </div>
+
+
                 </div>
                 <div th:if="${hasPassed}">
+
                                 <div class="buy-now-btn mt--15">
                                   <a class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
                                     <span class="btn-text">you have passed this course</span>
                                     <span class="btn-icon"><i class="feather-arrow-right"></i></span>
                                   </a>
+                                </div>
+
+
+                                <div class="buy-now-btn mt--15">
+                                  <form th:action="@{/courses/{id}/rate(id=${course.courseId})}" th:object="${rating}" method="post">
+                                    <input type="text" th:field="*{rating}">
+                                    <label>Rating 0-6 *</label>
+                                    <input type="text" th:field="*{comment}">
+                                    <label>Comment *</label>
+                                    <input type="submit" value="Rate Course">
+                                  </form>
                                 </div>
                 </div>
 

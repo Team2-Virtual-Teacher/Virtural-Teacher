@@ -4,9 +4,7 @@ package com.alpha53.virtualteacher.controllers.mvc;
 import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.models.Course;
-import com.alpha53.virtualteacher.models.FilterOptions;
-import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.models.dtos.CourseDto;
 import com.alpha53.virtualteacher.services.TopicServiceImpl;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
@@ -33,6 +31,7 @@ public class CourseMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final TopicServiceImpl topicService;
     private final CourseDtoMapper courseDtoMapper;
+
 
     public CourseMvcController(CourseService courseService, AuthenticationHelper authenticationHelper, TopicServiceImpl topicService, CourseDtoMapper courseDtoMapper) {
         this.courseService = courseService;
@@ -116,6 +115,7 @@ public class CourseMvcController {
             model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
             model.addAttribute("hasStarted", LocalDate.now().isAfter(course.getStartingDate()));
             model.addAttribute("isCreator", course.getCreator().getUserId()==user.getUserId());
+            model.addAttribute("rating", new RatingDto());
 
             return "SingleCourseView";
         } catch (EntityNotFoundException e) {
@@ -229,8 +229,6 @@ public class CourseMvcController {
                                   BindingResult bindingResult,
                                   HttpSession session) {
         if (bindingResult.hasErrors()) {
-            System.out.println("error");
-            System.out.println(bindingResult.toString());
             return "EditCourseView";
         }
 
@@ -250,5 +248,29 @@ public class CourseMvcController {
             return "EditCourseView";
         }
     }
+
+    @PostMapping("/{id}/rate")
+    public String handleRateCourse(@PathVariable int id, @Valid @ModelAttribute("rating") RatingDto rating,
+                                   BindingResult bindingResult,
+                                   HttpSession session) {
+        if (bindingResult.hasErrors()) {
+
+            return "SingleCourseView";
+        }
+
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            rating.setCourseId(id);
+
+            courseService.rateCourse(rating, id, user.getUserId());
+
+
+            return "redirect:/";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("title", "title_error", e.getMessage());
+            return "SingleCourseView";
+        }
+    }
+
 
 }
