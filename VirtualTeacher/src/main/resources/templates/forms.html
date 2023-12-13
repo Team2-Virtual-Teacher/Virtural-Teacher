@@ -66,7 +66,7 @@
                                         <i class="feather-chevron-down"></i>
                                     </a>
                                     <ul class="submenu">
-                                        <li class="has-dropdown"><a href="#">Search users</a>
+                                        <li class="has-dropdown"><a href="#" th:href="@{/users}">Search users</a>
                                         </li>
                                         <li class="has-dropdown"><a href="#">Something else</a>
                                         </li>
@@ -89,7 +89,10 @@
                                 <a href="#" th:href="@{/auth/login}"><i class="feather-user"></i>Login</a></li>
                             <li class="account-access rbt-user-wrapper d-none d-xl-block"
                                 th:if="${session.currentUser != null}">
-                                <a href="#"><i class="feather-user"></i>User</a>
+                                <a href="#">
+                                    <i class="feather-user"></i>
+                                    <span th:utext="${session.currentUser.firstName}">User</span>
+                                </a>
                                 <div class="rbt-user-menu-list-wrapper">
                                     <div class="inner">
                                         <div class="rbt-admin-profile">

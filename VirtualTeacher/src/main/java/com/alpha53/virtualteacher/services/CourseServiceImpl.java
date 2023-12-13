@@ -138,12 +138,11 @@ public class CourseServiceImpl implements CourseService {
             throw new AuthorizationException(COURSE_TRANSFER_EXCEPTION);
         }
         User previousTeacher = userService.get(teacherToTransferFromId);
-        if (!previousTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")) {
+        if (!previousTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher") && !previousTeacher.getRole().getRoleType().equalsIgnoreCase("Admin")) {
             throw new UnsupportedOperationException(String.format(INVALID_CURRENT_TEACHER_EXCEPTION, previousTeacher.getUserId()));
         }
         User newTeacher = userService.get(teacherToTransferToId);
-        // TODO: 25.11.23 correct this later if we we decide to also transfer to Admins.
-        if (!newTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher")) {
+        if (!newTeacher.getRole().getRoleType().equalsIgnoreCase("Teacher") && !newTeacher.getRole().getRoleType().equalsIgnoreCase("Admin")) {
             throw new UnsupportedOperationException(ASSIGN_COURSE_TO_USER_EXCEPTION);
         }
         if (teacherToTransferToId == teacherToTransferFromId) {

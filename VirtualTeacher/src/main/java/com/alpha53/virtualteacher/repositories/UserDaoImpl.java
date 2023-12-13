@@ -110,9 +110,9 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
 
         String orderBy = switch (filterOptionsUsers.getSortBy().get()) {
             case "email" -> "email";
-            case "firstName" -> "firstName";
-            case "lastName" -> "lastName";
-            case "roleType" -> "roleType";
+            case "firstName" -> "first_name";
+            case "lastName" -> "last_name";
+            case "roleType" -> "role";
             default -> "";
         };
 
@@ -192,6 +192,13 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new EntityNotFoundException(String.format("No role %s found.", roleType));
         }
+    }
+
+    public List<Role> getRoles() {
+        String query = "SELECT id as roleId, role as roleType " +
+                "FROM roles";
+
+            return namedParameterJdbcTemplate.query(query,new BeanPropertyRowMapper<>(Role.class));
     }
 
 

@@ -4,8 +4,10 @@ import com.alpha53.virtualteacher.exceptions.AuthorizationException;
 import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.exceptions.StorageException;
+import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.EmailForm;
+import com.alpha53.virtualteacher.models.dtos.FilterUserDto;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.services.contracts.UserService;
@@ -22,6 +24,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -156,20 +160,57 @@ public class UserMvcController {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
             return "4xx";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 404);
+            return "4xx";
         }
-        // TODO: 12.12.23 catch entity not found
 
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteUser(HttpSession session, @PathVariable int id, Model model) {
-        User user;
+    public String deleteUser(@PathVariable int id, Model model, HttpSession session) {
+        User user = null;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
             userService.delete(id, user);
+
+            if (user.getRole().getRoleType().equalsIgnoreCase("Admin") && user.getUserId() != id) {
+                return "redirect:/users";
+            }
             session.removeAttribute("currentUser");
             session.removeAttribute("currentUserEmail");
-            return "redirect:/";
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            // TODO: 13.12.23 we can just add a specific exception statement later on.
+            if (e.getMessage().contains("transfer") && user.getRole().getRoleType().equalsIgnoreCase("Admin")) {
+                model.addAttribute("errorMessage", e.getMessage());
+                return "TransferCoursesView";
+            }
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 404);
+            return "4xx";
+        } catch (StorageException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 422);
+            return "4xx";
+        }
+    }
+
+    @PostMapping("/transfer")
+    public String transferCourses(@RequestParam("userIdFrom") int userIdFrom, @RequestParam("userIdTo") int userIdTo, Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            courseService.transferTeacherCourses(userIdFrom, userIdTo, user);
+            if (user.getUserId() != userIdFrom) {
+                return "redirect:/users";
+            } else {
+                return String.format("redirect:/users/%d/settings", user.getUserId());
+            }
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
@@ -178,10 +219,9 @@ public class UserMvcController {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 404);
             return "4xx";
-
-        } catch (StorageException e) {
+        } catch (UnsupportedOperationException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("statusCode", 422);
+            model.addAttribute("statusCode", 403);
             return "4xx";
         }
     }
@@ -195,7 +235,6 @@ public class UserMvcController {
             model.addAttribute("userProfile", userService.get(id));
             session.setAttribute("currentUser", loggedInUser);
             return "redirect:/users/{id}/profile";
-
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
@@ -229,7 +268,6 @@ public class UserMvcController {
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
-            // TODO: 11.12.23 add this page.
             return "4xx";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("email", "email_error", e.getMessage());
@@ -241,4 +279,51 @@ public class UserMvcController {
         }
     }
 
+    @GetMapping
+    public String showUsers(@ModelAttribute("filterOptionsUsers") FilterUserDto filterUserDto, HttpSession session, Model model) {
+        try {
+           User loggedUser = authenticationHelper.tryGetCurrentUser(session);
+           if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin") && !loggedUser.getRole().getRoleType().equalsIgnoreCase("Teacher")){
+               model.addAttribute("errorMessage", "Invalid authentication.");
+               model.addAttribute("statusCode", 401);
+               return "4xx";
+           }
+            FilterOptionsUsers filterOptionsUsers = new FilterOptionsUsers(
+                    filterUserDto.getEmail(),
+                    filterUserDto.getFirstName(),
+                    filterUserDto.getLastName(),
+                    filterUserDto.getRole(),
+                    filterUserDto.getSortBy(),
+                    filterUserDto.getSortOrder());
+
+            List<User> userList = userService.getAll(filterOptionsUsers);
+            model.addAttribute("filterOptionsUsers", filterUserDto);
+            model.addAttribute("users", userList);
+            model.addAttribute("roles", userService.getRoles());
+            return "UsersView";
+
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        }
+    }
+
+    @PostMapping("{id}/role/{newRole}")
+    public String setUserRole(HttpSession session, Model model, @PathVariable int id, @PathVariable String newRole) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
+            User userToGetRole = userService.get(id);
+            userService.setUserRole(loggedInUser, userToGetRole, newRole);
+            return "redirect:/users";
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 404);
+            return "4xx";
+        }
+    }
 }

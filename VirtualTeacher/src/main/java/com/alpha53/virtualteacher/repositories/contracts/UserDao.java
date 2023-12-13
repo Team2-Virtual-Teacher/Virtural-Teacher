@@ -23,4 +23,6 @@ public interface UserDao {
     void delete(int id);
 
     Role getRole(String roleType);
+
+    List<Role> getRoles();
 }

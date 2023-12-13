@@ -29219,3 +29219,147 @@ Course Sidebar
   }
 }
 /*# sourceMappingURL=../maps/style.css.map */
+
+
+
+
+.quiz-window {
+  position: absolute;
+  left:0; right:0;
+  top: 50px;
+  margin: auto;
+  width: 600px;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+.quiz-window-header {
+  padding: 20px 15px;
+  text-align:center;
+  position: relative;
+}
+.quiz-window-title {
+  font-size: 26px;
+}
+.quiz-window-close {
+  position: absolute;
+  top:20px;
+  right:20px;
+  padding:0;
+  background:none;
+  border:0;
+  width: 30px;
+  height: 30px;
+  font-size: 60px;
+  font-weight: 100;
+  line-height: 24px;
+  color: #777;
+  cursor:pointer;
+}
+.quiz-window-body {
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+.guiz-awards-row {
+  margin:0;
+  padding: 10px 40px;
+  list-style: none;
+}
+.guiz-awards-row:after {
+  content: '';
+  display: table;
+  clear:both;
+}
+.guiz-awards-row-even {
+  background-color: #fff;
+}
+.guiz-awards-row li {
+  display:inline-block;
+  vertical-align: top;
+  float: left;
+}
+.guiz-awards-header {
+  text-align: center;
+  padding: 20px 40px;
+}
+.guiz-awards-star, .guiz-awards-track, .guiz-awards-time,
+.guiz-awards-header-track, .guiz-awards-header-time, .guiz-awards-header-date{
+  min-width: 50px;
+  text-align: center;
+  width: 5%;
+}
+.guiz-awards-header-star{
+  min-width: 50px;
+  text-align: left;
+  width: 5%;
+  font-weight: bold;
+}
+
+
+.guiz-awards-title {
+  width: 55%;
+  min-width: 200px;
+  font-size: 18px;
+  font-weight: normal;
+  padding-top: 3px;
+}
+.guiz-awards-header-title {
+  width: 55%;
+  min-width: 190px;
+  font-weight: bold;
+}
+.guiz-awards-subtitle {
+  color: #858585;
+  font-size: 14px;
+  font-weight: 300;
+  display: block;
+}
+.guiz-awards-track, .guiz-awards-time {
+  width: 10%;
+  min-width: 30px;
+  font-size: 15px;
+  line-height: 45px
+}
+.guiz-awards-header-track, .guiz-awards-header-time {
+  width: 10%;
+  min-width: 30px;
+  font-weight: bold;
+}
+.guiz-awards-header-date{
+  width: 12%;
+  min-width: 35px;
+  font-weight: bold;
+}
+
+.guiz-awards-track .null, .guiz-awards-time .null {
+  color:#bababa;
+}
+.guiz-awards-buttons {
+  background: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+.guiz-awards-but-back {
+  display:inline-block;
+  background: none;
+  border: 1px solid #61a3e5;
+  border-radius: 21px;
+  padding: 7px 40px 7px 20px;
+  color: #61a3e5;
+  font-size: 17px;
+  cursor:pointer;
+  transition: all .3s ease;
+}
+
+.guiz-awards-but-back:hover {
+  background: #61a3e5;
+  color: #fff;
+}
+
+.guiz-awards-but-back i {
+  font-size: 26px;
+  line-height: 17px;
+  margin-right: 20px;
+  position: relative;
+  top: 2px;
+}

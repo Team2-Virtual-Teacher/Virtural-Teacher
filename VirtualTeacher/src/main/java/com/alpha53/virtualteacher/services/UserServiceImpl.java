@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
         //the following if-statement checks if the role passed (in case such exists) is a valid one. getRole throws
         //in case of invalid role/
-        if (filterOptionsUsers.getRoleType().isPresent()) {
+        if (filterOptionsUsers.getRoleType().isPresent() && !filterOptionsUsers.getRoleType().get().isEmpty()) {
             userDao.getRole(filterOptionsUsers.getRoleType().get());
         }
         return userDao.getAll(filterOptionsUsers);
@@ -178,7 +178,9 @@ public class UserServiceImpl implements UserService {
         }
         List<Solution> solutionList = solutionDao.getAllByUserId(id);
         storageService.deleteAll(solutionList);
-        storageService.delete(userToDelete.getPictureUrl());
+        if (!userToDelete.getPictureUrl().equals(DEFAULT_PHOTO_URL)) {
+            storageService.delete(userToDelete.getPictureUrl());
+        }
         userDao.delete(id);
     }
 
@@ -232,6 +234,10 @@ public class UserServiceImpl implements UserService {
         emailService.send(email,referralEmail, REFERRAL_SUBJECT, null, null);
     }
 
+    public List<Role> getRoles(){
+       return userDao.getRoles();
+    }
+
     private void sendConfirmationToken(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken(user.getEmail());
         confirmationTokenService.save(confirmationToken);
@@ -239,4 +245,5 @@ public class UserServiceImpl implements UserService {
         String confirmationEmail = emailService.generateConfirmationEmail(user.getFirstName(),link);
         emailService.send(user.getEmail(),confirmationEmail,REGISTRATION_CONFIRMATION_SUBJECT, null,null);
     }
+
 }

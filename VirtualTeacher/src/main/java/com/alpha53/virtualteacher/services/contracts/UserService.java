@@ -1,6 +1,7 @@
 package com.alpha53.virtualteacher.services.contracts;
 
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
+import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,4 +29,6 @@ public interface UserService {
     void confirmRegistration(String token);
 
     void referFriend(User loggedInUser, String email);
+
+    List<Role> getRoles();
 }

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Users</title>
+    <meta name="robots" content="noindex, follow"/>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/assets/images/favicon.png">
+    <!-- CSS
+	============================================ -->
+    <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css" th:href="@{/css/vendor/bootstrap.min.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick.css" th:href="@{/css/vendor/slick.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick-theme.css" th:href="@{/css/vendor/slick-theme.css}">
+    <link rel="stylesheet" href="../static/css/plugins/sal.css" th:href="@{/css/plugins/sal.css}">
+    <link rel="stylesheet" href="../static/css/plugins/feather.css" th:href="@{/css/plugins/feather.css}">
+    <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css" th:href="@{/css/plugins/euclid-circulara.css}">
+    <link rel="stylesheet" href="../static/css/plugins/swiper.css" th:href="@{/css/plugins/swiper.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnify.css" th:href="@{/css/plugins/magnify.css}">
+    <link rel="stylesheet" href="../static/css/plugins/odometer.css" th:href="@{/css/plugins/odometer.css}">
+    <link rel="stylesheet" href="../static/css/plugins/animation.css" th:href="@{/css/plugins/animation.css}">
+    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css" th:href="@{/css/plugins/bootstrap-select.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css" th:href="@{/css/plugins/jquery-ui.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css" th:href="@{/css/plugins/magnigy-popup.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/plyr.css" th:href="@{/css/plugins/plyr.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+</head>
+<body class="rbt-header-sticky">
+<!-- Start Header Area -->
+<header class="rbt-header rbt-header-10">
+    <!--<div class="rbt-sticky-placeholder"></div>-->
+    <div class="rbt-header-wrapper header-space-betwween header-sticky">
+        <form th:replace="~{forms.html::header}"></form>
+    </div>
+</header>
+<!-- Mobile Menu Section -->
+<div class="popup-mobile-menu">
+    <div class="inner-wrapper">
+        <div class="inner-top">
+            <div class="content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="../static/assets/images/logo/logo.png" alt="Education Logo Images">
+                    </a>
+                </div>
+                <div class="rbt-btn-close">
+                    <button class="close-button rbt-round-btn"><i class="feather-x"></i></button>
+                </div>
+            </div>
+            <p class="description">Histudy is a education website template. You can customize all.</p>
+            <ul class="navbar-top-left rbt-information-list justify-content-start">
+                <li>
+                    <a href="mailto:hello@example.com"><i class="feather-mail"></i>example@gmail.com</a>
+                </li>
+                <li>
+                    <a href="#"><i class="feather-phone"></i>(302) 555-0107</a>
+                </li>
+            </ul>
+        </div>
+        <nav class="mainmenu-nav">
+            <ul class="mainmenu">
+                <li class="with-megamenu has-menu-child-item position-static">
+                    <a href="#">Home <i class="feather-chevron-down"></i></a>
+                    <!-- Start Mega Menu  -->
+                    <div class="rbt-megamenu menu-skin-dark">
+                        <div class="wrapper">
+                            <div class="row row--15 home-plesentation-wrapper single-dropdown-menu-presentation">
+                            </div>
+                            <div class="load-demo-btn text-center">
+                                <a class="rbt-btn-link color-white" href="#">Scroll to view more
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Mega Menu  -->
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<div class="rbt-page-banner-wrapper">
+    <!-- Start Banner BG Image  -->
+    <div class="rbt-banner-image"></div>
+    <!-- End Banner BG Image  -->
+    <div class="rbt-banner-content">
+        <!-- Start Banner Content Top  -->
+        <div class="rbt-banner-content-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Start Breadcrumb Area  -->
+
+                        <!-- End Breadcrumb Area  -->
+                        <div class=" title-wrapper">
+                            <h1 class="title mb--0">Users</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Banner Content Top  -->
+        <!-- Start Course Top  -->
+        <div class="rbt-course-top-wrapper mt--40 mt_sm--20">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-5 col-md-12">
+                        <div class="rbt-sorting-list d-flex flex-wrap align-items-center"></div>
+                    </div>
+                </div>
+                <!-- Start Filter Toggle  -->
+                <form action="#" th:action="@{/users}" method="get" th:object="${filterOptionsUsers}">
+                    <div class="default-exp-wrapper">
+                        <div class="filter-inner">
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select rbt-search-style me-0">
+                                    <span class="select-label d-block">Email</span>
+                                    <label>
+                                        <input type="text" th:field="*{email}">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select rbt-search-style me-0">
+                                    <span class="select-label input-label d-block">First Name</span>
+                                    <label>
+                                        <input type="text" th:field="*{firstName}">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select rbt-search-style me-0">
+                                    <span class="select-label input-label d-block">Last Name</span>
+                                    <label>
+                                        <input type="text" th:field="*{lastName}">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select">
+                                    <span class="select-label input-label d-block">Role</span>
+                                    <div>
+                                        <select th:field="*{role}">
+                                            <option value="#" th:value="${''}" th:text="${'none'}">Select Role
+                                            </option>
+                                            <option th:each="role : ${roles}"
+                                                    th:value="${role.roleType}"
+                                                    th:text="${role.roleType}">
+                                                Topic
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select">
+                                    <span class="select-label d-block">Sort By</span>
+                                    <div>
+                                        <select th:field="*{sortBy}">
+                                            <option value="#" th:value="${null}" th:text="${'Sort By'}">Sort by</option>
+                                            <option th:text="${'email'}" th:value="${'email'}">Email</option>
+                                            <option th:text="${'First Name'}" th:value="${'firstName'}">First Name</option>
+                                            <option th:text="${'Last Name'}" th:value="${'lastName'}">First Name</option>
+                                            <option th:text="${'Last Name'}" th:value="${'lastName'}">Last Name</option>
+                                            <option th:text="${'Role'}" th:value="${'roleType'}">Role</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-select-option">
+                                <div class="filter-select rbt-modern-select">
+                                    <span class="select-label d-block">Order</span>
+                                    <div>
+                                        <select th:field="*{sortOrder}">
+                                            <!--<option value="#" th:value="${null}" th:text="${'Order'}" >Order</option>-->
+                                            <option th:text="${'Ascending'}" th:value="${null}">name</option>
+                                            <option th:text="${'Descending'}" th:value="${'desc'}">rating</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="rbt-btn btn-gradient btn-sm" href="#" type="submit">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- End Filter Toggle  -->
+        </div>
+    </div>
+    <!-- End Course Top  -->
+</div>
+</div>
+<div class="rbt-section-overlayping-top rbt-section-gapBottom">
+    <div class="inner">
+        <div class="container">
+            <div>
+                <div class="quiz-window-body">
+                    <div class="content-container" style="border-radius: 10px;">
+                        <div class="quiz-window-body">
+                            <div class="gui-window-awards">
+                                <ul class="guiz-awards-row guiz-awards-header">
+                                    <li class="guiz-awards-header-track" style="width: 3%">ID</li>
+                                    <li class="guiz-awards-header-track" style="width: 27%">Email</li>
+                                    <li class="guiz-awards-header-track" style="width: 15%">First Name</li>
+                                    <li class="guiz-awards-header-track" style="width: 15%">Last Name</li>
+                                    <li class="guiz-awards-header-track" style="width: 10%" >Role</li>
+                                    <li class="guiz-awards-header-track" style="width: 10%"  th:if="${session.currentUser.role.roleType == 'Admin'}">Approve</li>
+                                    <li class="guiz-awards-header-track" style="width: 10%"  th:if="${session.currentUser.role.roleType == 'Admin'}"> Admin</li>
+                                    <li class="guiz-awards-header-track" style="width: 10%" th:if="${session.currentUser.role.roleType == 'Admin'}" > Delete</li>
+
+
+                                </ul>
+                                <ul class="guiz-awards-row guiz-awards-row-even"
+                                    th:each="user : ${users}">
+                                    <li class="guiz-awards-track" style="width: 3%"  th:text="${user.userId}"> testID</li>
+                                    <li class="guiz-awards-track" style="width: 27%" th:text="${user.email}"> testEmail</li>
+                                    <li class="guiz-awards-track" style="width: 15%" th:text="${user.firstName}"> TestFirstName</li>
+                                    <li class="guiz-awards-track" style="width: 15%" th:text="${user.lastName}"> TestFirstName</li>
+                                    <li class="guiz-awards-track" style="width: 10%" th:text="${user.role.roleType}"> TestRole</li>
+                                    <li class="guiz-awards-track" style="width: 10%" th:if="${session.currentUser.role.roleType == 'Admin'}">
+                                        <form action="#" th:if="${user.role.roleType == 'PendingTeacher'}" th:action="@{/users/{id}/role/{newRole}(id=${user.userId}, newRole=${'Teacher'})}" method="post">
+                                                    <button class="rbt-btn btn-gradient btn-sm" href="#" type="submit"
+                                                            style="width: 110px; background: green !important;">Approve
+                                                    </button>
+                                        </form>
+                                    </li>
+                                    <li class="guiz-awards-track" style="width: 10%" th:if="${session.currentUser.role.roleType == 'Admin'}">
+                                        <form action="#" th:if="${user.role.roleType == 'Teacher'}" th:action="@{/users/{id}/role/{newRole}(id=${user.userId}, newRole=${'Admin'})}" method="post">
+                                            <button class="rbt-btn btn-gradient btn-sm" href="#" type="submit"
+                                                    style="width: 110px; background: blue !important;">Promote
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <li class="guiz-awards-track" style="width: 10%" th:if="${session.currentUser.role.roleType == 'Admin'}">
+                                        <form action="#" th:if="${user.role.roleType != 'Admin'}" th:action="@{/users/{id}/delete(id=${user.userId})}" method="get" onclick="confirmDeleteUser()">
+                                            <button class="rbt-btn btn-gradient btn-sm" href="#" type="submit"
+                                                    style="width: 110px; background: red !important;">Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDeleteUser() {
+        const confirmation = confirm('Are you sure you want to delete this user?');
+        if (confirmation){
+            window.location.href = '/user/settings/delete';
+        }
+    }
+</script>
+
+
+<!-- JS
+============================================ -->
+<!-- Modernizer JS -->
+<script src="/js/vendor/modernizr.min.js"></script>
+<!-- jQuery JS -->
+<script src="/js/vendor/jquery.js"></script>
+<!-- Bootstrap JS -->
+<script src="/js/vendor/bootstrap.min.js"></script>
+<!-- sal.js -->
+<script src="/js/vendor/sal.js"></script>
+<script src="/js/vendor/swiper.js"></script>
+<script src="/js/vendor/magnify.min.js"></script>
+<script src="/js/vendor/jquery-appear.js"></script>
+<script src="/js/vendor/odometer.js"></script>
+<script src="/js/vendor/backtotop.js"></script>
+<script src="/js/vendor/isotop.js"></script>
+<script src="/js/vendor/imageloaded.js"></script>
+
+<script src="/js/vendor/wow.js"></script>
+<script src="/js/vendor/waypoint.min.js"></script>
+<script src="/js/vendor/easypie.js"></script>
+<script src="/js/vendor/text-type.js"></script>
+<script src="/js/vendor/jquery-one-page-nav.js"></script>
+<script src="/js/vendor/bootstrap-select.min.js"></script>
+<script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/vendor/magnify-popup.min.js"></script>
+<script src="/js/vendor/paralax-scroll.js"></script>
+<script src="/js/vendor/paralax.min.js"></script>
+<script src="/js/vendor/countdown.js"></script>
+<script src="/js/vendor/plyr.js"></script>
+<!-- Main JS -->
+<script src="/js/main.js"></script>
+</body>
