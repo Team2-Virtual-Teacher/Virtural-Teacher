@@ -5,6 +5,8 @@ import com.alpha53.virtualteacher.services.contracts.WikiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import org.wikiclean.WikiClean;
 import org.wikiclean.languages.English;
@@ -28,20 +30,16 @@ public class WikiServiceImpl implements WikiService {
     private static final String EXTRACT_PAGEID_AND_TITLE_URI = "https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&formatversion=2&srsearch=";
     private static final String EXTRACT_FULL_URI = "https://en.wikipedia.org/w/api.php?action=query&prop=info&inprop=url&format=json&pageids=";
     private final ObjectMapper objectMapper;
+    private final HttpClient httpClient;
 
-    public WikiServiceImpl(ObjectMapper objectMapper) {
+    public WikiServiceImpl(ObjectMapper objectMapper, HttpClient httpClient) {
         this.objectMapper = objectMapper;
+        this.httpClient = httpClient;
     }
 
     @Override
     public List<WikiResult> getSearchResult(String searchCriteria) throws URISyntaxException, IOException, InterruptedException {
         List<WikiResult> searchResultlist = new ArrayList<>();
-
-        HttpClient httpClient = HttpClient
-                .newBuilder()
-                .followRedirects(HttpClient.Redirect.ALWAYS)
-                .build();
-
 
         HttpRequest request = HttpRequest
                 .newBuilder(new URI(EXTRACT_PAGEID_AND_TITLE_URI.concat(URLEncoder.encode(searchCriteria, StandardCharsets.UTF_8))))
@@ -62,12 +60,12 @@ public class WikiServiceImpl implements WikiService {
 
         String pageidsRequestParams = generatePageIdParamValue(searchResultlist);
 
-        request=HttpRequest
+        request = HttpRequest
                 .newBuilder(new URI(EXTRACT_FULL_URI.concat(pageidsRequestParams)))
                 .GET()
                 .build();
-        response = httpClient.send(request,HttpResponse.BodyHandlers.ofString());
-        extractFullUrl(response,searchResultlist);
+        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        extractFullUrl(response, searchResultlist);
 
 
         return searchResultlist;
@@ -100,15 +98,18 @@ public class WikiServiceImpl implements WikiService {
             WikiResult w = new WikiResult();
             w.setPageid(jsonNode.get("pageid").asInt(-1));
             w.setTitle(jsonNode.get("title").asText("Not available"));
-            w.setSnippet(jsonNode.get("snippet").asText("Not available"));
+            String htmlSnipped = jsonNode.get("snippet").asText("Not available");
+            Document textSnipped = Jsoup.parse(htmlSnipped);
+            w.setSnippet(textSnipped.text());
             resultList.add(w);
         }
     }
+
     private void extractFullUrl(HttpResponse<String> response, List<WikiResult> searchResultlist) throws JsonProcessingException {
         JsonNode source = objectMapper.readTree(response.body()).path("query").path("pages");
-        Map<Integer,String> urlMap = new HashMap<>();
+        Map<Integer, String> urlMap = new HashMap<>();
         for (JsonNode node : source) {
-            urlMap.put(node.get("pageid").asInt(),node.get("fullurl").asText());
+            urlMap.put(node.get("pageid").asInt(), node.get("fullurl").asText());
         }
         for (WikiResult wikiResult : searchResultlist) {
             wikiResult.setFullUrl(urlMap.get(wikiResult.getPageid()));
@@ -118,12 +119,12 @@ public class WikiServiceImpl implements WikiService {
 
     private void extractContent(HttpResponse<String> response, List<WikiResult> resultList) throws JsonProcessingException {
         JsonNode source = objectMapper.readTree(response.body()).path("query").path("pages");
-        Map<Integer,String> contentMap = new HashMap<>();
+        Map<Integer, String> contentMap = new HashMap<>();
         for (JsonNode jsonNode : source) {
             JsonNode n = objectMapper.readTree(jsonNode.toString()).path("revisions");
             Integer pageId = jsonNode.get("pageid").asInt();
             for (JsonNode node : n) {
-                contentMap.put(pageId,node.path("slots").path("main").get("content").asText("N/A"));
+                contentMap.put(pageId, node.path("slots").path("main").get("content").asText("N/A"));
             }
         }
 

@@ -35,16 +35,16 @@ dependencies {
 	//used for creating pdf certificates:
 	implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.30'
 
+	//used to convert Wiki-text to text
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
-
+	//used to convert HTML to text
+	implementation 'org.jsoup:jsoup:1.17.1'
 
 
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
 	implementation 'org.wikiclean:wikiclean:1.2'
-
-
 
 
 }

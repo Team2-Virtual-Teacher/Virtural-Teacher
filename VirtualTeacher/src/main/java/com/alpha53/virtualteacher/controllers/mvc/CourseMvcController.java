@@ -80,7 +80,7 @@ public class CourseMvcController {
         } catch (AuthorizationException ignored) {
 
         }
-        List<Course> courses =courseService.get(filterOptions, optionalUser);
+        List<Course> courses = courseService.get(filterOptions, optionalUser);
 
 
         model.addAttribute("courses", courses);
@@ -98,10 +98,10 @@ public class CourseMvcController {
             User user = authenticationHelper.tryGetCurrentUser(session);
             course = courseService.getCourseByIdAuth(id, user);
 
-            if (courseService.isUserEnrolled(user.getUserId(), course.getCourseId())){
+            if (courseService.isUserEnrolled(user.getUserId(), course.getCourseId())) {
                 model.addAttribute("isEnrolled", true);
                 model.addAttribute("hasPassed", false);
-            } else if (courseService.hasUserPassedCourse(user.getUserId(), course.getCourseId())){
+            } else if (courseService.hasUserPassedCourse(user.getUserId(), course.getCourseId())) {
                 model.addAttribute("hasPassed", true);
                 model.addAttribute("isEnrolled", false);
             } else {
@@ -109,14 +109,14 @@ public class CourseMvcController {
                 model.addAttribute("isEnrolled", false);
             }
 
-            if (user.getRole().getRoleType().equalsIgnoreCase("admin") || (user.getRole().getRoleType().equalsIgnoreCase("teacher") && course.getCreator().getUserId() == user.getUserId())){
+            if (user.getRole().getRoleType().equalsIgnoreCase("admin") || (user.getRole().getRoleType().equalsIgnoreCase("teacher") && course.getCreator().getUserId() == user.getUserId())) {
                 model.addAttribute("hasModifyPermissions", true);
             } else {
                 model.addAttribute("hasModifyPermissions", false);
             }
 
             model.addAttribute("course", course);
-            model.addAttribute("currentUserRole",  session.getAttribute("currentUserRole"));
+            model.addAttribute("currentUserRole", session.getAttribute("currentUserRole"));
             model.addAttribute("isStudent", session.getAttribute("isStudent"));
             model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
             model.addAttribute("hasStarted", LocalDate.now().isAfter(course.getStartingDate()));
@@ -160,7 +160,6 @@ public class CourseMvcController {
     }
 
 
-
     @GetMapping("/new")
     public String createCourse(Model model) {
         model.addAttribute("course", new CourseDto());
@@ -179,7 +178,7 @@ public class CourseMvcController {
         }
 
         try {
-            if (course.getDescription().getDescription().isEmpty()){
+            if (course.getDescription().getDescription().isEmpty()) {
                 course.setDescription(null);
             }
             Course c = courseDtoMapper.fromDto(course);
@@ -193,10 +192,6 @@ public class CourseMvcController {
             return "NewCourseView";
         }
     }
-
-
-
-
 
 
     @GetMapping("/{id}/delete")
@@ -219,7 +214,7 @@ public class CourseMvcController {
     @GetMapping("/{id}/update")
     public String showEditCoursePage(@PathVariable int id, Model model, HttpSession session) {
         try {
-            User user =  authenticationHelper.tryGetCurrentUser(session);
+            User user = authenticationHelper.tryGetCurrentUser(session);
             Course course = courseService.getCourseByIdAuth(id, user);
             CourseDto courseDto = courseDtoMapper.toDto(course);
             model.addAttribute("topics", topicService.getAll());
@@ -232,6 +227,7 @@ public class CourseMvcController {
 
 
     }
+
     @PostMapping("/{id}/update")
     public String handleEditCourse(Model model, @PathVariable int id, @Valid @ModelAttribute("course") CourseDto course,
                                   BindingResult bindingResult,
@@ -244,7 +240,7 @@ public class CourseMvcController {
         }
 
         try {
-            if (course.getDescription().getDescription().isEmpty()){
+            if (course.getDescription().getDescription().isEmpty()) {
                 course.setDescription(null);
             }
             Course c = courseDtoMapper.fromDto(course);

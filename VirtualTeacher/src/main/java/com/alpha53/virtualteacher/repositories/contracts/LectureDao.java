@@ -20,4 +20,7 @@ public interface LectureDao {
     Integer getCourseCreatorId(int lectureId);
 
     Optional<String> getAssignmentUrl(int lectureId);
+
+    boolean isAssignmentExist(int lectureId);
 }
+

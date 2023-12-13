@@ -1,3 +1,4 @@
+/*
 package com.alpha53.virtualteacher.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -12,4 +13,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/")
                 .setCachePeriod(0);
     }
-}
+}*/

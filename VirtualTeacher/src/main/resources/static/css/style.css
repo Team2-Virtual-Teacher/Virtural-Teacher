@@ -22567,7 +22567,7 @@ body.modal-open {
     Search Style Default  
 --------------------------*/
 .rbt-search-style {
-  position: relative;
+  position:relative;
 }
 .rbt-search-style input {
   background: white;
@@ -22584,7 +22584,7 @@ body.modal-open {
 .rbt-search-style .rbt-search-btn {
   position: absolute;
   top: 50%;
-  right: 5px;
+  right: -50px;
   transform: translateY(-50%);
 }
 .rbt-search-style .rbt-search-btn i {
@@ -27187,8 +27187,8 @@ Course Sidebar
   }
 }
 .rbt-lesson-content-wrapper .rbt-lesson-leftsidebar {
-  flex: 0 0 400px;
-  width: 400px;
+  flex: 0 0 700px;
+  width: 700px;
   background-color: var(--color-extra2);
   border-right: 1px solid var(--color-border);
   max-height: 100%;

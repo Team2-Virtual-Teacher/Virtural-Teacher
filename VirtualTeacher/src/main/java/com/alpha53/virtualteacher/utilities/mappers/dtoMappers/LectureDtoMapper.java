@@ -10,8 +10,7 @@ public class LectureDtoMapper {
         Lecture lecture = new Lecture();
         lecture.setDescription(lectureDto.getDescription());
         lecture.setTitle(lectureDto.getTitle());
-        lecture.setVideoUrl(lectureDto.getVideoUrl());
-
+        lecture.setVideoUrl(lectureDto.getVideoUrl().replace("watch?v=","embed/"));
         return lecture;
     }
 }

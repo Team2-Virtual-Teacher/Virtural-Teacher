@@ -158,6 +158,10 @@ public class LectureServiceImpl implements LectureService {
         }
 
     }
+    @Override
+    public boolean isAssignmentExist(int lectureId){
+        return lectureDao.isAssignmentExist(lectureId);
+    }
 
     private void checkLectureTitleExist(Lecture lecture) {
         List<Lecture> lectureList = lectureDao.getAllByCourseId(lecture.getCourseId());
@@ -177,5 +181,6 @@ public class LectureServiceImpl implements LectureService {
         }
 
     }
+
 
 }

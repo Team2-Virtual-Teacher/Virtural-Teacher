@@ -12,6 +12,7 @@ import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,8 +43,8 @@ public class LectureController {
 
     @GetMapping(value = "/{courseId}/lecture/{lectureId}")
     public Lecture get(@RequestHeader HttpHeaders headers,
-                       @PathVariable(name = "courseId") int courseId,
-                       @PathVariable(name = "lectureId") int lectureId) {
+                       @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
+                       @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return lectureService.get(courseId, lectureId, user);
@@ -58,7 +59,7 @@ public class LectureController {
 
     @GetMapping("/{courseId}/lectures")
     public List<Lecture> getAllByCourse(@RequestHeader HttpHeaders headers,
-                                        @PathVariable(name = "courseId") int courseId) {
+                                        @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
@@ -75,8 +76,8 @@ public class LectureController {
     @PostMapping(value = "{id}/lecture", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void create(@RequestHeader HttpHeaders headers,
                        @RequestPart @Valid LectureDto lectureDto,
-                       @RequestPart MultipartFile assignment,
-                       @PathVariable(name = "id") int courseId) {
+                       @RequestPart  MultipartFile assignment,
+                       @PathVariable(name = "id") @Positive(message = "Course ID must be a positive integer") int courseId) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
@@ -95,8 +96,8 @@ public class LectureController {
     public void update(@RequestHeader HttpHeaders headers,
                        @RequestPart @Valid LectureDto lectureDto,
                        @RequestPart(required = false) MultipartFile assignment,
-                       @PathVariable(name = "courseId") int courseId,
-                       @PathVariable(name = "id") int id
+                       @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
+                       @PathVariable(name = "id") @Positive(message = "Lecture ID must be a positive integer") int id
     ) {
 
         try {
@@ -118,8 +119,8 @@ public class LectureController {
 
     @DeleteMapping("{courseId}/lecture/{lectureId}")
     public void delete(@RequestHeader HttpHeaders headers,
-                       @PathVariable(name = "lectureId") int lectureId,
-                       @PathVariable(name = "courseId") int courseId) {
+                       @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                       @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId) {
 
         try {
             User user = authenticationHelper.tryGetUser(headers);
@@ -133,8 +134,8 @@ public class LectureController {
 
     @PostMapping(value = "{courseId}/lecture/{lectureId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void uploadSolution(@RequestHeader HttpHeaders headers,
-                               @PathVariable(name = "lectureId") int lectureId,
-                               @PathVariable(name = "courseId") int courseId,
+                               @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                               @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
                                @RequestPart(name = "solution") MultipartFile solution) {
 
         try {
@@ -153,9 +154,9 @@ public class LectureController {
 
     @PostMapping("{courseId}/lecture/{lectureId}/user/{userId}/grade")
     public void addSolutionGrade(@RequestHeader HttpHeaders headers,
-                                 @PathVariable(name = "courseId") int courseId,
-                                 @PathVariable(name = "lectureId") int lectureId,
-                                 @PathVariable(name = "userId") int userId,
+                                 @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
+                                 @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                                 @PathVariable(name = "userId") @Positive(message = "User ID must be a positive integer") int userId,
                                  @RequestParam(name = "grade")
                                  @Min(value = 2, message = INCORRECT_GRADE)
                                  @Max(value = 6, message = INCORRECT_GRADE) double grade) {

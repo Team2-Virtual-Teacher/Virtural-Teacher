@@ -20,5 +20,7 @@ public interface LectureService {
     void delete(int courseId, int lectureId, User user);
 
     void uploadSolution(int courseId, int lectureId, User user, MultipartFile assignmentSolution);
+
+    boolean isAssignmentExist(int lectureId);
 }
 

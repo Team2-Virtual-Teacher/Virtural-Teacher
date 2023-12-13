@@ -31,22 +31,22 @@
 
     <!-- CSS
 	============================================ -->
-    <link rel="stylesheet" th:href="@{/css/vendor/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/vendor/slick.css}">
-    <link rel="stylesheet" th:href="@{/css/vendor/slick-theme.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/sal.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/feather.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/fontawesome.min.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/euclid-circulara.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/swiper.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/magnify.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/odometer.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/animation.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/bootstrap-select.min.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/jquery-ui.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/magnigy-popup.min.css}">
-    <link rel="stylesheet" th:href="@{/css/plugins/plyr.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/vendor/bootstrap.min.css" th:href="@{/css/vendor/bootstrap.min.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick.css" th:href="@{/css/vendor/slick.css}">
+    <link rel="stylesheet" href="../static/css/vendor/slick-theme.css" th:href="@{/css/vendor/slick-theme.css}">
+    <link rel="stylesheet" href="../static/css/plugins/sal.css" th:href="@{/css/plugins/sal.css}">
+    <link rel="stylesheet" href="../static/css/plugins/feather.css" th:href="@{/css/plugins/feather.css}">
+    <link rel="stylesheet" href="../static/css/plugins/fontawesome.min.css" th:href="@{/css/plugins/fontawesome.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/euclid-circulara.css" th:href="@{/css/plugins/euclid-circulara.css}">
+    <link rel="stylesheet" href="../static/css/plugins/swiper.css" th:href="@{/css/plugins/swiper.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnify.css" th:href="@{/css/plugins/magnify.css}">
+    <link rel="stylesheet" href="../static/css/plugins/odometer.css" th:href="@{/css/plugins/odometer.css}">
+    <link rel="stylesheet" href="../static/css/plugins/animation.css" th:href="@{/css/plugins/animation.css}">
+    <link rel="stylesheet" href="../static/css/plugins/bootstrap-select.min.css" th:href="@{/css/plugins/bootstrap-select.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/jquery-ui.css" th:href="@{/css/plugins/jquery-ui.css}">
+    <link rel="stylesheet" href="../static/css/plugins/magnigy-popup.min.css" th:href="@{/css/plugins/magnigy-popup.min.css}">
+    <link rel="stylesheet" href="../static/css/plugins/plyr.css" th:href="@{/css/plugins/plyr.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
 </head>
 
 <body class="rbt-header-sticky">
@@ -402,7 +402,7 @@
                                         <li><a href="course-with-sidebar.html">Course With Sidebar</a></li>
                                         <li><a href="course-details.html">Course Details</a></li>
                                         <li><a href="course-details-2.html">Course Details Two</a></li>
-                                        <li><a href="lesson.html">Course Lesson <span class="rbt-badge-card">New</span></a></li>
+                                        <li><a href="single-lecture1.html">Course Lesson <span class="rbt-badge-card">New</span></a></li>
                                         <li><a href="create-course.html">Create Course <span class="rbt-badge-card">New</span></a></li>
                                     </ul>
                                 </div>
@@ -487,7 +487,7 @@
                                         <li><a href="instructor.html">Instructor</a></li>
                                         <li><a href="faqs.html">FAQS</a></li>
                                         <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                                        <li><a href="404.html">404 Page</a></li>
+                                        <li><a href="4xx.html">404 Page</a></li>
                                         <li><a href="maintenance.html">Maintenance</a></li>
                                     </ul>
                                 </div>
@@ -663,7 +663,7 @@
                                     <ul class="mega-menu-item">
                                         <li><a href="post-format-quote.html">Post Format Quote</a></li>
                                         <li><a href="post-format-audio.html">Post Format Audio</a></li>
-                                        <li><a href="post-format-video.html">Post Format Video</a></li>
+                                        <li><a href="single-lecture.html">Post Format Video</a></li>
                                         <li><a href="#">Media Under Title <span class="rbt-badge-card">Coming</span></a></li>
                                         <li><a href="#">Sticky Sidebar <span class="rbt-badge-card">Coming</span></a></li>
                                         <li><a href="#">Auto Masonry <span class="rbt-badge-card">Coming</span></a></li>
@@ -874,7 +874,7 @@
 
 
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 mx-auto">
                 <div class="rbt-contact-form contact-form-style-1 max-width-auto">
                     <h3 class="title">Course</h3>
                     <form class="max-width-auto" th:action="@{/courses/new}" th:object="${course}" method="post">

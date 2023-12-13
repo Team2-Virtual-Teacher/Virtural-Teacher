@@ -172,7 +172,6 @@
                                 </div>
                             </form>
                             <div id="selectedFileName" style="display: none;"></div>
-
                         </div>
                     </div>
 
@@ -196,9 +195,9 @@
 
     <script>
         function validatePassword() {
-            var password = document.getElementById("newpassword").value;
-            var confirmPassword = document.getElementById("retypenewpassword").value;
-            var confirmPasswordError = document.getElementById("confirmPasswordError");
+            const password = document.getElementById("newpassword").value;
+            const confirmPassword = document.getElementById("retypenewpassword").value;
+            const confirmPasswordError = document.getElementById("confirmPasswordError");
 
             if (password !== confirmPassword) {
                 confirmPasswordError.textContent = "Passwords do not match";

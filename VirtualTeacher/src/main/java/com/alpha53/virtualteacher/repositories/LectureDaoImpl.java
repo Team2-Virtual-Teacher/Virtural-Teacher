@@ -179,6 +179,16 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         }
     }
 
+    @Override
+    public boolean isAssignmentExist(int lectureId) {
+        String sql = "SELECT COUNT(*) FROM lectures WHERE id =:lectureId";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("lectureId", lectureId);
+
+        Integer result = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
+        return result!=null && result>0;
+    }
+
     /**
      * Check if lecture has description
      *

@@ -27,7 +27,6 @@ public class UserController {
 
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
-
     private final UserMapperHelper userMapperHelper;
 
     @Autowired
