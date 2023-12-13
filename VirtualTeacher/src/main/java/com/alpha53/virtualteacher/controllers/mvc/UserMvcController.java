@@ -252,7 +252,6 @@ public class UserMvcController {
         // TODO: 12.12.23 catch entitynotfoundexception
     }
 
-
     @GetMapping("/referral")
     public String showReferralPage(Model model) {
         model.addAttribute("emailForm", new EmailForm());

@@ -32,8 +32,6 @@ public class LectureController {
     private final LectureDtoMapper lectureDtoMapper;
     private final AuthenticationHelper authenticationHelper;
     private final SolutionService solutionService;
-
-
     public LectureController(LectureService lectureService, LectureDtoMapper lectureDtoMapper, AuthenticationHelper authenticationHelper, SolutionService solutionService) {
         this.lectureService = lectureService;
         this.lectureDtoMapper = lectureDtoMapper;
@@ -54,7 +52,6 @@ public class LectureController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
     }
 
     @GetMapping("/{courseId}/lectures")
@@ -70,7 +67,6 @@ public class LectureController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
     }
 
     @PostMapping(value = "{id}/lecture", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -84,7 +80,6 @@ public class LectureController {
             Lecture lectureToCreate = lectureDtoMapper.dtoToObject(lectureDto);
             lectureToCreate.setCourseId(courseId);
             lectureService.create(lectureToCreate, user, assignment);
-
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityDuplicateException e) {
@@ -99,7 +94,6 @@ public class LectureController {
                        @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
                        @PathVariable(name = "id") @Positive(message = "Lecture ID must be a positive integer") int id
     ) {
-
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Lecture updateLecture = lectureDtoMapper.dtoToObject(lectureDto);
@@ -114,7 +108,6 @@ public class LectureController {
         } catch (EntityDuplicateException | UnsupportedFileTypeException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
     }
 
     @DeleteMapping("{courseId}/lecture/{lectureId}")
@@ -141,7 +134,6 @@ public class LectureController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             lectureService.uploadSolution(courseId, lectureId, user, solution);
-
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (UnsupportedFileTypeException | EntityNotFoundException e) {

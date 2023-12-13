@@ -36,7 +36,6 @@ public class CourseMvcController {
     private final LectureDtoMapper lectureDtoMapper;
     private final LectureService lectureService;
 
-
     public CourseMvcController(CourseService courseService, AuthenticationHelper authenticationHelper, TopicServiceImpl topicService, CourseDtoMapper courseDtoMapper, LectureDtoMapper lectureDtoMapper, LectureService lectureService) {
         this.courseService = courseService;
         this.authenticationHelper = authenticationHelper;
@@ -51,6 +50,7 @@ public class CourseMvcController {
         return session.getAttribute("currentUser") != null;
     }
 
+    //TODO missing CoursesView -> check with Bobi the purpose of this method
     @GetMapping
     public String showAllCourses( @RequestParam(required = false) String title,
                                   @RequestParam(required = false) String topic,
@@ -78,15 +78,10 @@ public class CourseMvcController {
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException ignored) {
-
         }
         List<Course> courses = courseService.get(filterOptions, optionalUser);
-
-
         model.addAttribute("courses", courses);
-
         return "CoursesView";
-
     }
 
     @GetMapping("/{id}")
@@ -108,7 +103,6 @@ public class CourseMvcController {
                 model.addAttribute("hasPassed", false);
                 model.addAttribute("isEnrolled", false);
             }
-
             if (user.getRole().getRoleType().equalsIgnoreCase("admin") || (user.getRole().getRoleType().equalsIgnoreCase("teacher") && course.getCreator().getUserId() == user.getUserId())) {
                 model.addAttribute("hasModifyPermissions", true);
             } else {
@@ -133,16 +127,12 @@ public class CourseMvcController {
             course = courseService.getCourseById(id);
             model.addAttribute("course", course);
             model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
-
             return "SingleCourseView";
         }
     }
 
     @GetMapping("/{id}/enroll")
     public String enrollForCourse(@RequestHeader(required = false) HttpHeaders headers, @PathVariable(name = "id") int id, Model model, HttpSession session) {
-
-
-
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -156,9 +146,7 @@ public class CourseMvcController {
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
-
     }
-
 
     @GetMapping("/new")
     public String createCourse(Model model) {
@@ -166,7 +154,6 @@ public class CourseMvcController {
         model.addAttribute("topics", topicService.getAll());
         return "NewCourseView";
     }
-
 
     @PostMapping("/new")
     public String handleNewCourse( Model model, @Valid @ModelAttribute("course") CourseDto course,
@@ -176,7 +163,6 @@ public class CourseMvcController {
             model.addAttribute("topics", topicService.getAll());
             return "NewCourseView";
         }
-
         try {
             if (course.getDescription().getDescription().isEmpty()) {
                 course.setDescription(null);
@@ -184,15 +170,12 @@ public class CourseMvcController {
             Course c = courseDtoMapper.fromDto(course);
             User user = authenticationHelper.tryGetCurrentUser(session);
             courseService.create(c, user);
-
-
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
             return "NewCourseView";
         }
     }
-
 
     @GetMapping("/{id}/delete")
     public String deleteCourse(@PathVariable int id, Model model, HttpSession session) {
@@ -202,12 +185,8 @@ public class CourseMvcController {
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
-
-
-
             courseService.delete(id, user);
             return "redirect:/";
-
     }
 
 
@@ -224,8 +203,6 @@ public class CourseMvcController {
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
-
-
     }
 
     @PostMapping("/{id}/update")
@@ -238,7 +215,6 @@ public class CourseMvcController {
             model.addAttribute("course", course);
             return "EditCourseView";
         }
-
         try {
             if (course.getDescription().getDescription().isEmpty()) {
                 course.setDescription(null);
@@ -247,8 +223,6 @@ public class CourseMvcController {
             c.setCourseId(id);
             User user = authenticationHelper.tryGetCurrentUser(session);
             courseService.update(c, user);
-
-
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
@@ -261,17 +235,12 @@ public class CourseMvcController {
                                    BindingResult bindingResult,
                                    HttpSession session) {
         if (bindingResult.hasErrors()) {
-
             return "SingleCourseView";
         }
-
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
             rating.setCourseId(id);
-
             courseService.rateCourse(rating, id, user.getUserId());
-
-
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
@@ -293,24 +262,19 @@ public class CourseMvcController {
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
-
-
     }
-
-
-
-
     @PostMapping("/{courseId}/lecture/new")
-    public String handleNewLecture(@RequestParam("file") MultipartFile file, Model model, @PathVariable int courseId, @Valid @ModelAttribute("lecture") LectureDto lecture,
+    public String handleNewLecture(@RequestParam("file") MultipartFile file,
+                                   @PathVariable int courseId,
+                                   @Valid @ModelAttribute("lecture") LectureDto lecture,
+                                   Model model,
                                    BindingResult bindingResult,
-
                                    HttpSession session) {
         model.addAttribute("file", file);
         if (bindingResult.hasErrors()) {
 
             return "NewLectureView";
         }
-
         try {
             if (lecture.getDescription().getDescription().isEmpty()){
                 lecture.setDescription(null);
@@ -318,12 +282,7 @@ public class CourseMvcController {
             Lecture l = lectureDtoMapper.dtoToObject(lecture);
             User user = authenticationHelper.tryGetCurrentUser(session);
             l.setCourseId(courseId);
-
-
-
-
             lectureService.create(l, user, file);
-
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
@@ -335,7 +294,4 @@ public class CourseMvcController {
             return "NewLectureView";
         }
     }
-
-
-
 }

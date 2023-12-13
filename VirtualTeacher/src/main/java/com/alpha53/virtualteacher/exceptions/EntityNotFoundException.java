@@ -14,16 +14,18 @@ public class EntityNotFoundException extends RuntimeException {
     }
 
     public EntityNotFoundException(int lectureId) {
-        super(String.format("Not found assignment for lecture ID: %d",lectureId));
+        super(String.format("Not found assignment for lecture ID: %d", lectureId));
     }
 
     public EntityNotFoundException(String message) {
         super(message);
     }
-    public EntityNotFoundException(int userId,int lectureId){
-        super(String.format("Solution not found for user with ID: %d in Lecture with ID: %d",userId,lectureId));
+
+    public EntityNotFoundException(int userId, int lectureId) {
+        super(String.format("Solution not found for user with ID: %d in Lecture with ID: %d", userId, lectureId));
     }
-    public EntityNotFoundException(){
+
+    public EntityNotFoundException() {
         super();
     }
 }

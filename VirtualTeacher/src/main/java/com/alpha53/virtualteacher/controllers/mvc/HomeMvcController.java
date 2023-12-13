@@ -23,7 +23,6 @@ public class HomeMvcController {
     private final CourseService courseService;
     private final TopicService topicService;
     private final AuthenticationHelper authenticationHelper;
-
     public HomeMvcController(CourseService courseService, TopicService topicService, AuthenticationHelper authenticationHelper) {
         this.courseService = courseService;
         this.topicService = topicService;
@@ -39,7 +38,6 @@ public class HomeMvcController {
     public String showHomePage(@ModelAttribute("filterOptions") FilterOptionDto filterOptionDto, Model model, HttpSession session) {
         model.addAttribute("coursesCount", courseService.getCoursesCount());
         model.addAttribute("topics", topicService.getAll());
-
         Optional<User> user;
         if (session.getAttribute("currentUser") == null) {
             user = Optional.empty();
@@ -47,10 +45,8 @@ public class HomeMvcController {
             user = Optional.ofNullable(authenticationHelper.tryGetCurrentUser(session));
         }
         FilterOptions filterOption = FilterMapper.fromFilterOptionsDtoToFilterOptions(filterOptionDto);
-
         model.addAttribute("courses", courseService.get(filterOption, user));
         model.addAttribute("filterOptions", filterOptionDto);
-
         return "index";
     }
 

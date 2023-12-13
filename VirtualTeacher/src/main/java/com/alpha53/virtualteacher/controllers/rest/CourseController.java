@@ -62,11 +62,8 @@ public class CourseController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException ignored) {
 
-
         }
-
         return courseService.get(filterOptions, optionalUser);
-
     }
 
     @GetMapping("/{id}")
@@ -76,13 +73,11 @@ public class CourseController {
         User user = new User();
         try {
             user = authenticationHelper.tryGetUser(headers);
-
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
-
             isAuthenticated = false;
         }
         if (isAuthenticated) {
@@ -90,12 +85,10 @@ public class CourseController {
         } else {
             return courseService.getCourseById(id);
         }
-
     }
 
     @GetMapping("/enrolled")
     public List<Course> getUsersEnrolledCourses(@RequestHeader HttpHeaders headers) {
-
         //TODO remove unnecessary catch
         try {
             User user = authenticationHelper.tryGetUser(headers);
@@ -157,7 +150,6 @@ public class CourseController {
 
     @PutMapping("/{id}")
     public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody CourseDto courseDto) {
-
     //TODO fromDto with two arguments may be is unnecessary we can discuss
         try {
             Course course = courseMapper.fromDto(id, courseDto);
@@ -186,7 +178,6 @@ public class CourseController {
 
     @PostMapping("/{id}/rate")
     public void rateCourse(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody RatingDto rating) {
-
         try {
             User user = authenticationHelper.tryGetUser(headers);
             courseService.rateCourse(rating, id, user.getUserId());

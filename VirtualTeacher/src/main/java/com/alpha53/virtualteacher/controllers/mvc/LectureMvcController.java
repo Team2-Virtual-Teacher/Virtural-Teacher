@@ -62,7 +62,6 @@ public class LectureMvcController {
                 model.addAttribute("wikiSearchResult", wikiSearchResult);
             }
             return "single-lecture";
-
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 404);
@@ -72,7 +71,6 @@ public class LectureMvcController {
             model.addAttribute("statusCode", 500);
             return "5xx";
         }
-
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/solution")
@@ -96,7 +94,6 @@ public class LectureMvcController {
     public ResponseEntity<Resource> downloadAssignment(@PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
                                                        @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
                                                        HttpSession session) throws IOException {
-
         try {
             User loggedUser = authenticationHelper.tryGetCurrentUser(session);
             Resource resource = lectureService.downloadAssignment(courseId, lectureId, loggedUser);

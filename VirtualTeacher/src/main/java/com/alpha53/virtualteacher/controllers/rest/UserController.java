@@ -1,12 +1,10 @@
 package com.alpha53.virtualteacher.controllers.rest;
 
 import com.alpha53.virtualteacher.exceptions.*;
-import com.alpha53.virtualteacher.models.ConfirmationToken;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.models.dtos.UserDtoOut;
-import com.alpha53.virtualteacher.services.contracts.StorageService;
 import com.alpha53.virtualteacher.services.contracts.UserService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UserMapperHelper;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
-
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapperHelper userMapperHelper;
@@ -101,7 +98,6 @@ public class UserController {
         try {
             User loggedInUser = authenticationHelper.tryGetUser(headers);
             userService.update(userDto, loggedInUser, id);
-
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
@@ -116,7 +112,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (StorageException e){
+        } catch (StorageException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
@@ -146,18 +142,17 @@ public class UserController {
         }
     }
 
-@PostMapping("/refer/{email}")
-    public void referFriend(@RequestHeader HttpHeaders headers, @PathVariable String email){
+    @PostMapping("/refer/{email}")
+    public void referFriend(@RequestHeader HttpHeaders headers, @PathVariable String email) {
         try {
             User loggedInUser = authenticationHelper.tryGetUser(headers);
-            userService.referFriend(loggedInUser ,email);
-        } catch (AuthorizationException e){
+            userService.referFriend(loggedInUser, email);
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityDuplicateException e){
+        } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (IllegalStateException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-}
-
+    }
 }

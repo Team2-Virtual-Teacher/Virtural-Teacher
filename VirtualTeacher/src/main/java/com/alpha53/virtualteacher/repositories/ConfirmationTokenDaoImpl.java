@@ -17,9 +17,7 @@ import java.time.LocalDateTime;
 @Repository
 @Transactional
 public class ConfirmationTokenDaoImpl extends NamedParameterJdbcDaoSupport implements ConfirmationTokenDao {
-
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     public ConfirmationTokenDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.setDataSource(dataSource);
@@ -31,10 +29,8 @@ public class ConfirmationTokenDaoImpl extends NamedParameterJdbcDaoSupport imple
                        "user_email as userEmail  " +
                        "FROM tokens " +
                        "WHERE tokens.token like :token;";
-
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("token", token);
-
         try {
             return namedParameterJdbcTemplate.queryForObject(query, in, new BeanPropertyRowMapper<>(ConfirmationToken.class));
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -46,14 +42,12 @@ public class ConfirmationTokenDaoImpl extends NamedParameterJdbcDaoSupport imple
     public void save(ConfirmationToken token) {
         String sql = "INSERT INTO tokens (token, created_at, expires_at, confirmed_at, user_email) " +
                      "VALUES (:token, :createdAt , :expiresAt, :confirmedAt, :userEmail)";
-
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("token", token.getToken());
         in.addValue("createdAt", token.getCreatedAt());
         in.addValue("expiresAt", token.getExpiresAt());
         in.addValue("confirmedAt", token.getConfirmedAt());
         in.addValue("userEmail", token.getUserEmail());
-
         namedParameterJdbcTemplate.update(sql, in);
     }
 
@@ -61,11 +55,9 @@ public class ConfirmationTokenDaoImpl extends NamedParameterJdbcDaoSupport imple
     public void updateConfirmedAt(String token, LocalDateTime time) {
         String sql = "UPDATE tokens SET confirmed_at = :confirmedAt " +
                      "WHERE tokens.token like :token ";
-
         MapSqlParameterSource in = new MapSqlParameterSource();
         in.addValue("confirmedAt", time);
         in.addValue("token", token);
-
         namedParameterJdbcTemplate.update(sql, in);
     }
 

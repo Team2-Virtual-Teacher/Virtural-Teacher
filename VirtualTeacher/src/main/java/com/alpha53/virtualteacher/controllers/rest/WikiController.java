@@ -17,7 +17,6 @@ import java.util.List;
 @RestController()
 @RequestMapping("api/v1/wiki-search")
 public class WikiController {
-
     private final WikiServiceImpl wikiServiceImpl;
     private final AuthenticationHelper authenticationHelper;
 
@@ -30,7 +29,6 @@ public class WikiController {
     public List<WikiResult> searchWiki(@RequestHeader HttpHeaders headers,
                                        @RequestParam("search") @Size(min = 1) String searchCriteria) throws IOException, InterruptedException, URISyntaxException {
         try{
-
             authenticationHelper.tryGetUser(headers);
             return wikiServiceImpl.getSearchResult(searchCriteria);
         }
@@ -38,5 +36,4 @@ public class WikiController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
         }
     }
-
 }

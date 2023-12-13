@@ -67,8 +67,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         return namedParameterJdbcTemplate.query(sql, param, new LectureMapper());
     }
 
-    //TODO Is it better the method for create, delete and update to be void or int(affected rows)
-
     /**
      * Create lecture
      *
@@ -76,7 +74,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
      */
     @Override
     public int create(Lecture lecture) {
-
         String sql =
                 "INSERT INTO lectures(title,video_url,assignment_url,course_id) " +
                         "     VALUES (:title,:videoUrl,:assignmentUrl,:courseId)    ";
@@ -86,9 +83,7 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         param.addValue("videoUrl", lecture.getVideoUrl());
         param.addValue("assignmentUrl", lecture.getAssignmentUrl());
         param.addValue("courseId", lecture.getCourseId());
-
         int executeResult = namedParameterJdbcTemplate.update(sql, param);
-
         if (lecture.getDescription() != null) {
             addDescription(lecture, param);
         }
@@ -120,7 +115,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         if (namedParameterJdbcTemplate.update(sql, params) == 0) {
             throw new EntityNotFoundException("Lecture", "id", lecture.getId().toString());
         }
-
         if (isDescriptionExist(lecture.getId())) {
             if (lecture.getDescription() == null) {
                 deleteDescription(params);
@@ -144,7 +138,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         String sql = "DELETE FROM lectures WHERE id =:lectureId";
         MapSqlParameterSource params = new MapSqlParameterSource("lectureId", lectureId);
         return namedParameterJdbcTemplate.update(sql, params);
-
     }
 
     /**
@@ -153,25 +146,12 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
      * @param lectureId - ID of the lecture
      * @return ID of the creator of the given lecture
      */
-    @Override
-    public Integer getCourseCreatorId(int lectureId) {
-        String sql = "SELECT courses.creator_id FROM lectures  INNER JOIN courses ON lectures.course_id = courses.id WHERE lectures.id = :lectureId ";
-        MapSqlParameterSource param = new MapSqlParameterSource();
-        param.addValue("lectureId", lectureId);
-
-        try {
-            return namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            throw new EntityNotFoundException("Course not found for lecture with ID: " + lectureId);
-        }
-    }
 
     @Override
     public Optional<String> getAssignmentUrl(int lectureId){
         String sql = "SELECT assignment_url FROM lectures WHERE id=:lectureId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("lectureId",lectureId);
-
         try {
             return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, param, String.class));
         } catch (EmptyResultDataAccessException e) {
@@ -184,7 +164,6 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         String sql = "SELECT COUNT(*) FROM lectures WHERE id =:lectureId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("lectureId", lectureId);
-
         Integer result = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
         return result!=null && result>0;
     }
@@ -196,16 +175,12 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
      * @return true if description exist, otherwise false
      */
     private boolean isDescriptionExist(int lectureId) {
-
         String sql =
                 "SELECT COUNT(*) FROM lecture_description WHERE lecture_id = :lectureId";
-
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("lectureId", lectureId);
-
         Integer result = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
         return result!=null && result>0;
-
     }
 
     /**
@@ -215,14 +190,11 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
      * @param lecture - Lecture containing description and lecture ID
      */
     private void addDescription(Lecture lecture, MapSqlParameterSource param) {
-
         if (lecture.getId() == null) {
             String lectureIdSql = "SELECT id FROM lectures WHERE course_id = :courseId AND title =:title";
             lecture.setId(namedParameterJdbcTemplate.queryForObject(lectureIdSql, param, Integer.class));
         }
-
         String descriptionSql = "INSERT INTO lecture_description (lecture_id,description) VALUES (:lecture_id,:description) ";
-
         param.addValue("lecture_id", lecture.getId());
         param.addValue("description", lecture.getDescription().getDescription());
         namedParameterJdbcTemplate.update(descriptionSql, param);
@@ -245,5 +217,4 @@ public class LectureDaoImpl extends NamedParameterJdbcDaoSupport implements Lect
         String sql = "UPDATE lecture_description SET description =:description WHERE lecture_id =:lectureId";
         namedParameterJdbcTemplate.update(sql, params);
     }
-
 }

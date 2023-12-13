@@ -95,7 +95,6 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
         if (!filterAttributes.isEmpty()) {
             queryString.append(" where ").append(String.join(" and ", filterAttributes));
         }
-
         queryString.append(generateOrderBy(filterOptionsUsers));
 
 

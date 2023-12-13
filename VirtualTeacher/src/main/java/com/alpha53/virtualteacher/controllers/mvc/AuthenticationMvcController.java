@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/auth")
 public class AuthenticationMvcController {
-
     private final AuthenticationHelper authenticationHelper;
     private final UserMapperHelper userMapperHelper;
-
     private final UserService userService;
 
     public AuthenticationMvcController(AuthenticationHelper authenticationHelper, UserMapperHelper userMapperHelper, UserService userService) {
@@ -52,14 +50,12 @@ public class AuthenticationMvcController {
         if (bindingResult.hasErrors()) {
             return "LoginView";
         }
-
         try {
             User user = authenticationHelper.verifyAuthentication(login.getEmail(), login.getPassword());
             session.setAttribute("currentUserEmail", user.getEmail());
             // TODO: 11.12.23 consider adding userDtoOut here if we do not need the pass! 
             session.setAttribute("currentUser", user);
             session.setAttribute("currentUserRole", user.getRole().getRoleType());
-
             return "redirect:/";
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("email", "auth_error", e.getMessage());
@@ -85,9 +81,7 @@ public class AuthenticationMvcController {
         if (bindingResult.hasErrors()) {
             return "RegisterView";
         }
-
         User user = userMapperHelper.userDtoToUser(registerDto);
-
         try {
             userService.create(user, registerDto.getRole());
             return "EmailConfirmationView";

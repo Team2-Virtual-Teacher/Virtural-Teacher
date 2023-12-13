@@ -19,14 +19,6 @@ public class TopicDaoImpl extends NamedParameterJdbcDaoSupport implements TopicD
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.setDataSource(dataSource);
     }
-
-
-
-   /* @Autowired
-    public TopicDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }*/
-
     @Override
     public List<Topic> getAll() {
         String sql = "SELECT * FROM topics";
