@@ -82,30 +82,30 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void delete(String filename) {
+    public void delete(String filePath) {
 
         try {
-            Path path = Paths.get("src/main/resources/static" + filename);
+            Path path = Paths.get("src/main/resources/static" + filePath);
             Files.deleteIfExists(path);
         } catch (IOException e){
-            throw new StorageException(String.format("Unable to delete file %s.", filename));
+            throw new StorageException(String.format("Unable to delete file %s.", filePath));
         }
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
+    public Resource loadAsResource(String filePath) {
         try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
+            Path path = Paths.get("src/main/resources/static" + filePath);
+            Resource resource = new UrlResource(path.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
                 throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
+                        "Could not read file: " + filePath);
 
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("Could not read file: " + filePath, e);
         }
     }
 
