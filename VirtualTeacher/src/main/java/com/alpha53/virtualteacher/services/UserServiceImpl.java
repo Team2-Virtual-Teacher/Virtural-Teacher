@@ -160,6 +160,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    // TODO: 12.12.23 make this transactional and test 
     public void delete(int id, User loggedInUser) {
         if (loggedInUser.getUserId() != id && !loggedInUser.getRole().getRoleType().equalsIgnoreCase("Admin")) {
             throw new AuthorizationException(String.format(MODIFY_USER_EXCEPTION, "delete"));

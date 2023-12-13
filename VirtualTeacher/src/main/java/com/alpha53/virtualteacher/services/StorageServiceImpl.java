@@ -88,7 +88,7 @@ public class StorageServiceImpl implements StorageService {
             Path path = Paths.get("src/main/resources/static" + filename);
             Files.deleteIfExists(path);
         } catch (IOException e){
-            throw new StorageException("Unable to delete file.");
+            throw new StorageException(String.format("Unable to delete file %s.", filename));
         }
     }
 

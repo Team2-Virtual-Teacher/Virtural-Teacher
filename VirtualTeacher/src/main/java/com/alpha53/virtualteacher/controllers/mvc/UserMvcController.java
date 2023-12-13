@@ -143,16 +143,16 @@ public class UserMvcController {
 
     @PostMapping("/{id}/settings")
     public String handleUpdateUser(@Valid @ModelAttribute("userDto") UserDto updateDto, BindingResult bindingResult, HttpSession session, Model model,
-                                    @PathVariable int id) {
+                                   @PathVariable int id) {
         try {
             User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
             model.addAttribute("userProfile", userService.get(id));
             if (bindingResult.hasErrors()) {
                 return "UserSettingsView";
             }
-            userService.update(updateDto,loggedInUser,id);
+            userService.update(updateDto, loggedInUser, id);
             return "redirect:/users/{id}/profile";
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
             return "4xx";
@@ -161,13 +161,39 @@ public class UserMvcController {
 
     }
 
+    @GetMapping("/{id}/delete")
+    public String deleteUser(HttpSession session, @PathVariable int id, Model model) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+            userService.delete(id, user);
+            session.removeAttribute("currentUser");
+            session.removeAttribute("currentUserEmail");
+            return "redirect:/";
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 404);
+            return "4xx";
+
+        } catch (StorageException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 422);
+            return "4xx";
+        }
+    }
+
+
     @PostMapping("{id}/settings/picture")
     public String uploadProfilePicture(HttpSession session, @PathVariable int id, Model model, @RequestParam("file") MultipartFile file) {
         try {
             User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
             userService.uploadProfilePicture(file, loggedInUser, id);
             model.addAttribute("userProfile", userService.get(id));
-            session.setAttribute("currentUser", userService.get(id));
+            session.setAttribute("currentUser", loggedInUser);
             return "redirect:/users/{id}/profile";
 
         } catch (AuthorizationException e) {

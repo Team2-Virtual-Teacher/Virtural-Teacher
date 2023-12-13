@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="../static/css/plugins/plyr.css" th:href="@{/css/plugins/plyr.css}">
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
 </head>
+<!--FOOTER VISUALIZATION-->
 <body class="rbt-header-sticky">
 <!-- Start Header Area -->
 <header class="rbt-header rbt-header-10">
@@ -109,22 +110,16 @@
                                                     <span>My Profile</span>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="instructor-enrolled-courses.html">
+                                            <li th:if="${session.currentUser.role.roleType == 'Student'}">
+                                                <a th:href="@{/users/{id}/courses/enrolled(id=${session.currentUser.userId})}">
                                                     <i class="feather-shopping-bag"></i>
                                                     <span>Enrolled Courses</span>
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="instructor-reviews.html">
-                                                    <i class="feather-star"></i>
-                                                    <span>Reviews</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="instructor-my-quiz-attempts.html">
-                                                    <i class="feather-list"></i>
-                                                    <span>My Quiz Attempts</span>
+                                            <li th:if="${session.currentUser.role.roleType == 'Teacher' or session.currentUser.role.roleType == 'Admin'}">
+                                                <a th:href="@{/users/{id}/courses/enrolled(id=${session.currentUser.userId})}">
+                                                    <i class="feather-shopping-bag"></i>
+                                                    <span>Managed Courses</span>
                                                 </a>
                                             </li>
 
@@ -132,7 +127,7 @@
                                         <hr class="mt--10 mb--10">
                                         <ul class="user-list-wrapper">
                                             <li>
-                                                <a href="instructor-settings.html">
+                                                <a href="instructor-settings.html" th:href="@{/users/{id}/settings(id=${session.currentUser.userId})}">
                                                     <i class="feather-settings"></i>
                                                     <span>Settings</span>
                                                 </a>
@@ -164,6 +159,54 @@
         </div>
     </div>
 </header>
+
+<div th:fragment="userSettingsSidebar">
+<div class="rbt-default-sidebar sticky-top rbt-shadow-box rbt-gradient-border">
+    <div class="inner">
+        <div class="content-item-content">
+            <div class="rbt-default-sidebar-wrapper">
+                <div class="section-title mb--20">
+                    <h6 class="rbt-title-style-2"
+                        th:text="${'Welcome, ' + userProfile.firstName + ' ' + userProfile.lastName}">
+                        Welcome, Jone Due</h6>
+                </div>
+                <nav class="mainmenu-nav">
+                    <ul class="dashboard-mainmenu rbt-default-sidebar-list">
+                        <li><a href="UserPageView.html"
+                               th:href="@{/users/{id}/profile(id=${userProfile.userId})}"><i
+                                class="feather-user"></i><span>My Profile</span></a></li>
+                        <li><a href="student-enrolled-courses.html"
+                               th:href="@{/users/{id}/courses/enrolled(id=${userProfile.userId})}"><i
+                                class="feather-book-open"></i><span
+                                th:text="${userProfile.role.roleType == 'Student' ? 'Enrolled Courses' : 'Managed Courses'}">Enrolled Courses</span></a>
+                        </li>
+                        <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}">
+                            <a href="student-enrolled-courses.html"
+                               th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"><i
+                                    class="feather-book-open"></i><span>Completed Courses</span></a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="section-title mt--40 mb--20">
+                    <h6 class="rbt-title-style-2">User</h6>
+                </div>
+
+                <nav class="mainmenu-nav">
+                    <ul class="dashboard-mainmenu rbt-default-sidebar-list">
+                        <li><a href="student-settings.html" th:href="@{/users/{id}/settings(id=${userProfile.userId})}"><i
+                                class="feather-settings"></i><span>Settings</span></a></li>
+                        <li><a href="index.html" th:href="@{/auth/logout}"><i
+                                class="feather-log-out"></i><span>Logout</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
 
 <!-- JS
 ============================================ -->

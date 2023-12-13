@@ -11,7 +11,7 @@ CREATE TABLE tokens
     confirmed_at       datetime  ,
     user_email         varchar(50)          not null,
     constraint tokens_users_fk
-    foreign key (user_email) references users (email)
+    foreign key (user_email) references users (email) on delete cascade
 );
 
 ALTER TABLE users
