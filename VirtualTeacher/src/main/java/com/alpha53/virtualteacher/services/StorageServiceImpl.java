@@ -77,7 +77,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Path load(String filename) {
+    public Path loadAbsolutFilePath(String filename) {
         return rootLocation.resolve(filename);
     }
 

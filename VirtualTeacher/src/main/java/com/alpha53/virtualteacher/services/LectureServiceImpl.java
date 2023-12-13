@@ -13,10 +13,15 @@ import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
 import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.services.contracts.StorageService;
 import com.alpha53.virtualteacher.utilities.helpers.FileValidator;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -26,6 +31,7 @@ public class LectureServiceImpl implements LectureService {
     private static final String LECTURE_PERMIT_CREATE_EXCEPTION = "Only  creator of the course or admin can create a lecture.";
     private static final String LECTURE_PERMIT_UPDATE_EXCEPTION = "Only  creator of the course or admin can update a lecture.";
     public static final String ASSIGNMENT_UPLOAD_ERROR = "Assignment upload is not allowed on public course";
+    public static final String AUTHORIZED_DOWNLOAD_FILE_EXEPTION = "You are not authorized to download this file";
     private final LectureDao lectureDao;
     private final CourseDao courseDao;
     private final SolutionDao solutionDao;
@@ -92,14 +98,12 @@ public class LectureServiceImpl implements LectureService {
 
     }
 
-
-
     @Transactional
     @Override
     public void update(Lecture lecture, User user, MultipartFile assignment) {
         Course course = courseDao.get(lecture.getCourseId());
         verifyLectureModifyPermit(user, course, LECTURE_PERMIT_UPDATE_EXCEPTION);
-        FileValidator.fileTypeValidator(assignment,"text");
+        FileValidator.fileTypeValidator(assignment, "text");
         Optional<String> existAssignmentUrl = lectureDao.getAssignmentUrl(lecture.getId());
         if (course.isPublished()) {
             if (assignment != null) {
@@ -158,9 +162,30 @@ public class LectureServiceImpl implements LectureService {
         }
 
     }
+
     @Override
-    public boolean isAssignmentExist(int lectureId){
+    public boolean isAssignmentExist(int lectureId) {
         return lectureDao.isAssignmentExist(lectureId);
+    }
+
+    @Override
+    public Resource downloadAssignment(int courseId, int lectureId, User user) {
+        if (!courseDao.isUserEnrolled(user.getUserId(), courseId)) {
+            throw new AuthorizationException(AUTHORIZED_DOWNLOAD_FILE_EXEPTION);
+        }
+        String assignmentUrl = lectureDao.getAssignmentUrl(lectureId).orElseThrow(()->new EntityNotFoundException(lectureId));
+        String fileName = extractFileName(assignmentUrl);
+        Path assignmentFullUrlPath = storageService.loadAbsolutFilePath(fileName);
+        Resource assignment = new FileSystemResource(assignmentFullUrlPath);
+        if (assignment.exists()) {
+            return assignment;
+        }
+        throw new EntityNotFoundException(lectureId);
+    }
+
+    private String extractFileName(String assignmentUrl) {
+        int startIndex = assignmentUrl.lastIndexOf("\\");
+        return assignmentUrl.substring(startIndex+1);
     }
 
     private void checkLectureTitleExist(Lecture lecture) {
@@ -179,7 +204,6 @@ public class LectureServiceImpl implements LectureService {
             throw new AuthorizationException(errorMessage);
 
         }
-
     }
 
 

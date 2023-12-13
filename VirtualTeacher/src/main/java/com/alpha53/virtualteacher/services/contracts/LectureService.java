@@ -2,8 +2,10 @@ package com.alpha53.virtualteacher.services.contracts;
 
 import com.alpha53.virtualteacher.models.Lecture;
 import com.alpha53.virtualteacher.models.User;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface LectureService {
@@ -22,5 +24,7 @@ public interface LectureService {
     void uploadSolution(int courseId, int lectureId, User user, MultipartFile assignmentSolution);
 
     boolean isAssignmentExist(int lectureId);
+
+    Resource downloadAssignment(int courseId, int lectureId, User user) throws IOException;
 }
 

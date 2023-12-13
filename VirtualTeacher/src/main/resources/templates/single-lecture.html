@@ -39,6 +39,7 @@
             margin: 0 auto;
             width: 52%;
         }
+
         /* Style for the modal */
         .modal {
             display: none;
@@ -75,6 +76,7 @@
             text-decoration: none;
             cursor: pointer;
         }
+
         /* Style for the link */
         .wiki-link {
             color: #007bff; /* Set the link color to a primary color */
@@ -104,24 +106,8 @@
 
 <div class="rbt-overlay-page-wrapper content">
     <div class="breadcrumb-image-container breadcrumb-style-max-width ">
-        <div class="breadcrumb-image-wrapper">
-            <img src="/static/assets/images/bg/bg-image-10.jpg" alt="Education Images">
-        </div>
+
         <div class="breadcrumb-content-top text-center ">
-            <ul class="meta-list justify-content-center mb--10">
-                <li class="list-item">
-                    <div class="author-thumbnail">
-                        <img src="/static/assets/images/testimonial/client-06.png" alt="blog-image">
-                    </div>
-                    <div class="author-info">
-                        <a href="#"><strong>Jone Song</strong></a> in <a href="#"><strong>Design</strong></a>
-                    </div>
-                </li>
-                <li class="list-item">
-                    <i class="feather-clock"></i>
-                    <span>20 Aug 2021</span>
-                </li>
-            </ul>
             <h1 class="title" th:text="${lecture.title}">Skills That You Can Learn From Education.</h1>
         </div>
     </div>
@@ -135,136 +121,145 @@
                 <iframe src="https://www.youtube.com/embed/fLGGyAhVm3s" th:src="${lecture.getVideoUrl()}"
                         allowfullscreen allow="autoplay"></iframe>
             </div>
-
             <p th:text="${lecture.getDescription().description}">There </p>
         </div>
     </div>
 
-    <!--START-->
     <div class="rbt-dashboard-content bg-color-white rbt-shadow-box">
-        <form action="#" th:action="@{/course/{courseId}/lecture/{lectureId}/solution(courseId=${courseId},lectureId=${lectureId})}" method="post"
-              id="solutionForm" enctype="multipart/form-data">
-            <label for="solutionInput" class="rbt-edit-photo-link" title="Upload file">
-                <i class="feather-file"></i> Chose file
-            </label>
-            <input type="file" id="solutionInput" name="file" style="display: none;"
-                   onchange="handleFileChange(this)">
+        <div th:if="${isAssignmentExist==true && isEnrolled==true}">
+            <form action="#"
+                  th:action="@{/course/{courseId}/lecture/{lectureId}/solution(courseId=${courseId},lectureId=${lectureId})}"
+                  method="post"
+                  id="solutionForm" enctype="multipart/form-data">
+                <label for="solutionInput" class="rbt-edit-photo-link" title="Upload file">
+                    <i class="feather-file"></i> Chose file
+                </label>
+                <input type="file" id="solutionInput" name="file" style="display: none;"
+                       onchange="handleFileChange(this)">
 
-            <div class="col-12 mt--20">
-                <div class="rbt-form-group">
-                    <button class="rbt-btn btn-gradient" href="#" type="submit"
-                            style="width: 150px;">Upload
-                    </button>
-                </div>
-            </div>
-        </form>
-        <div id="selectedFileName" style="display: none;"></div>
-
-    </div>
-    <!--STOP-->
-
-    <div class="rbt-elements-area bg-color-darker rbt-section-gap">
-        <div class="container center">
-            <div class="center">
-                <div>
-                    <form class="rbt-search-style me-0" action="#"
-                          th:action="@{/course/{courseId}/lecture/{lectureId}(courseId=${lecture.courseId},lectureId=${lecture.getId()})}"
-                          th:object="${wikiSearchCriteria}" method="get">
-                        <input style="color: #0b0b0b" type="text" th:field="*{wikiSearchCriteria}"
-                               placeholder="Are you hungry for knowledge?">
-                        <button type="submit" class="rbt-search-btn rbt-round-btn">
-                            <i class="feather-search"></i>
+                <div class="col-12 mt--20">
+                    <div class="rbt-form-group">
+                        <button class="rbt-btn btn-gradient" href="#" type="submit"
+                                style="width: 250px;">Upload solution
                         </button>
-                    </form>
+                    </div>
+                </div>
+            </form>
+            <div id="selectedFileName" style="display: none;"></div>
+            <form action="#"
+                  th:action="@{/course/{courseId}/lecture/{lectureId}/assignment (courseId=${courseId},lectureId=${lectureId})}"
+                  method="get">
+                <div class="col-12 mt--20">
+                    <div class="rbt-form-group">
+                        <button class="rbt-btn btn-gradient" href="#" type="submit"
+                                style="width: 250px;">Download assignment
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <!--STOP-->
+
+        <div class="rbt-elements-area bg-color-darker rbt-section-gap">
+            <div class="container center">
+                <div class="center">
+                    <div>
+                        <form class="rbt-search-style me-0" action="#"
+                              th:action="@{/course/{courseId}/lecture/{lectureId}(courseId=${lecture.courseId},lectureId=${lecture.getId()})}"
+                              th:object="${wikiSearchCriteria}" method="get">
+                            <input style="color: #0b0b0b" type="text" th:field="*{wikiSearchCriteria}"
+                                   placeholder="Are you hungry for knowledge?">
+                            <button type="submit" class="rbt-search-btn rbt-round-btn">
+                                <i class="feather-search"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="rbt-elements-area bg-color-light rbt-section-gap">
+        <div class="rbt-elements-area bg-color-light rbt-section-gap">
 
-        <div>
             <div>
-                <ul th:each="wiki : ${wikiSearchResult}">
-                    <li>
-                        <span th:text="${wiki.getSnippet()}">short snippet</span>
-                        <br>
-                        <button th:attr="content-id=${wiki.getContent()}" onclick="showPopup(this)">Read more</button>
-                        <br>
-                        <a class="wiki-link" target="_blank" th:href="${wiki.getFullUrl()}"> Link to official Wiki page </a>
-                    </li>
-                </ul>
+                <div>
+                    <ul th:each="wiki : ${wikiSearchResult}">
+                        <li>
+                            <span th:text="${wiki.getSnippet()}">short snippet</span>
+                            <br>
+                            <button th:attr="content-id=${wiki.getContent()}" onclick="showPopup(this)">Read
+                                more
+                            </button>
+                            <br>
+                            <a class="wiki-link" target="_blank" th:href="${wiki.getFullUrl()}"> Link to
+                                official
+                                Wiki page </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closePopup()">&times;</span>
-                <p id="modalContent"></p>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closePopup()">&times;</span>
+                    <p id="modalContent"></p>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
+    <!-- End Footer aera -->
+    <div class="rbt-progress-parent">
+        <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+        </svg>
+    </div>
 
+    <!-- JS
+    ============================================ -->
+    <script src="/static/js/vendor/modernizr.min.js" th:src="@{/js/vendor/modernizr.min.js}"></script>
+    <script src="/static/js/vendor/jquery.js" th:src="@{/js/vendor/jquery.js}"></script>
+    <script src="/static/js/vendor/bootstrap.min.js" th:src="@{/js/vendor/bootstrap.min.js}"></script>
+    <script src="/static/js/vendor/sal.js" th:src="@{/js/vendor/sal.js}"></script>
+    <script src="/static/js/vendor/swiper.js" th:src="@{/js/vendor/swiper.js}"></script>
+    <script src="/static/js/vendor/magnify.min.js" th:src="@{/js/vendor/magnify.min.js}"></script>
+    <script src="/static/js/vendor/jquery-appear.js" th:src="@{/js/vendor/jquery-appear.js}"></script>
+    <script src="/static/js/vendor/odometer.js" th:src="@{/js/vendor/odometer.js}"></script>
+    <script src="/static/js/vendor/backtotop.js" th:src="@{/js/vendor/backtotop.js}"></script>
+    <script src="/static/js/vendor/isotop.js" th:src="@{/js/vendor/isotop.js}"></script>
+    <script src="/static/js/vendor/imageloaded.js" th:src="@{/js/vendor/imageloaded.js}"></script>
+    <script src="/static/js/vendor/wow.js" th:src="@{/js/vendor/wow.js}"></script>
+    <script src="/static/js/vendor/waypoint.min.js" th:src="@{/js/vendor/waypoint.min.js}"></script>
+    <script src="/static/js/vendor/easypie.js" th:src="@{/js/vendor/easypie.js}"></script>
+    <script src="/static/js/vendor/text-type.js" th:src="@{/js/vendor/text-type.js}"></script>
+    <script src="/static/js/vendor/jquery-one-page-nav.js"
+            th:src="@{/js/vendor/jquery-one-page-nav.js}"></script>
+    <script src="/static/js/vendor/bootstrap-select.min.js"
+            th:src="@{/js/vendor/bootstrap-select.min.js}"></script>
+    <script src="/static/js/vendor/jquery-ui.js" th:src="@{/js/vendor/jquery-ui.js}"></script>
+    <script src="/static/js/vendor/magnify-popup.min.js" th:src="@{/js/vendor/magnify-popup.min.js}"></script>
+    <script src="/static/js/vendor/paralax-scroll.js" th:src="@{/js/vendor/paralax-scroll.js}"></script>
+    <script src="/static/js/vendor/paralax.min.js" th:src="@{/js/vendor/paralax.min.js}"></script>
+    <script src="/static/js/vendor/countdown.js" th:src="@{/js/vendor/countdown.js}"></script>
+    <script src="/static/js/vendor/plyr.js" th:src="@{/js/vendor/plyr.js}"></script>
+    <!-- Main JS -->
+    <script src="/static/js/main.js" th:src="@{/js/main.js}"></script>
 
-<!-- End Footer aera -->
-<div class="rbt-progress-parent">
-    <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
-        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
-    </svg>
-</div>
+    <script th:inline="javascript">
 
-<!-- JS
-============================================ -->
-<!-- Modernizer JS -->
-<script src="/static/js/vendor/modernizr.min.js" th:src="@{/js/vendor/modernizr.min.js}"></script>
-<!-- jQuery JS -->
-<script src="/static/js/vendor/jquery.js" th:src="@{/js/vendor/jquery.js}"></script>
-<!-- Bootstrap JS -->
-<script src="/static/js/vendor/bootstrap.min.js" th:src="@{/js/vendor/bootstrap.min.js}"></script>
-<!-- sal.js -->
-<script src="/static/js/vendor/sal.js" th:src="@{/js/vendor/sal.js}"></script>
-<script src="/static/js/vendor/swiper.js" th:src="@{/js/vendor/swiper.js}"></script>
-<script src="/static/js/vendor/magnify.min.js" th:src="@{/js/vendor/magnify.min.js}"></script>
-<script src="/static/js/vendor/jquery-appear.js" th:src="@{/js/vendor/jquery-appear.js}"></script>
-<script src="/static/js/vendor/odometer.js" th:src="@{/js/vendor/odometer.js}"></script>
-<script src="/static/js/vendor/backtotop.js" th:src="@{/js/vendor/backtotop.js}"></script>
-<script src="/static/js/vendor/isotop.js" th:src="@{/js/vendor/isotop.js}"></script>
-<script src="/static/js/vendor/imageloaded.js" th:src="@{/js/vendor/imageloaded.js}"></script>
-<script src="/static/js/vendor/wow.js" th:src="@{/js/vendor/wow.js}"></script>
-<script src="/static/js/vendor/waypoint.min.js" th:src="@{/js/vendor/waypoint.min.js}"></script>
-<script src="/static/js/vendor/easypie.js" th:src="@{/js/vendor/easypie.js}"></script>
-<script src="/static/js/vendor/text-type.js" th:src="@{/js/vendor/text-type.js}"></script>
-<script src="/static/js/vendor/jquery-one-page-nav.js" th:src="@{/js/vendor/jquery-one-page-nav.js}"></script>
-<script src="/static/js/vendor/bootstrap-select.min.js" th:src="@{/js/vendor/bootstrap-select.min.js}"></script>
-<script src="/static/js/vendor/jquery-ui.js" th:src="@{/js/vendor/jquery-ui.js}"></script>
-<script src="/static/js/vendor/magnify-popup.min.js" th:src="@{/js/vendor/magnify-popup.min.js}"></script>
-<script src="/static/js/vendor/paralax-scroll.js" th:src="@{/js/vendor/paralax-scroll.js}"></script>
-<script src="/static/js/vendor/paralax.min.js" th:src="@{/js/vendor/paralax.min.js}"></script>
-<script src="/static/js/vendor/countdown.js" th:src="@{/js/vendor/countdown.js}"></script>
-<script src="/static/js/vendor/plyr.js" th:src="@{/js/vendor/plyr.js}"></script>
-<!-- Main JS -->
-<script src="/static/js/main.js" th:src="@{/js/main.js}"></script>
+        function showPopup(element) {
+            const content = element.getAttribute('content-id');
+            const modal = document.getElementById('myModal');
+            const modalContent = document.getElementById('modalContent');
 
-<script th:inline="javascript">
-    /*function showPopup(content) {
-        alert(content); // You can replace this with your preferred pop-up/modal implementation
-        // For example, using a modal library like Bootstrap or creating a custom modal.
-    }*/
-    function showPopup(element) {
-        const content = element.getAttribute('content-id');
-        const modal = document.getElementById('myModal');
-        const modalContent = document.getElementById('modalContent');
+            modal.style.display = 'block';
+            modalContent.innerText = content;
+        }
 
-        modal.style.display = 'block';
-        modalContent.innerText = content;
-    }
-
-    function closePopup() {
-        const modal = document.getElementById('myModal');
-        modal.style.display = 'none';
-    }
-</script>
+        function closePopup() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+    </script>
 </body>
 
 </html>

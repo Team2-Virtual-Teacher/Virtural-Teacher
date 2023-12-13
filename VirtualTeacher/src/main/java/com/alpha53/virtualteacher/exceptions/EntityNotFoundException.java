@@ -13,7 +13,8 @@ public class EntityNotFoundException extends RuntimeException {
         super(String.format("%s with %s not found.", type, value));
     }
 
-    public EntityNotFoundException() {
+    public EntityNotFoundException(int lectureId) {
+        super(String.format("Not found assignment for lecture ID: %d",lectureId));
     }
 
     public EntityNotFoundException(String message) {
@@ -21,5 +22,8 @@ public class EntityNotFoundException extends RuntimeException {
     }
     public EntityNotFoundException(int userId,int lectureId){
         super(String.format("Solution not found for user with ID: %d in Lecture with ID: %d",userId,lectureId));
+    }
+    public EntityNotFoundException(){
+        super();
     }
 }
