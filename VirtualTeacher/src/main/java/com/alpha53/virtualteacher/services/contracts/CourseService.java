@@ -29,4 +29,5 @@ public interface CourseService {
     boolean hasUserPassedCourse(int userId, int courseId);
     Integer getCoursesCount();
     List<Rating> getRatingsByCourseId(int courseId);
+    public List<User> getStudentsWhichAreEnrolledForCourse(int courseId);
 }

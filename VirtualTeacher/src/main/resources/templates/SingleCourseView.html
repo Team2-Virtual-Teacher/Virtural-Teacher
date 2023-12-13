@@ -204,7 +204,7 @@
     <div class="inner-top">
       <div class="content">
         <div class="logo">
-          <a th:href="index.html">
+          <a th:href="@{/}">
             <img th:src="@{/assets/images/logo/logo.png}" alt="Education Logo Images">
           </a>
         </div>
@@ -980,7 +980,7 @@
       <div class="col-lg-8">
         <div class="content text-start">
           <ul class="page-list">
-            <li class="rbt-breadcrumb-item"><a th:href="index.html">Home</a></li>
+            <li class="rbt-breadcrumb-item"><a th:href="@{/}">Home</a></li>
             <li>
               <div class="icon-right"><i class="feather-chevron-right"></i></div>
             </li>
@@ -1047,7 +1047,7 @@
               </div>
               <p th:text="${course.description.description}">Description</p>
             </div>
-            <div class="rbt-show-more-btn">Show More</div>
+<!--            <div class="rbt-show-more-btn">Show More</div>-->
           </div>
           <!-- End Course Feature Box  -->
 
@@ -1055,17 +1055,13 @@
           <div class="course-content rbt-shadow-box coursecontent-wrapper mt--30" id="coursecontent" th:unless="${course.lectures.isEmpty()}">
             <div class="rbt-course-feature-inner">
               <div class="section-title">
-                <h4 class="rbt-title-style-3">Course Content</h4>
+                <h4 class="rbt-title-style-3">Course Lectures</h4>
               </div>
               <div class="rbt-accordion-style rbt-accordion-02 accordion">
                 <div class="accordion" id="accordionExampleb2" >
 
                   <div class="accordion-item card" th:each="lecture: ${course.lectures}">
-                    <h2 class="accordion-header card-header" id="headingTwo11">
-                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo1" aria-expanded="true" aria-controls="collapseTwo1" th:text="${lecture.title}">
-                        Lecture Title
-                      </button>
-                    </h2>
+                      <a class="accordion-header card-header" th:text="${lecture.title}" th:href="@{/{courseId}/lecture/{lectureId}(courseId=${course.getCourseId()}, lectureId=${lecture.getId()})}"></a>
                   </div>
 
 
@@ -1195,10 +1191,10 @@
 
                                 <div class="buy-now-btn mt--15">
                                   <form th:action="@{/courses/{id}/rate(id=${course.courseId})}" th:object="${rating}" method="post">
-                                    <input type="text" th:field="*{rating}">
-                                    <label>Rating 0-6 *</label>
-                                    <input type="text" th:field="*{comment}">
-                                    <label>Comment *</label>
+                                    <input type="text" th:field="*{rating}" placeholder="Rating 0-6 *">
+
+                                    <input type="text" th:field="*{comment}" placeholder="Comment *">
+
                                     <input type="submit" value="Rate Course">
                                   </form>
                                 </div>
@@ -1229,6 +1225,15 @@
 
 
 
+                <div class="add-to-card-button mt--15">
+                  <a class="rbt-btn btn-gradient icon-hover w-100 d-block text-center" href="#" th:href="@{/courses/{id}/lecture/new(id=${course.courseId})}">
+                    <span class="btn-text">Add Lecture</span>
+                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
+                  </a>
+                </div>
+
+
+
                 <div class="buy-now-btn mt--15">
                   <a th:href="@{/courses/{id}/update(id=${course.courseId})}" class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
                     <span class="btn-text">Modify</span>
@@ -1237,7 +1242,18 @@
                 </div>
 
 
+
+
+              <div th:if="${hasStudents}">
                 <div class="buy-now-btn mt--15">
+
+                    <span style="font-size: 15px; line-height: 1">The course has students which are enrolled, so you cannot delete it</span>
+
+
+                </div>
+              </div>
+
+                <div th:unless="${hasStudents}" class="buy-now-btn mt--15">
                   <a th:href="@{/courses/{id}/delete(id=${course.courseId})}" class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
                     <span class="btn-text">Delete</span>
                     <span class="btn-icon"><i class="feather-arrow-right"></i></span>
@@ -1273,7 +1289,7 @@
 
 
                 </ul>
-                <div class="rbt-show-more-btn">Show More</div>
+<!--                <div class="rbt-show-more-btn">Show More</div>-->
               </div>
 
 

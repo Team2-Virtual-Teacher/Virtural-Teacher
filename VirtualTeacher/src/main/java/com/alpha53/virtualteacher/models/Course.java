@@ -1,6 +1,7 @@
 package com.alpha53.virtualteacher.models;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode
 public class Course {
+
     private Integer courseId;
     private String title;
     private Topic topic;

@@ -116,6 +116,7 @@ public class CourseMvcController {
             model.addAttribute("hasStarted", LocalDate.now().isAfter(course.getStartingDate()));
             model.addAttribute("isCreator", course.getCreator().getUserId()==user.getUserId());
             model.addAttribute("rating", new RatingDto());
+            model.addAttribute("hasStudents", courseService.getStudentsWhichAreEnrolledForCourse(course.getCourseId()).size()>0);
 
             return "SingleCourseView";
         } catch (EntityNotFoundException e) {
@@ -163,10 +164,11 @@ public class CourseMvcController {
 
 
     @PostMapping("/new")
-    public String handleNewCourse(@Valid @ModelAttribute("course") CourseDto course,
+    public String handleNewCourse( Model model, @Valid @ModelAttribute("course") CourseDto course,
                                 BindingResult bindingResult,
                                 HttpSession session) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("topics", topicService.getAll());
             return "NewCourseView";
         }
 
@@ -203,7 +205,7 @@ public class CourseMvcController {
 
 
             courseService.delete(id, user);
-            return "redirect:/courses";
+            return "redirect:/";
 
     }
 
@@ -225,10 +227,13 @@ public class CourseMvcController {
 
     }
     @PostMapping("/{id}/update")
-    public String handleEditCourse(@PathVariable int id, @Valid @ModelAttribute("course") CourseDto course,
+    public String handleEditCourse(Model model, @PathVariable int id, @Valid @ModelAttribute("course") CourseDto course,
                                   BindingResult bindingResult,
                                   HttpSession session) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("topics", topicService.getAll());
+            model.addAttribute("courseId", id);
+            model.addAttribute("course", course);
             return "EditCourseView";
         }
 

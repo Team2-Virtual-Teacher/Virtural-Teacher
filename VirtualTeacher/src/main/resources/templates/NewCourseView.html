@@ -59,7 +59,7 @@
         <div class="inner-top">
             <div class="content">
                 <div class="logo">
-                    <a href="index.html">
+                    <a th:href="@{/}">
                         <img th:src="@{/assets/images/logo/logo.png}" alt="Education Logo Images">
                     </a>
                 </div>
@@ -833,7 +833,7 @@
                 <div class="breadcrumb-inner text-center">
                     <h2 class="title">Create Course</h2>
                     <ul class="page-list">
-                        <li class="rbt-breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="rbt-breadcrumb-item"><a th:href="@{/}">Home</a></li>
                         <li>
                             <div class="icon-right"><i class="feather-chevron-right"></i></div>
                         </li>
@@ -881,7 +881,7 @@
                         <div class="form-group">
                             <input name="course-title" type="text" th:field="*{title}"/>
                             <label>Course Title *</label>
-                            <label th:errors="*{title}">Title error placeholder</label>
+                            <p style="color: red" th:errors="*{title}">Title error placeholder</p>
                             <span class="focus-border"></span>
                         </div>
 
@@ -891,24 +891,26 @@
                             <div class="filter-select rbt-modern-select">
                                 <span class="select-label d-block">Topic *</span>
                                 <select title="Topic *"  th:field="*{topicId}" >
-                                    <option th:each="topic:${ topics}" th:text="${topic.topic}" th:value="${topic.topicId}">Topic</option>
+                                    <option th:each="topic:${topics}" th:text="${topic.topic}" th:value="${topic.topicId}">Topic</option>
 
                                 </select>
+                                <p style="color: red" th:errors="*{topicId}">Topic error placeholder</p>
                             </div>
                         </div>
 
 
-                        <div class="form-group">
-                            <input name="starting-date" type="text" th:field="*{startingDate}">
+                        <div class="form-group focused">
+                            <input name="starting-date" type="date" th:field="*{startingDate}">
                             <label>Starting Date *</label>
-                            <label th:errors="*{startingDate}">Startign Date error placeholder</label>
+                            <p style="color: red" th:errors="*{startingDate}">Starting date error placeholder</p>
                             <span class="focus-border"></span>
                         </div>
 
 
                         <div class="form-group">
-                            <input name="course_description" type="text" th:field="*{description.description}">
-                            <label>Description</label>
+                            <textarea name="course_description" type="text" th:field="*{description.description}">
+                            </textarea>
+                                <label>Description</label>
                             <label th:errors="*{description.description}">Description error placeholder</label>
                             <span class="focus-border"></span>
                         </div>

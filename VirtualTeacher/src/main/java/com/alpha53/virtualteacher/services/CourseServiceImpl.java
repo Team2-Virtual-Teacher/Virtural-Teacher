@@ -212,5 +212,10 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.getRatingsByCourseId(courseId);
     }
 
+    @Override
+    public List<User> getStudentsWhichAreEnrolledForCourse(int courseId) {
+        return courseRepository.getStudentsWhichAreEnrolledForCourse(courseId);
+    }
+
 
 }
