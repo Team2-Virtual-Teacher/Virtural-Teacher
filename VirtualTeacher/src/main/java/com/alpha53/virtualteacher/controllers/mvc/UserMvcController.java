@@ -49,7 +49,9 @@ public class UserMvcController {
         try {
             loggedUser = authenticationHelper.tryGetCurrentUser(session);
             userToGet = userService.get(id);
-            if (loggedUser.getUserId() != userToGet.getUserId()) {
+            if (loggedUser.getUserId() != userToGet.getUserId() &&
+                    !(loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin") ||
+                            loggedUser.getRole().getRoleType().equalsIgnoreCase("Teacher"))) {
                 model.addAttribute("errorMessage", "Unauthorized access.");
                 model.addAttribute("statusCode", 404);
                 return "4xx";
@@ -73,7 +75,9 @@ public class UserMvcController {
         try {
             loggedUser = authenticationHelper.tryGetCurrentUser(session);
             userToGet = userService.get(id);
-            if (loggedUser.getUserId() != userToGet.getUserId()) {
+            if (loggedUser.getUserId() != userToGet.getUserId() &&
+                    !(loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin") ||
+                            loggedUser.getRole().getRoleType().equalsIgnoreCase("Teacher"))) {
                 model.addAttribute("errorMessage", "Unauthorized access.");
                 model.addAttribute("statusCode", 404);
                 return "4xx";
@@ -97,12 +101,16 @@ public class UserMvcController {
         try {
             loggedUser = authenticationHelper.tryGetCurrentUser(session);
             userToGet = userService.get(id);
-            if (loggedUser.getUserId() != userToGet.getUserId()) {
+            if (loggedUser.getUserId() != userToGet.getUserId() &&
+                    !(loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin") ||
+                            loggedUser.getRole().getRoleType().equalsIgnoreCase("Teacher"))) {
                 model.addAttribute("errorMessage", "Unauthorized access.");
                 model.addAttribute("statusCode", 404);
                 return "4xx";
             }
             model.addAttribute("userProfile", userToGet);
+            model.addAttribute("completedCourses", courseService.getUsersCompletedCourses(id));
+            return "UserPageCompletedCoursesView";
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         } catch (EntityNotFoundException e) {
@@ -110,9 +118,6 @@ public class UserMvcController {
             model.addAttribute("statusCode", 404);
             return "4xx";
         }
-
-        model.addAttribute("completedCourses", courseService.getUsersCompletedCourses(id));
-        return "UserPageCompletedCoursesView";
     }
 
     @GetMapping("/{id}/settings")
@@ -282,12 +287,12 @@ public class UserMvcController {
     @GetMapping
     public String showUsers(@ModelAttribute("filterOptionsUsers") FilterUserDto filterUserDto, HttpSession session, Model model) {
         try {
-           User loggedUser = authenticationHelper.tryGetCurrentUser(session);
-           if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin") && !loggedUser.getRole().getRoleType().equalsIgnoreCase("Teacher")){
-               model.addAttribute("errorMessage", "Invalid authentication.");
-               model.addAttribute("statusCode", 401);
-               return "4xx";
-           }
+            User loggedUser = authenticationHelper.tryGetCurrentUser(session);
+            if (!loggedUser.getRole().getRoleType().equalsIgnoreCase("Admin") && !loggedUser.getRole().getRoleType().equalsIgnoreCase("Teacher")) {
+                model.addAttribute("errorMessage", "Invalid authentication.");
+                model.addAttribute("statusCode", 401);
+                return "4xx";
+            }
             FilterOptionsUsers filterOptionsUsers = new FilterOptionsUsers(
                     filterUserDto.getEmail(),
                     filterUserDto.getFirstName(),

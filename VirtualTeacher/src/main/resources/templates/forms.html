@@ -130,7 +130,8 @@
                                         <hr class="mt--10 mb--10">
                                         <ul class="user-list-wrapper">
                                             <li>
-                                                <a href="instructor-settings.html" th:href="@{/users/{id}/settings(id=${session.currentUser.userId})}">
+                                                <a href="instructor-settings.html"
+                                                   th:href="@{/users/{id}/settings(id=${session.currentUser.userId})}">
                                                     <i class="feather-settings"></i>
                                                     <span>Settings</span>
                                                 </a>
@@ -152,7 +153,8 @@
                                 <span data-text="Enroll Now">Register</span>
                             </a>
                             <a th:if="${session.currentUser != null}"
-                               class="rbt-btn btn-border-gradient radius-round btn-sm" href="/referral" th:href="@{/users/referral}">
+                               class="rbt-btn btn-border-gradient radius-round btn-sm" href="/referral"
+                               th:href="@{/users/referral}">
                                 <span data-text="Refer Friend">Refer Friend</span>
                             </a>
                         </div>
@@ -164,51 +166,55 @@
 </header>
 
 <div th:fragment="userSettingsSidebar">
-<div class="rbt-default-sidebar sticky-top rbt-shadow-box rbt-gradient-border">
-    <div class="inner">
-        <div class="content-item-content">
-            <div class="rbt-default-sidebar-wrapper">
-                <div class="section-title mb--20">
-                    <h6 class="rbt-title-style-2"
-                        th:text="${'Welcome, ' + userProfile.firstName + ' ' + userProfile.lastName}">
-                        Welcome, Jone Due</h6>
-                </div>
-                <nav class="mainmenu-nav">
-                    <ul class="dashboard-mainmenu rbt-default-sidebar-list">
-                        <li><a href="UserPageView.html"
-                               th:href="@{/users/{id}/profile(id=${userProfile.userId})}"><i
-                                class="feather-user"></i><span>My Profile</span></a></li>
-                        <li><a href="student-enrolled-courses.html"
-                               th:href="@{/users/{id}/courses/enrolled(id=${userProfile.userId})}"><i
-                                class="feather-book-open"></i><span
-                                th:text="${userProfile.role.roleType == 'Student' ? 'Enrolled Courses' : 'Managed Courses'}">Enrolled Courses</span></a>
-                        </li>
-                        <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}">
-                            <a href="student-enrolled-courses.html"
-                               th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"><i
-                                    class="feather-book-open"></i><span>Completed Courses</span></a>
-                        </li>
-                    </ul>
-                </nav>
+    <div class="rbt-default-sidebar sticky-top rbt-shadow-box rbt-gradient-border">
+        <div class="inner">
+            <div class="content-item-content">
+                <div class="rbt-default-sidebar-wrapper">
+                    <div class="section-title mb--20">
+                        <h6 class="rbt-title-style-2">
+                            <span th:if="${session.currentUser.userId == userProfile.userId}" th:text="${'Welcome, ' + userProfile.firstName + ' ' + userProfile.lastName}"></span>
+                            <span th:if="${session.currentUser.userId != userProfile.userId}" th:text="${'Logged in as ' + session.currentUser.firstName + ' ' + session.currentUser.lastName}" style="color: red"></span>
+                        </h6>
+                    </div>
+                    <nav class="mainmenu-nav">
+                        <ul class="dashboard-mainmenu rbt-default-sidebar-list">
+                            <li><a href="UserPageView.html"
+                                   th:href="@{/users/{id}/profile(id=${userProfile.userId})}"><i
+                                    class="feather-user"></i><span th:text="${session.currentUser.userId == userProfile.userId} ? 'My Profile' : 'Profile'"></span>
+                            </a></li>
+                            <li><a href="student-enrolled-courses.html"
+                                   th:href="@{/users/{id}/courses/enrolled(id=${userProfile.userId})}"><i
+                                    class="feather-book-open"></i><span
+                                    th:text="${userProfile.role.roleType == 'Student' ? 'Enrolled Courses' : 'Managed Courses'}">Enrolled Courses</span></a>
+                            </li>
+                            <li th:if="${userProfile.role.roleType != 'Admin' and userProfile.role.roleType != 'Teacher'}">
+                                <a href="student-enrolled-courses.html"
+                                   th:href="@{/users/{id}/courses/completed(id=${userProfile.userId})}"><i
+                                        class="feather-book-open"></i><span>Completed Courses</span></a>
+                            </li>
+                        </ul>
+                    </nav>
 
-                <div class="section-title mt--40 mb--20">
-                    <h6 class="rbt-title-style-2">User</h6>
-                </div>
+                    <div th:if="${session.currentUser.userId == userProfile.userId}">
+                        <div class="section-title mt--40 mb--20">
+                            <h6 class="rbt-title-style-2">User</h6>
+                        </div>
 
-                <nav class="mainmenu-nav">
-                    <ul class="dashboard-mainmenu rbt-default-sidebar-list">
-                        <li><a href="student-settings.html" th:href="@{/users/{id}/settings(id=${userProfile.userId})}"><i
-                                class="feather-settings"></i><span>Settings</span></a></li>
-                        <li><a href="index.html" th:href="@{/auth/logout}"><i
-                                class="feather-log-out"></i><span>Logout</span></a></li>
-                    </ul>
-                </nav>
+                        <nav class="mainmenu-nav">
+                            <ul class="dashboard-mainmenu rbt-default-sidebar-list">
+                                <li><a href="student-settings.html"
+                                       th:href="@{/users/{id}/settings(id=${userProfile.userId})}"><i
+                                        class="feather-settings"></i><span>Settings</span></a></li>
+                                <li><a href="index.html" th:href="@{/auth/logout}"><i
+                                        class="feather-log-out"></i><span>Logout</span></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-
 
 
 <!-- JS

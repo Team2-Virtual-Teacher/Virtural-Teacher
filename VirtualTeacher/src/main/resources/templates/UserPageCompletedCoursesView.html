@@ -71,7 +71,7 @@
                                 <h5 class="title" th:text="${userProfile.firstName + ' ' + userProfile.lastName}">Emily Hannah</h5>
                                 <ul class="rbt-meta rbt-meta-white mt--5">
                                     <li><i class="feather-book " th:if="${userProfile != null and (userProfile.role.roleType == 'Teacher' or userProfile.role.roleType == 'Admin')}" th:text="${completedCourses.size() + ' ' + 'Courses managed'}"></i></li>
-                                    <li><i class="feather-book " th:if="${userProfile != null and userProfile.role.roleType == 'Student'}" th:text="${userProfile.courses.size() + ' ' + 'Courses completed'}"></i></li>
+                                    <li><i class="feather-book " th:if="${userProfile != null and userProfile.role.roleType == 'Student'}" th:text="${completedCourses.size() + ' ' + 'Courses completed'}"></i></li>
                                 </ul>
                             </div>
                         </div>

@@ -221,7 +221,9 @@
                                 <ul class="guiz-awards-row guiz-awards-row-even"
                                     th:each="user : ${users}">
                                     <li class="guiz-awards-track" style="width: 3%"  th:text="${user.userId}"> testID</li>
-                                    <li class="guiz-awards-track" style="width: 27%" th:text="${user.email}"> testEmail</li>
+                                    <li class="guiz-awards-track" style="width: 27%">
+                                        <a th:href="@{/users/{id}/profile(id=${user.userId})}" th:text="${user.email}"> testEmail</a>
+                                    </li>
                                     <li class="guiz-awards-track" style="width: 15%" th:text="${user.firstName}"> TestFirstName</li>
                                     <li class="guiz-awards-track" style="width: 15%" th:text="${user.lastName}"> TestFirstName</li>
                                     <li class="guiz-awards-track" style="width: 10%" th:text="${user.role.roleType}"> TestRole</li>
