@@ -10,7 +10,6 @@ import com.alpha53.virtualteacher.models.dtos.WikiSearchDto;
 import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
 import com.alpha53.virtualteacher.services.contracts.*;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
-import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UpdateLectureDtoMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,7 +37,6 @@ public class LectureMvcController {
     private final LectureService lectureService;
     private final WikiService wikiService;
     private final CourseService courseService;
-    private final LectureDtoMapper lectureDtoMapper;
     private final SolutionService solutionService;
     private final SolutionDao solutionDao;
 
@@ -46,14 +44,13 @@ public class LectureMvcController {
     private final UserService userService;
 
     public LectureMvcController(AuthenticationHelper authenticationHelper, LectureService lectureService,
-                                WikiService wikiService, CourseService courseService, LectureDtoMapper lectureDtoMapper, SolutionService solutionService, SolutionDao solutionDao,
+                                WikiService wikiService, CourseService courseService, SolutionService solutionService, SolutionDao solutionDao,
                                 UpdateLectureDtoMapper updateLectureDtoMapper,
                                 UserService userService) {
         this.authenticationHelper = authenticationHelper;
         this.lectureService = lectureService;
         this.wikiService = wikiService;
         this.courseService = courseService;
-        this.lectureDtoMapper = lectureDtoMapper;
         this.solutionService = solutionService;
         this.solutionDao = solutionDao;
         this.updateLectureDtoMapper = updateLectureDtoMapper;
@@ -86,6 +83,11 @@ public class LectureMvcController {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 500);
             return "5xx";
+        }
+        catch (AuthorizationException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
         }
     }
 

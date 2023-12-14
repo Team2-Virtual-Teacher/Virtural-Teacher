@@ -118,7 +118,8 @@ create table solutions
         primary key,
     grade        double default 0 not null,
     constraint solutions_lectures_id_fk
-        foreign key (lecture_id) references lectures (id),
+        foreign key (lecture_id) references lectures (id)
+            on delete cascade,
     constraint solutions_users_id_fk
         foreign key (user_id) references users (id)
             on delete cascade

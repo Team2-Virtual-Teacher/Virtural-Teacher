@@ -175,7 +175,7 @@
                                 <div class="media-body">
                                     <div class="author-info">
                                         <h5 class="title">
-                                            <a class="hover-flip-item-wrapper" th:href="author.html"
+                                            <a class="hover-flip-item-wrapper" th:href="@{/users/{id}/profile(id=${course.creator.userId})}"
                                                th:text="${course.creator.firstName + ' ' + course.creator.lastName} ">Teacher</a>
                                         </h5>
                                         <span class="b3 subtitle">Teacher</span>

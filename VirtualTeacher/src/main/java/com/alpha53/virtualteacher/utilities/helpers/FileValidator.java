@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class FileValidator {
 
-    private static final Set<String> acceptableSolutionFormats = new HashSet<>(Set.of("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"));
+    private static final Set<String> acceptableSolutionFormats = new HashSet<>(Set.of("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain","application/pdf"));
 
     private static final Set<String> acceptablePhotoFormats = new HashSet<>(Set.of("image/png","image/jpg","image/jpeg"));
 

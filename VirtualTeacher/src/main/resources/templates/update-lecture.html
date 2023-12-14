@@ -65,21 +65,21 @@
                     <h3 class="title">Lecture</h3>
                     <form class="max-width-auto" th:action="@{__${requestURI}__}" th:object="${lectureDto}" method="post"
                           enctype="multipart/form-data">
-                        <div class="form-group">
+                        <div class="form-group focused">
                             <input name="lecture-title" type="text" th:field="*{title}"/>
                             <label>Lecture Title *</label>
                             <p style="color: red" th:errors="*{title}">Title error placeholder</p>
                             <span class="focus-border"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group focused">
                             <input name="video-url" type="text" th:field="*{videoUrl}"/>
                             <label>Video URL *</label>
                             <p style="color: red" th:errors="*{videoUrl}">VideoUrl error placeholder</p>
                             <span class="focus-border"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group focused">
                             <textarea name="lecture_description" type="text" th:field="*{description.description}">
                             </textarea>
                             <label>Description</label>
