@@ -3,6 +3,7 @@ package com.alpha53.virtualteacher.services.contracts;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.dtos.GradedUserDtoOut;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,4 +32,6 @@ public interface UserService {
     void referFriend(User loggedInUser, String email);
 
     List<Role> getRoles();
+
+    List<GradedUserDtoOut> getStudentsByLectureId(int lectureId);
 }

@@ -5,6 +5,7 @@ import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
 import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.exceptions.RegistrationException;
 import com.alpha53.virtualteacher.models.*;
+import com.alpha53.virtualteacher.models.dtos.GradedUserDtoOut;
 import com.alpha53.virtualteacher.models.dtos.UserDto;
 import com.alpha53.virtualteacher.repositories.contracts.CourseDao;
 import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
@@ -244,6 +245,10 @@ public class UserServiceImpl implements UserService {
         String link = CONFIRMATION_LINK.concat(confirmationToken.getToken());
         String confirmationEmail = emailService.generateConfirmationEmail(user.getFirstName(),link);
         emailService.send(user.getEmail(),confirmationEmail,REGISTRATION_CONFIRMATION_SUBJECT, null,null);
+    }
+
+    public List<GradedUserDtoOut> getStudentsByLectureId(int lectureId){
+      return userDao.getStudentsByLectureId(lectureId);
     }
 
 }
