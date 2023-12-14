@@ -36,12 +36,16 @@ public class LectureMvcController {
     private final LectureService lectureService;
     private final WikiService wikiService;
     private final CourseService courseService;
+    private final LectureDtoMapper lectureDtoMapper;
+    private final UpdateLectureDtoMapper updateLectureDtoMapper;
 
-    public LectureMvcController(AuthenticationHelper authenticationHelper, LectureService lectureService, WikiService wikiService, CourseService courseService) {
+    public LectureMvcController(AuthenticationHelper authenticationHelper, LectureService lectureService, WikiService wikiService, CourseService courseService, LectureDtoMapper lectureDtoMapper, UpdateLectureDtoMapper updateLectureDtoMapper) {
         this.authenticationHelper = authenticationHelper;
         this.lectureService = lectureService;
         this.wikiService = wikiService;
         this.courseService = courseService;
+        this.lectureDtoMapper = lectureDtoMapper;
+        this.updateLectureDtoMapper = updateLectureDtoMapper;
     }
 
     @GetMapping("/{courseId}/lecture/{lectureId}")
@@ -104,10 +108,9 @@ public class LectureMvcController {
                     .headers(headers)
                     .body(resource);
         } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
-        }
-        catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }

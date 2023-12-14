@@ -200,28 +200,28 @@
 </header>
 <!-- Mobile Menu Section -->
 <div class="popup-mobile-menu">
-  <div class="inner-wrapper">
-    <div class="inner-top">
-      <div class="content">
-        <div class="logo">
-          <a th:href="@{/}">
-            <img th:src="@{/assets/images/logo/logo.png}" alt="Education Logo Images">
-          </a>
+    <div class="inner-wrapper">
+        <div class="inner-top">
+            <div class="content">
+                <div class="logo">
+                    <a th:href="@{/}">
+                        <img th:src="@{/assets/images/logo/logo.png}" alt="Education Logo Images">
+                    </a>
+                </div>
+                <div class="rbt-btn-close">
+                    <button class="close-button rbt-round-btn"><i class="feather-x"></i></button>
+                </div>
+            </div>
+            <p class="description">Histudy is a education website template. You can customize all.</p>
+            <ul class="navbar-top-left rbt-information-list justify-content-start">
+                <li>
+                    <a href="mailto:hello@example.com"><i class="feather-mail"></i>example@gmail.com</a>
+                </li>
+                <li>
+                    <a href="#"><i class="feather-phone"></i>(302) 555-0107</a>
+                </li>
+            </ul>
         </div>
-        <div class="rbt-btn-close">
-          <button class="close-button rbt-round-btn"><i class="feather-x"></i></button>
-        </div>
-      </div>
-      <p class="description">Histudy is a education website template. You can customize all.</p>
-      <ul class="navbar-top-left rbt-information-list justify-content-start">
-        <li>
-          <a href="mailto:hello@example.com"><i class="feather-mail"></i>example@gmail.com</a>
-        </li>
-        <li>
-          <a href="#"><i class="feather-phone"></i>(302) 555-0107</a>
-        </li>
-      </ul>
-    </div>
 
         <nav class="mainmenu-nav">
             <ul class="mainmenu">
@@ -1122,35 +1122,45 @@
                             <div class="row g-5 mb--30">
 
 
+                            </div>
+                            <p th:text="${course.description.description}">Description</p>
+                        </div>
+                        <!--            <div class="rbt-show-more-btn">Show More</div>-->
+                    </div>
+                    <!-- End Course Feature Box  -->
 
-              </div>
-              <p th:text="${course.description.description}">Description</p>
-            </div>
-<!--            <div class="rbt-show-more-btn">Show More</div>-->
-          </div>
-          <!-- End Course Feature Box  -->
+                    <!-- Start Course Content  -->
+                    <div class="course-content rbt-shadow-box coursecontent-wrapper mt--30" id="coursecontent"
+                         th:unless="${course.lectures.isEmpty()}">
+                        <div class="rbt-course-feature-inner">
+                            <div class="section-title">
+                                <h4 class="rbt-title-style-3">Course Lectures</h4>
+                            </div>
+                            <div class="rbt-accordion-style rbt-accordion-02 accordion">
+                                <div class="accordion" id="accordionExampleb2">
 
-          <!-- Start Course Content  -->
-          <div class="course-content rbt-shadow-box coursecontent-wrapper mt--30" id="coursecontent" th:unless="${course.lectures.isEmpty()}">
-            <div class="rbt-course-feature-inner">
-              <div class="section-title">
-                <h4 class="rbt-title-style-3">Course Lectures</h4>
-              </div>
-              <div class="rbt-accordion-style rbt-accordion-02 accordion">
-                <div class="accordion" id="accordionExampleb2" >
-
-                  <div class="accordion-item card" th:each="lecture: ${course.lectures}">
-                      <a class="accordion-header card-header" th:text="${lecture.title}" th:href="@{/course/{courseId}/lecture/{lectureId}(courseId=${course.courseId}, lectureId=${lecture.id})}"></a>
-                  </div>
-
-
+                                    <div class="accordion-item card" th:each="lecture: ${course.lectures}">
+                                        <div class="accordion-header card-header justify-content-between d-flex align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <a th:text="${lecture.title}"
+                                                   th:href="@{/course/{courseId}/lecture/{lectureId}(courseId=${course.courseId}, lectureId=${lecture.id})}"></a>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <form action="#" th:if="${session.currentUser.getUserId() == course.creator.getUserId() or session.currentUser.role.roleType == 'Admin'}" th:action="@{/course/{courseId}/lecture/{lectureId}/update(courseId=${course.courseId},lectureId=${lecture.id})}" method="get">
+                                                <button class="rbt-btn btn-gradient btn-sm text-center" href="#" type="submit" style="width: 100px; background: blue !important; padding-left: 10px">Update</button>
+                                                </form>
+                                                <form action="#" th:if="${session.currentUser.getUserId() == course.creator.getUserId() or session.currentUser.role.roleType == 'Admin'}" th:action="@{/course/{courseId}/lecture/{lectureId}/grade(courseId=${course.courseId},lectureId=${lecture.id})}" method="get">
+                                                <button class="rbt-btn btn-gradient btn-sm text-center" href="#" type="submit" style="width: 100px; background: green !important;">Grade</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- End Course Content  -->
-
                     <!-- Start Intructor Area  -->
                     <div class="rbt-instructor rbt-shadow-box intructor-wrapper mt--30" id="intructor">
                         <div class="about-author border-0 pb--0 pt--0">
@@ -1254,13 +1264,14 @@
 
 
                                 <div class="buy-now-btn mt--15">
-                                  <form th:action="@{/courses/{id}/rate(id=${course.courseId})}" th:object="${rating}" method="post">
-                                    <input type="text" th:field="*{rating}" placeholder="Rating 0-6 *">
+                                    <form th:action="@{/courses/{id}/rate(id=${course.courseId})}" th:object="${rating}"
+                                          method="post">
+                                        <input type="text" th:field="*{rating}" placeholder="Rating 0-6 *">
 
-                                    <input type="text" th:field="*{comment}" placeholder="Comment *">
+                                        <input type="text" th:field="*{comment}" placeholder="Comment *">
 
-                                    <input type="submit" value="Rate Course">
-                                  </form>
+                                        <input type="submit" value="Rate Course">
+                                    </form>
                                 </div>
                             </div>
 
@@ -1289,41 +1300,40 @@
                         <div th:if="${isCreator || currentUserRole=='Admin'}">
 
 
-
-                <div class="add-to-card-button mt--15">
-                  <a class="rbt-btn btn-gradient icon-hover w-100 d-block text-center" href="#" th:href="@{/courses/{id}/lecture/new(id=${course.courseId})}">
-                    <span class="btn-text">Add Lecture</span>
-                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
-                  </a>
-                </div>
-
-
-
-                <div class="buy-now-btn mt--15">
-                  <a th:href="@{/courses/{id}/update(id=${course.courseId})}" class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
-                    <span class="btn-text">Modify</span>
-                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
-                  </a>
-                </div>
+                            <div class="add-to-card-button mt--15">
+                                <a class="rbt-btn btn-gradient icon-hover w-100 d-block text-center" href="#"
+                                   th:href="@{/courses/{id}/lecture/new(id=${course.courseId})}">
+                                    <span class="btn-text">Add Lecture</span>
+                                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
+                                </a>
+                            </div>
 
 
+                            <div class="buy-now-btn mt--15">
+                                <a th:href="@{/courses/{id}/update(id=${course.courseId})}"
+                                   class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
+                                    <span class="btn-text">Modify</span>
+                                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
+                                </a>
+                            </div>
 
 
-              <div th:if="${hasStudents}">
-                <div class="buy-now-btn mt--15">
+                            <div th:if="${hasStudents}">
+                                <div class="buy-now-btn mt--15">
 
-                    <span style="font-size: 15px; line-height: 1">The course has students which are enrolled, so you cannot delete it</span>
+                                    <span style="font-size: 15px; line-height: 1">The course has students which are enrolled, so you cannot delete it</span>
 
 
-                </div>
-              </div>
+                                </div>
+                            </div>
 
-                <div th:unless="${hasStudents}" class="buy-now-btn mt--15">
-                  <a th:href="@{/courses/{id}/delete(id=${course.courseId})}" class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
-                    <span class="btn-text">Delete</span>
-                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
-                  </a>
-                </div>
+                            <div th:unless="${hasStudents}" class="buy-now-btn mt--15">
+                                <a th:href="@{/courses/{id}/delete(id=${course.courseId})}"
+                                   class="rbt-btn btn-border icon-hover w-100 d-block text-center" href="#">
+                                    <span class="btn-text">Delete</span>
+                                    <span class="btn-icon"><i class="feather-arrow-right"></i></span>
+                                </a>
+                            </div>
 
 
                         </div>
@@ -1347,9 +1357,9 @@
                                                                 th:text="${course.passingGrade}">Passing Grade</span>
                             </li>
 
-                </ul>
-<!--                <div class="rbt-show-more-btn">Show More</div>-->
-              </div>
+                        </ul>
+                        <!--                <div class="rbt-show-more-btn">Show More</div>-->
+                    </div>
 
 
                 </div>

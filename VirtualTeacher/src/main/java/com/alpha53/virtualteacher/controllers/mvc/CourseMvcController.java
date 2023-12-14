@@ -11,6 +11,7 @@ import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.CourseDtoMapper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -116,7 +117,7 @@ public class CourseMvcController {
             model.addAttribute("hasStarted", LocalDate.now().isAfter(course.getStartingDate()));
             model.addAttribute("isCreator", course.getCreator().getUserId()==user.getUserId());
             model.addAttribute("rating", new RatingDto());
-            model.addAttribute("hasStudents", courseService.getStudentsWhichAreEnrolledForCourse(course.getCourseId()).size()>0);
+            model.addAttribute("hasStudents", !courseService.getStudentsWhichAreEnrolledForCourse(course.getCourseId()).isEmpty());
 
             return "SingleCourseView";
         } catch (EntityNotFoundException e) {
@@ -189,6 +190,7 @@ public class CourseMvcController {
             return "redirect:/";
     }
 
+    //TODO EntityNotFoundException must be catch we have error pages 4xx and 5xx we can use them
 
     @GetMapping("/{id}/update")
     public String showEditCoursePage(@PathVariable int id, Model model, HttpSession session) {
@@ -293,5 +295,9 @@ public class CourseMvcController {
             model.addAttribute("statusCode",400);
             return "NewLectureView";
         }
+    }
+    @ModelAttribute("requestURI")
+    public String requestURI(final HttpServletRequest request) {
+        return request.getRequestURI();
     }
 }

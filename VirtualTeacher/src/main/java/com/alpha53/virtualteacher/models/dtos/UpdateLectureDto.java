@@ -8,15 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.checkerframework.checker.regex.qual.Regex;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class LectureDto {
-
+public class UpdateLectureDto {
     @NotNull
     @Size(min = 5, max = 50)
     private String title;
@@ -27,5 +26,5 @@ public class LectureDto {
     private String videoUrl;
 
     private LectureDescription description;
-
+    private MultipartFile assignment;
 }

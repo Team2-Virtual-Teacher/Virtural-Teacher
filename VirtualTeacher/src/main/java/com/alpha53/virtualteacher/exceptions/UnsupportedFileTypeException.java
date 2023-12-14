@@ -4,4 +4,7 @@ public class UnsupportedFileTypeException extends RuntimeException{
     public UnsupportedFileTypeException(String fileType) {
         super(String.format("File type %s not supported.",fileType));
     }
+    public UnsupportedFileTypeException(){
+        super("File not present");
+    }
 }

@@ -13,4 +13,11 @@ public class LectureDtoMapper {
         lecture.setVideoUrl(lectureDto.getVideoUrl().replace("watch?v=","embed/"));
         return lecture;
     }
+    public LectureDto objectToDto(Lecture lecture){
+        LectureDto lectureDto =  new LectureDto();
+        lectureDto.setTitle(lecture.getTitle());
+        lectureDto.setDescription(lecture.getDescription());
+        lectureDto.setVideoUrl(lecture.getVideoUrl());
+        return lectureDto;
+    }
 }

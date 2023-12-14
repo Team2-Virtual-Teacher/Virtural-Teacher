@@ -14,6 +14,9 @@ public class FileValidator {
     private static final Set<String> acceptablePhotoFormats = new HashSet<>(Set.of("image/png","image/jpg","image/jpeg"));
 
     public static boolean fileTypeValidator(MultipartFile file, String fileType) {
+        if (file==null){
+            throw new UnsupportedFileTypeException();
+        }
         if (fileType.equalsIgnoreCase("text") && file.getContentType() != null && acceptableSolutionFormats.contains(file.getContentType())) {
             return true;
         }

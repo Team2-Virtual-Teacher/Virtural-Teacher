@@ -1,8 +1,7 @@
 package com.alpha53.virtualteacher.models.dtos;
 
 import com.alpha53.virtualteacher.models.CourseDescription;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 
@@ -17,7 +16,7 @@ public class CourseDto {
     @Size(min = 5, max = 50)
     private String title;
 
-    @NotBlank
+    @Positive
     private int topicId;
 
     @NotBlank
