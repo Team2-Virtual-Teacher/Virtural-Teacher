@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -171,6 +172,23 @@ public class LectureServiceImpl implements LectureService {
             return assignment;
         }
         throw new EntityNotFoundException(lectureId);
+    }
+
+    @Override
+    public Resource downloadSolution(String solutionUrl,int courseId,User user)  {
+
+        Course course = courseDao.get(courseId);
+        if (user.getUserId()==course.getCreator().getUserId() || user.getRole().getRoleType().equalsIgnoreCase("admin")){
+            String fileName = extractFileName(solutionUrl);
+            Path assignmentFullUrlPath = storageService.loadAbsolutFilePath(fileName);
+            Resource assignment = new FileSystemResource(assignmentFullUrlPath);
+            if (assignment.exists()) {
+                return assignment;
+            }
+            throw new EntityNotFoundException();
+        }
+       throw new AuthorizationException(AUTHORIZED_DOWNLOAD_FILE_EXCEPTION);
+
     }
 
     private String extractFileName(String assignmentUrl) {

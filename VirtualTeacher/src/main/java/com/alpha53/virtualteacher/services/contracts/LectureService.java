@@ -26,5 +26,6 @@ public interface LectureService {
     boolean isAssignmentExist(int lectureId);
 
     Resource downloadAssignment(int courseId, int lectureId, User user) throws IOException;
+    Resource downloadSolution(String solutionUrl,int courseId ,User user) throws IOException;
 }
 

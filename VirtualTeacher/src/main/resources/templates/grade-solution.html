@@ -235,15 +235,27 @@
                                     <li class="guiz-awards-track" style="width: 23%" th:text="${solution.email}">
                                         TestFirstName
                                     </li>
-                                    <li class="guiz-awards-track" style="width: 20%" th:text="${solution.solutionUrl}">
-                                        TestFirstName
+
+                                    <li class="guiz-awards-track" style="width: 20%">
+                                        <form th:action="@{/course/{courseId}/lecture/solution(courseId=${solution.courseId})}" method="get"
+                                              class="d-flex align-items-center justify-content-center">
+                                            <input type="hidden" name=url th:value="${solution.solutionUrl}"/>
+                                            <button class="rbt-btn btn-gradient btn-sm" type="submit"
+                                                    style="width: 110px; background: green !important; margin-left: 8px;">
+                                                Download
+                                            </button>
+                                        </form>
                                     </li>
+
                                     <li class="guiz-awards-track" style="width: 10%" th:text="${solution.grade}">
                                         TestRole
                                     </li>
                                     <li class="guiz-awards-track" style="width: 25%">
-                                        <form action="#" th:action="@{/course/{courseId}/lecture/{lectureId}/user/{userId}/grade(courseId=${solution.courseId},lectureId=${solution.lectureId},userId=${solution.userId})}" method="post" class="d-flex align-items-center">
-                                            <input type="number" name ="grade" min="2" max="6" step="0.5" class="form-control mr-2"
+                                        <form action="#"
+                                              th:action="@{/course/{courseId}/lecture/{lectureId}/user/{userId}/grade(courseId=${solution.courseId},lectureId=${solution.lectureId},userId=${solution.userId})}"
+                                              method="post" class="d-flex align-items-center justify-content-center">
+                                            <input type="number" name="grade" min="2" max="6" step="0.5"
+                                                   class="form-control mr-2"
                                                    style="width: 80px;">
                                             <button class="rbt-btn btn-gradient btn-sm" type="submit"
                                                     style="width: 110px; background: green !important; margin-left: 8px;">
@@ -251,10 +263,9 @@
                                             </button>
                                         </form>
                                     </li>
-                                    <!-- th:action="@{/course/{courseId}/lecture/{lectureId}/user/{userId}/grade()}"-->
 
                                 </ul>
-                                <!--Stop-->
+
                             </div>
                         </div>
                     </div>

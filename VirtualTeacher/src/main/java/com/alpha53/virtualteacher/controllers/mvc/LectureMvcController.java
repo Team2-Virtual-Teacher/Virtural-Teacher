@@ -176,6 +176,7 @@ public class LectureMvcController {
         }
     }
 
+    //TODO remove {courseId}
     @GetMapping("/{courseId}/lecture/{lectureId}/grade")
     public String showSolutionGradingPage(@PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
                                           Model model,
@@ -183,7 +184,7 @@ public class LectureMvcController {
         try {
             authenticationHelper.tryGetCurrentUser(session);
             model.addAttribute("solutionList", userService.getStudentsByLectureId(lectureId));
-            return "grade-assignment";
+            return "grade-solution";
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
@@ -212,6 +213,25 @@ public class LectureMvcController {
         }
     }
 
+    @GetMapping("{courseId}/lecture/solution")
+    public ResponseEntity<Resource> downloadSolution(@PathVariable(name = "courseId") int courseId,
+                                                     @RequestParam(name = "url") String solutionUrl,
+                                                     HttpSession session) throws IOException {
+        try {
+            User loggedUser = authenticationHelper.tryGetCurrentUser(session);
+            Resource resource = lectureService.downloadSolution(solutionUrl,courseId ,loggedUser);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFile().getName());
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(resource);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 
     @ModelAttribute("requestURI")
     public String requestURI(final HttpServletRequest request) {
