@@ -4,6 +4,7 @@ import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.dtos.GradedUserDtoOut;
 import com.alpha53.virtualteacher.repositories.contracts.UserDao;
 import com.alpha53.virtualteacher.utilities.mappers.UserMapper;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -16,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Repository
@@ -200,21 +203,26 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
             return namedParameterJdbcTemplate.query(query,new BeanPropertyRowMapper<>(Role.class));
     }
 
+    @Override
+    public List<GradedUserDtoOut> getStudentsByLectureId(int lectureId) {
+        String sql = "SELECT users.id as userId,                         " +
+                "users.email as email,                                   " +
+                "users.first_name as firstName,                          " +
+                "users.last_name as lastName,                            " +
+                "solutions.lecture_id as lectureId,                      " +
+                "solutions.id as solutionId,                             " +
+                "solutions.solution_url as solutionUrl,                  " +
+                "lectures.course_id as courseId,                         " +
+                "solutions.grade as grade                                " +
+                "FROM solutions                                          " +
+                " LEFT JOIN users ON solutions.user_id = users.id        " +
+                "LEFT JOIN  lectures ON solutions.lecture_id=lectures.id " +
+                "WHERE lecture_id = :lectureId;                          ";
 
-//
-//    private Role getUserRole(int id){
-//        String query = "SELECT role_id as roleId, role as roleType " +
-//                "FROM roles " +
-//                "JOIN users u on roles.id = u.role_id " +
-//                "WHERE u.id = :id;";
-//
-//        MapSqlParameterSource in = new MapSqlParameterSource();
-//        in.addValue("id", id);
-//
-//        try {
-//            return namedParameterJdbcTemplate.queryForObject(query,in, new BeanPropertyRowMapper<>(Role.class));
-//        } catch (IncorrectResultSizeDataAccessException e){
-//            throw new EntityNotFoundException(String.format("No role found for user with id %s!", id));
-//        }
-//    }
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("lectureId",lectureId);
+        return namedParameterJdbcTemplate.query(sql,param,new BeanPropertyRowMapper<>(GradedUserDtoOut.class));
+    }
+
+
 }

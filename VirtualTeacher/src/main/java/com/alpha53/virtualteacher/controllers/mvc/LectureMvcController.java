@@ -2,13 +2,13 @@ package com.alpha53.virtualteacher.controllers.mvc;
 
 import com.alpha53.virtualteacher.exceptions.*;
 import com.alpha53.virtualteacher.models.Lecture;
+import com.alpha53.virtualteacher.models.Solution;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.WikiResult;
 import com.alpha53.virtualteacher.models.dtos.UpdateLectureDto;
 import com.alpha53.virtualteacher.models.dtos.WikiSearchDto;
-import com.alpha53.virtualteacher.services.contracts.CourseService;
-import com.alpha53.virtualteacher.services.contracts.LectureService;
-import com.alpha53.virtualteacher.services.contracts.WikiService;
+import com.alpha53.virtualteacher.repositories.contracts.SolutionDao;
+import com.alpha53.virtualteacher.services.contracts.*;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UpdateLectureDtoMapper;
@@ -39,15 +39,25 @@ public class LectureMvcController {
     private final WikiService wikiService;
     private final CourseService courseService;
     private final LectureDtoMapper lectureDtoMapper;
-    private final UpdateLectureDtoMapper updateLectureDtoMapper;
+    private final SolutionService solutionService;
+    private final SolutionDao solutionDao;
 
-    public LectureMvcController(AuthenticationHelper authenticationHelper, LectureService lectureService, WikiService wikiService, CourseService courseService, LectureDtoMapper lectureDtoMapper, UpdateLectureDtoMapper updateLectureDtoMapper) {
+    private final UpdateLectureDtoMapper updateLectureDtoMapper;
+    private final UserService userService;
+
+    public LectureMvcController(AuthenticationHelper authenticationHelper, LectureService lectureService,
+                                WikiService wikiService, CourseService courseService, LectureDtoMapper lectureDtoMapper, SolutionService solutionService, SolutionDao solutionDao,
+                                UpdateLectureDtoMapper updateLectureDtoMapper,
+                                UserService userService) {
         this.authenticationHelper = authenticationHelper;
         this.lectureService = lectureService;
         this.wikiService = wikiService;
         this.courseService = courseService;
         this.lectureDtoMapper = lectureDtoMapper;
+        this.solutionService = solutionService;
+        this.solutionDao = solutionDao;
         this.updateLectureDtoMapper = updateLectureDtoMapper;
+        this.userService = userService;
     }
 
     @GetMapping("/{courseId}/lecture/{lectureId}")
@@ -140,10 +150,10 @@ public class LectureMvcController {
 
     @PostMapping("{courseId}/lecture/{lectureId}/update")
     public String update(HttpSession session,
-                       @RequestPart @Valid @ModelAttribute("lectureDto") UpdateLectureDto lectureDto,
-                       @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
-                       @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
-                       Model model) {
+                         @RequestPart @Valid @ModelAttribute("lectureDto") UpdateLectureDto lectureDto,
+                         @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
+                         @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                         Model model) {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
             MultipartFile assignment = lectureDto.getAssignment();
@@ -154,7 +164,7 @@ public class LectureMvcController {
                 updateLecture.setDescription(lectureDto.getDescription());
             }
             lectureService.update(updateLecture, user, assignment);
-            return String.format("redirect:/courses/%d",courseId);
+            return String.format("redirect:/courses/%d", courseId);
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
@@ -165,6 +175,44 @@ public class LectureMvcController {
             return "4xx";
         }
     }
+
+    @GetMapping("/{courseId}/lecture/{lectureId}/grade")
+    public String showSolutionGradingPage(@PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                                          Model model,
+                                          HttpSession session) {
+        try {
+            authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("solutionList", userService.getStudentsByLectureId(lectureId));
+            return "grade-assignment";
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        }
+
+    }
+
+    @PostMapping("/{courseId}/lecture/{lectureId}/user/{userId}/grade")
+    public String gradeAssignment(@PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                                  @PathVariable(name = "userId") int userId,
+                                  @PathVariable(name = "courseId") int courseId,
+                                  @RequestParam("grade") int grade,
+                                  HttpSession session,
+                                  Model model) {
+        try {
+            User loggedUser = authenticationHelper.tryGetCurrentUser(session);
+            Solution solution = solutionDao.getSolution(userId, lectureId);
+            solution.setGrade(grade);
+            solutionService.addSolutionGrade(solution, loggedUser, courseId);
+            return "redirect:/course/{courseId}/lecture/{lectureId}/grade";
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        }
+    }
+
+
     @ModelAttribute("requestURI")
     public String requestURI(final HttpServletRequest request) {
         return request.getRequestURI();

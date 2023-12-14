@@ -82,10 +82,10 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
 
     @Override
     public Solution getSolution(int userId, int lectureId) {
-        String sql = "SELECT solution_url, user_id, lecture_id, id, grade FROM solutions WHERE lecture_id =:lectureId AND user_id=:lectureId";
+        String sql = "SELECT solution_url, user_id, lecture_id, id, grade FROM solutions WHERE lecture_id =:lectureId AND user_id=:userId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("lectureId", lectureId);
-        params.addValue("lectureId", lectureId);
+        params.addValue("userId", userId);
 
         try {
             return namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<>(Solution.class));

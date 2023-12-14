@@ -3,6 +3,7 @@ package com.alpha53.virtualteacher.repositories.contracts;
 import com.alpha53.virtualteacher.models.FilterOptionsUsers;
 import com.alpha53.virtualteacher.models.Role;
 import com.alpha53.virtualteacher.models.User;
+import com.alpha53.virtualteacher.models.dtos.GradedUserDtoOut;
 
 import java.util.List;
 
@@ -25,4 +26,5 @@ public interface UserDao {
     Role getRole(String roleType);
 
     List<Role> getRoles();
+    List<GradedUserDtoOut> getStudentsByLectureId(int lectureId);
 }
