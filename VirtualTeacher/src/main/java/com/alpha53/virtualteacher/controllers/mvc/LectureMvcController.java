@@ -1,18 +1,20 @@
 package com.alpha53.virtualteacher.controllers.mvc;
 
-import com.alpha53.virtualteacher.exceptions.AuthorizationException;
-import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
-import com.alpha53.virtualteacher.exceptions.StorageException;
-import com.alpha53.virtualteacher.exceptions.UnsupportedFileTypeException;
+import com.alpha53.virtualteacher.exceptions.*;
 import com.alpha53.virtualteacher.models.Lecture;
 import com.alpha53.virtualteacher.models.User;
 import com.alpha53.virtualteacher.models.WikiResult;
+import com.alpha53.virtualteacher.models.dtos.UpdateLectureDto;
 import com.alpha53.virtualteacher.models.dtos.WikiSearchDto;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
 import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.services.contracts.WikiService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
+import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
+import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UpdateLectureDtoMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -112,5 +114,59 @@ public class LectureMvcController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+    }
+
+    @GetMapping("/{courseId}/lecture/{lectureId}/update")
+    public String showLectureUpdatePage(@PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
+                                        @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int id,
+                                        Model model,
+                                        HttpSession session) {
+        try {
+            User loggedUser = authenticationHelper.tryGetCurrentUser(session);
+            Lecture lectureToUpdate = lectureService.get(courseId, id, loggedUser);
+            UpdateLectureDto lectureDto = updateLectureDtoMapper.objectToDto(lectureToUpdate);
+            model.addAttribute("lectureDto", lectureDto);
+            return "UpdateLectureView";
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 404);
+            return "4xx";
+        }
+    }
+
+    @PostMapping("{courseId}/lecture/{lectureId}/update")
+    public String update(HttpSession session,
+                       @RequestPart @Valid @ModelAttribute("lectureDto") UpdateLectureDto lectureDto,
+                       @PathVariable(name = "courseId") @Positive(message = "Course ID must be a positive integer") int courseId,
+                       @PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                       Model model) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            MultipartFile assignment = lectureDto.getAssignment();
+            Lecture updateLecture = updateLectureDtoMapper.dtoToObject(lectureDto);
+            updateLecture.setCourseId(courseId);
+            updateLecture.setId(lectureId);
+            if (lectureDto.getDescription() != null) {
+                updateLecture.setDescription(lectureDto.getDescription());
+            }
+            lectureService.update(updateLecture, user, assignment);
+            return String.format("redirect:/courses/%d",courseId);
+        } catch (AuthorizationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
+        } catch (EntityDuplicateException | UnsupportedFileTypeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 422);
+            return "4xx";
+        }
+    }
+    @ModelAttribute("requestURI")
+    public String requestURI(final HttpServletRequest request) {
+        return request.getRequestURI();
     }
 }

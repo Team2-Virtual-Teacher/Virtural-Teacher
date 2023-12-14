@@ -98,7 +98,9 @@ public class LectureServiceImpl implements LectureService {
     public void update(Lecture lecture, User user, MultipartFile assignment) {
         Course course = courseDao.get(lecture.getCourseId());
         verifyLectureModifyPermit(user, course, LECTURE_PERMIT_UPDATE_EXCEPTION);
-        FileValidator.fileTypeValidator(assignment, "text");
+        if (assignment != null){
+            FileValidator.fileTypeValidator(assignment, "text");
+        }
         Optional<String> existAssignmentUrl = lectureDao.getAssignmentUrl(lecture.getId());
         if (course.isPublished()) {
             if (assignment != null) {
@@ -108,9 +110,10 @@ public class LectureServiceImpl implements LectureService {
                 lectureDao.update(lecture);
             }
         } else {
-
-            String fileUrl = storageService.store(assignment);
-            lecture.setAssignmentUrl(fileUrl);
+            if (assignment != null){
+                String fileUrl = storageService.store(assignment);
+                lecture.setAssignmentUrl(fileUrl);
+            }
             lectureDao.update(lecture);
             existAssignmentUrl.ifPresent(storageService::delete);
         }

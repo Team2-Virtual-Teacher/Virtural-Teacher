@@ -258,6 +258,7 @@ public class CourseMvcController {
         try {
             User user =  authenticationHelper.tryGetCurrentUser(session);
             Course course = courseService.getCourseByIdAuth(courseId, user);
+//            TODO the following is not used - consider removing it.
             CourseDto courseDto = courseDtoMapper.toDto(course);
             model.addAttribute("lecture", new LectureDto());
             return "NewLectureView";
