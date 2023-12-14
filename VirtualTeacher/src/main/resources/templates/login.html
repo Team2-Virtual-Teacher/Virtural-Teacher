@@ -56,12 +56,12 @@
                         <h3 class="title">Login</h3>
                         <form class="max-width-auto" th:action="@{/auth/login}" th:object="${login}" method="post">
                             <label th:errors="*{email}" style="color: red">Email error placeholder</label>
-                            <div class="form-group">
+                            <div class="form-group focused">
                                 <input name="lo" type="email" th:field="*{email}"/>
                                 <label>Email *</label>
                                 <span class="focus-border"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group focused">
                                 <input name="con_password" type="password" th:field="*{password}">
                                 <label>Password *</label>
                                 <span class="focus-border"></span>

@@ -59,7 +59,7 @@
                     <h3 class="title">Refer a friend</h3>
                     <form class="max-width-auto" th:action="@{/users/referral}" th:object="${emailForm}" method="post">
                         <label th:errors="*{email}" style="color: red">Email error placeholder</label>
-                        <div class="form-group">
+                        <div class="form-group focused">
                             <input type="email" th:field="*{email}"/>
                             <label>Email</label>
                             <span class="focus-border"></span>
