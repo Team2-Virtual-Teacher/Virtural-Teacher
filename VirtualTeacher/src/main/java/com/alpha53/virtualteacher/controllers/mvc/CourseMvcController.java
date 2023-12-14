@@ -119,7 +119,7 @@ public class CourseMvcController {
             model.addAttribute("rating", new RatingDto());
             model.addAttribute("hasStudents", !courseService.getStudentsWhichAreEnrolledForCourse(course.getCourseId()).isEmpty());
 
-            return "SingleCourseView";
+            return "single-course";
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
@@ -128,7 +128,7 @@ public class CourseMvcController {
             course = courseService.getCourseById(id);
             model.addAttribute("course", course);
             model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
-            return "SingleCourseView";
+            return "single-course";
         }
     }
 
@@ -153,7 +153,7 @@ public class CourseMvcController {
     public String createCourse(Model model) {
         model.addAttribute("course", new CourseDto());
         model.addAttribute("topics", topicService.getAll());
-        return "NewCourseView";
+        return "new-course";
     }
 
     @PostMapping("/new")
@@ -162,7 +162,7 @@ public class CourseMvcController {
                                 HttpSession session) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("topics", topicService.getAll());
-            return "NewCourseView";
+            return "new-course";
         }
         try {
             if (course.getDescription().getDescription().isEmpty()) {
@@ -174,7 +174,7 @@ public class CourseMvcController {
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
-            return "NewCourseView";
+            return "new-course";
         }
     }
 
@@ -201,7 +201,7 @@ public class CourseMvcController {
             model.addAttribute("topics", topicService.getAll());
             model.addAttribute("courseId", id);
             model.addAttribute("course", courseDto);
-            return "EditCourseView";
+            return "edit-course";
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -215,7 +215,7 @@ public class CourseMvcController {
             model.addAttribute("topics", topicService.getAll());
             model.addAttribute("courseId", id);
             model.addAttribute("course", course);
-            return "EditCourseView";
+            return "edit-course";
         }
         try {
             if (course.getDescription().getDescription().isEmpty()) {
@@ -228,7 +228,7 @@ public class CourseMvcController {
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
-            return "EditCourseView";
+            return "edit-course";
         }
     }
 
@@ -237,7 +237,7 @@ public class CourseMvcController {
                                    BindingResult bindingResult,
                                    HttpSession session) {
         if (bindingResult.hasErrors()) {
-            return "SingleCourseView";
+            return "single-course";
         }
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
@@ -246,7 +246,7 @@ public class CourseMvcController {
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
-            return "SingleCourseView";
+            return "single-course";
         }
     }
 
@@ -261,7 +261,7 @@ public class CourseMvcController {
 //            TODO the following is not used - consider removing it.
             CourseDto courseDto = courseDtoMapper.toDto(course);
             model.addAttribute("lecture", new LectureDto());
-            return "NewLectureView";
+            return "new-lecture";
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -276,7 +276,7 @@ public class CourseMvcController {
         model.addAttribute("file", file);
         if (bindingResult.hasErrors()) {
 
-            return "NewLectureView";
+            return "new-lecture";
         }
         try {
             if (lecture.getDescription().getDescription().isEmpty()){
@@ -289,12 +289,12 @@ public class CourseMvcController {
             return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("title", "title_error", e.getMessage());
-            return "NewLectureView";
+            return "new-lecture";
         }
         catch (EntityNotFoundException | UnsupportedFileTypeException | StorageException e) {
             model.addAttribute("errorMessage",e.getMessage());
             model.addAttribute("statusCode",400);
-            return "NewLectureView";
+            return "new-lecture";
         }
     }
     @ModelAttribute("requestURI")

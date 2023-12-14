@@ -15,15 +15,11 @@ import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.UserMapperHelper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.websocket.Session;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -64,7 +60,7 @@ public class UserMvcController {
             model.addAttribute("statusCode", 404);
             return "4xx";
         }
-        return "UserPageView";
+        return "user";
     }
 
     @GetMapping("/{id}/courses/enrolled")
@@ -90,7 +86,7 @@ public class UserMvcController {
             model.addAttribute("statusCode", 404);
             return "4xx";
         }
-        return "UserPageEnrolledCoursesView";
+        return "user-enrolled-courses";
     }
 
     @GetMapping("/{id}/courses/completed")
@@ -110,7 +106,7 @@ public class UserMvcController {
             }
             model.addAttribute("userProfile", userToGet);
             model.addAttribute("completedCourses", courseService.getUsersCompletedCourses(id));
-            return "UserPageCompletedCoursesView";
+            return "user-completed-courses";
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         } catch (EntityNotFoundException e) {
@@ -147,7 +143,7 @@ public class UserMvcController {
         userDto.setPassword(userToGet.getPassword());
         userDto.setRole(userToGet.getRole().getRoleType());
         model.addAttribute("userDto", userDto);
-        return "UserSettingsView";
+        return "user-settings";
     }
 
     @PostMapping("/{id}/settings")
@@ -157,7 +153,7 @@ public class UserMvcController {
             User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
             model.addAttribute("userProfile", userService.get(id));
             if (bindingResult.hasErrors()) {
-                return "UserSettingsView";
+                return "user-settings";
             }
             userService.update(updateDto, loggedInUser, id);
             return "redirect:/users/{id}/profile";
@@ -190,7 +186,7 @@ public class UserMvcController {
             // TODO: 13.12.23 we can just add a specific exception statement later on.
             if (e.getMessage().contains("transfer") && user.getRole().getRoleType().equalsIgnoreCase("Admin")) {
                 model.addAttribute("errorMessage", e.getMessage());
-                return "TransferCoursesView";
+                return "transfer-course";
             }
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
@@ -255,27 +251,27 @@ public class UserMvcController {
     @GetMapping("/referral")
     public String showReferralPage(Model model) {
         model.addAttribute("emailForm", new EmailForm());
-        return "ReferralView";
+        return "referral";
     }
 
     @PostMapping("/referral")
     public String handleReferral(@Valid @ModelAttribute("emailForm") EmailForm emailForm,
                                  BindingResult bindingResult, HttpSession session, Model model) {
         if (bindingResult.hasErrors()) {
-            return "ReferralView";
+            return "referral";
         }
 
         try {
             User loggedInUser = authenticationHelper.tryGetCurrentUser(session);
             userService.referFriend(loggedInUser, emailForm.getEmail());
-            return "ReferralConfirmationView";
+            return "referral-confirmation";
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
             return "4xx";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("email", "email_error", e.getMessage());
-            return "ReferralView";
+            return "referral";
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 422);
@@ -304,7 +300,7 @@ public class UserMvcController {
             model.addAttribute("filterOptionsUsers", filterUserDto);
             model.addAttribute("users", userList);
             model.addAttribute("roles", userService.getRoles());
-            return "UsersView";
+            return "users-view";
 
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());

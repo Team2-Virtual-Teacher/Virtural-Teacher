@@ -136,7 +136,7 @@ public class LectureMvcController {
             Lecture lectureToUpdate = lectureService.get(courseId, id, loggedUser);
             UpdateLectureDto lectureDto = updateLectureDtoMapper.objectToDto(lectureToUpdate);
             model.addAttribute("lectureDto", lectureDto);
-            return "UpdateLectureView";
+            return "update-lecture";
         } catch (AuthorizationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("statusCode", 401);
