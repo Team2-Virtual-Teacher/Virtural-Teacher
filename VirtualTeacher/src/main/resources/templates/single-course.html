@@ -144,10 +144,10 @@
                                                    th:href="@{/course/{courseId}/lecture/{lectureId}(courseId=${course.courseId}, lectureId=${lecture.id})}"></a>
                                             </div>
                                             <div class="ml-auto">
-                                                <form action="#" th:if="${session.currentUser.getUserId() == course.creator.getUserId() or session.currentUser.role.roleType == 'Admin'}" th:action="@{/course/{courseId}/lecture/{lectureId}/update(courseId=${course.courseId},lectureId=${lecture.id})}" method="get">
+                                                <form action="#" th:if="${session.currentUser != null and (session.currentUser.getUserId() == course.creator.getUserId() or session.currentUser.role.roleType == 'Admin')}" th:action="@{/course/{courseId}/lecture/{lectureId}/update(courseId=${course.courseId},lectureId=${lecture.id})}" method="get">
                                                 <button class="rbt-btn btn-gradient btn-sm text-center" href="#" type="submit" style="width: 100px; background: blue !important; padding-left: 10px">Update</button>
                                                 </form>
-                                                <form action="#" th:if="${session.currentUser.getUserId() == course.creator.getUserId() or session.currentUser.role.roleType == 'Admin'}" th:action="@{/course/{courseId}/lecture/{lectureId}/grade(courseId=${course.courseId},lectureId=${lecture.id})}" method="get">
+                                                <form action="#" th:if="${session.currentUser != null and (session.currentUser.getUserId() == course.creator.getUserId() or session.currentUser.role.roleType == 'Admin')}" th:action="@{/course/{courseId}/lecture/{lectureId}/grade(courseId=${course.courseId},lectureId=${lecture.id})}" method="get">
                                                 <button class="rbt-btn btn-gradient btn-sm text-center" href="#" type="submit" style="width: 100px; background: green !important;">Grade</button>
                                                 </form>
                                             </div>

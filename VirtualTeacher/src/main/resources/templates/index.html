@@ -238,7 +238,7 @@
                         <div class="rbt-card-body">
                             <div class="rbt-card-top">
                                 <div class="rbt-review">
-                                    <div class="rating" th:text="${course.getAvgRating()}">
+                                    <div class="rating" th:text="${'Rating: ' + course.getAvgRating()+'/6'}">
                                         Rating: 4/6
                                     </div>
                                 </div>
