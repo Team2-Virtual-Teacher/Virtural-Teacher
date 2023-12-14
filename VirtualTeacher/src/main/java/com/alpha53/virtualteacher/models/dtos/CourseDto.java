@@ -12,14 +12,14 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 public class CourseDto {
-    @NonNull
+
     @NotBlank
     @Size(min = 5, max = 50)
     private String title;
-    @NonNull
 
+    @NotBlank
     private int topicId;
-    @NonNull
+
     @NotBlank
     private String startingDate;
 

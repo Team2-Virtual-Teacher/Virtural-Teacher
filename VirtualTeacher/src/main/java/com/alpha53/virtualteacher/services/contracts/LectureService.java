@@ -14,6 +14,7 @@ public interface LectureService {
 
     void create(Lecture lecture, User user, MultipartFile assignment);
 
+
     void update(Lecture lecture, User user, MultipartFile assignment);
 
     void delete(int courseId, int lectureId, User user);

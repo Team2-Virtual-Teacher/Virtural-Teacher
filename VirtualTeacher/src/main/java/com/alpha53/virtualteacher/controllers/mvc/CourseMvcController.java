@@ -1,15 +1,16 @@
 package com.alpha53.virtualteacher.controllers.mvc;
 
 
-import com.alpha53.virtualteacher.exceptions.AuthorizationException;
-import com.alpha53.virtualteacher.exceptions.EntityDuplicateException;
-import com.alpha53.virtualteacher.exceptions.EntityNotFoundException;
+import com.alpha53.virtualteacher.exceptions.*;
 import com.alpha53.virtualteacher.models.*;
 import com.alpha53.virtualteacher.models.dtos.CourseDto;
+import com.alpha53.virtualteacher.models.dtos.LectureDto;
 import com.alpha53.virtualteacher.services.TopicServiceImpl;
 import com.alpha53.virtualteacher.services.contracts.CourseService;
+import com.alpha53.virtualteacher.services.contracts.LectureService;
 import com.alpha53.virtualteacher.utilities.helpers.AuthenticationHelper;
 import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.CourseDtoMapper;
+import com.alpha53.virtualteacher.utilities.mappers.dtoMappers.LectureDtoMapper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -31,13 +33,17 @@ public class CourseMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final TopicServiceImpl topicService;
     private final CourseDtoMapper courseDtoMapper;
+    private final LectureDtoMapper lectureDtoMapper;
+    private final LectureService lectureService;
 
 
-    public CourseMvcController(CourseService courseService, AuthenticationHelper authenticationHelper, TopicServiceImpl topicService, CourseDtoMapper courseDtoMapper) {
+    public CourseMvcController(CourseService courseService, AuthenticationHelper authenticationHelper, TopicServiceImpl topicService, CourseDtoMapper courseDtoMapper, LectureDtoMapper lectureDtoMapper, LectureService lectureService) {
         this.courseService = courseService;
         this.authenticationHelper = authenticationHelper;
         this.topicService = topicService;
         this.courseDtoMapper = courseDtoMapper;
+        this.lectureDtoMapper = lectureDtoMapper;
+        this.lectureService = lectureService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -276,6 +282,64 @@ public class CourseMvcController {
             return "SingleCourseView";
         }
     }
+
+
+    //TODO maybe move to LectureMvcController
+    //handle file upload
+    @GetMapping("/{courseId}/lecture/new")
+    public String showNewLecturePage(@PathVariable int courseId, Model model, HttpSession session) {
+        try {
+            User user =  authenticationHelper.tryGetCurrentUser(session);
+            Course course = courseService.getCourseByIdAuth(courseId, user);
+            CourseDto courseDto = courseDtoMapper.toDto(course);
+            model.addAttribute("lecture", new LectureDto());
+            return "NewLectureView";
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+
+    }
+
+
+
+
+    @PostMapping("/{courseId}/lecture/new")
+    public String handleNewLecture(@RequestParam("file") MultipartFile file, Model model, @PathVariable int courseId, @Valid @ModelAttribute("lecture") LectureDto lecture,
+                                   BindingResult bindingResult,
+
+                                   HttpSession session) {
+        model.addAttribute("file", file);
+        if (bindingResult.hasErrors()) {
+
+            return "NewLectureView";
+        }
+
+        try {
+            if (lecture.getDescription().getDescription().isEmpty()){
+                lecture.setDescription(null);
+            }
+            Lecture l = lectureDtoMapper.dtoToObject(lecture);
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            l.setCourseId(courseId);
+
+
+
+
+            lectureService.create(l, user, file);
+
+            return "redirect:/";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("title", "title_error", e.getMessage());
+            return "NewLectureView";
+        }
+        catch (EntityNotFoundException | UnsupportedFileTypeException | StorageException e) {
+            model.addAttribute("errorMessage",e.getMessage());
+            model.addAttribute("statusCode",400);
+            return "NewLectureView";
+        }
+    }
+
 
 
 }

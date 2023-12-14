@@ -84,9 +84,15 @@ public class LectureServiceImpl implements LectureService {
         verifyLectureModifyPermit(user, course, LECTURE_PERMIT_CREATE_EXCEPTION);
 
         checkLectureTitleExist(lecture);
+
+
+        String fileUrl = storageService.store(assignment);
+        lecture.setAssignmentUrl(fileUrl);
         lectureDao.create(lecture);
 
     }
+
+
 
     @Transactional
     @Override
