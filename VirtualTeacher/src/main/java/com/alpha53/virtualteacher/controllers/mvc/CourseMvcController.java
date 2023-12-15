@@ -125,10 +125,10 @@ public class CourseMvcController {
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (AuthorizationException e) {
-            course = courseService.getCourseById(id);
-            model.addAttribute("course", course);
-            model.addAttribute("ratings", courseService.getRatingsByCourseId(id));
-            return "single-course";
+          //  course = courseService.getCourseById(id);
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("statusCode", 401);
+            return "4xx";
         }
     }
 

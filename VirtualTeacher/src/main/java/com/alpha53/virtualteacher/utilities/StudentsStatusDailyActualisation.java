@@ -30,7 +30,7 @@ public class StudentsStatusDailyActualisation {
         this.solutionDao = solutionDao;
         this.emailService = emailService;
     }
-    @Scheduled(cron = "30 23 20 * * *")
+    @Scheduled(cron = "00 10 10 * * *")
     private void informGraduatedStudents() {
         System.out.println("Certificates sent");
         List<Integer> ongoingCoursesIds = courseDao.getIdOngoingCourses();

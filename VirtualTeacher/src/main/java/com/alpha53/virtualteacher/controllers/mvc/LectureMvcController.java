@@ -196,12 +196,12 @@ public class LectureMvcController {
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/user/{userId}/grade")
-    public String gradeAssignment(@PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
-                                  @PathVariable(name = "userId") int userId,
-                                  @PathVariable(name = "courseId") int courseId,
-                                  @RequestParam("grade") int grade,
-                                  HttpSession session,
-                                  Model model) {
+    public String gradeSolution(@PathVariable(name = "lectureId") @Positive(message = "Lecture ID must be a positive integer") int lectureId,
+                                @PathVariable(name = "userId") int userId,
+                                @PathVariable(name = "courseId") int courseId,
+                                @RequestParam("grade") int grade,
+                                HttpSession session,
+                                Model model) {
         try {
             User loggedUser = authenticationHelper.tryGetCurrentUser(session);
             Solution solution = solutionDao.getSolution(userId, lectureId);

@@ -143,7 +143,7 @@ public class LectureServiceImpl implements LectureService {
             if (course.getLectures().stream().noneMatch(lecture -> lecture.getId() == lectureId)) {
                 throw new EntityNotFoundException("Lecture", "ID", String.valueOf(lectureId));
             }
-            Optional<String> existingSolutionUrl = solutionDao.getSolutionUrl(lectureId);
+            Optional<String> existingSolutionUrl = solutionDao.getSolutionUrl(lectureId,user.getUserId());
             String fileUrl = storageService.store(solution);
             if (existingSolutionUrl.isPresent()) {
                 storageService.delete(existingSolutionUrl.get());

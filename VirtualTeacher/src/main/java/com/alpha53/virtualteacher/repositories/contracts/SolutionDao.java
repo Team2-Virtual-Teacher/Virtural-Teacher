@@ -11,7 +11,9 @@ public interface SolutionDao {
 
     List<Solution> getAllByUserId(int userId);
 
-    Optional<String> getSolutionUrl(int lectureId);
+    /*Optional<String> getSolutionUrl(int lectureId);*/
+
+    Optional<String> getSolutionUrl(int lectureId, int userId);
 
     void addSolution(int userId, int lectureId, String fileUrl);
 

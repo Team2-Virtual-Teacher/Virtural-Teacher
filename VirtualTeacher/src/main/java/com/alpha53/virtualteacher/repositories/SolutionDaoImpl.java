@@ -47,10 +47,11 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
     }
 
     @Override
-    public Optional<String> getSolutionUrl(int lectureId) {
-        String sql = "SELECT solution_url FROM solutions WHERE lecture_id=:lectureId";
+    public Optional<String> getSolutionUrl(int lectureId, int userId) {
+        String sql = "SELECT solution_url FROM solutions WHERE lecture_id=:lectureId AND user_id =:userId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("lectureId", lectureId);
+        param.addValue("userId",userId);
         try {
             return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, param, String.class));
         } catch (EmptyResultDataAccessException e) {
@@ -72,10 +73,11 @@ public class SolutionDaoImpl extends NamedParameterJdbcDaoSupport implements Sol
 
     @Override
     public void updateSolutionUrl(int userId, int lectureId, String fileUrl) {
-        String sql = "UPDATE solutions SET solution_url =:fileUrl WHERE lecture_id = :lectureId";
+        String sql = "UPDATE solutions SET solution_url =:fileUrl WHERE lecture_id = :lectureId AND user_id = :userId";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("fileUrl", fileUrl);
         param.addValue("lectureId", lectureId);
+        param.addValue("userId",userId);
 
         namedParameterJdbcTemplate.update(sql, param);
     }
